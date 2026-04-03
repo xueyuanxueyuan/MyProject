@@ -1,0 +1,67 @@
+[Session Meta]
+sessionId:
+date:
+executor:
+branch:
+projectDir:
+targetFeatureId:
+targetFeatureDesc:
+
+[Context Recovery]
+- Read app_spec.txt: done / not_done
+- Read feature_list.json: done / not_done
+- Read previous progress log: done / not_done
+- Read git log (last 20): done / not_done
+- Baseline verification executed: yes / no
+- Baseline verification result:
+
+[Plan]
+1)
+2)
+3)
+
+[Implementation]
+- Files changed:
+  - 
+  - 
+- Key changes:
+  - 
+  - 
+
+[Verification]
+- Lint:
+  command:
+  result:
+- Typecheck:
+  command:
+  result:
+- Tests:
+  command:
+  result:
+- E2E / Manual flow:
+  steps:
+  result:
+- Regression on previously passing core features:
+  result:
+
+[Feature Status Update]
+- Updated feature(s):
+  - id:
+    passes: false -> true / unchanged
+- Notes:
+  - 
+
+[Risks / Issues]
+- 
+- 
+
+[Commit]
+- commitHash:
+- commitMessage:
+- summary:
+
+[Handoff For Next Session]
+- Current state:
+- First step next session:
+- Blockers:
+- Suggested priority:

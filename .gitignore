@@ -1,0 +1,5 @@
+# 本仓库仅跟踪 doc/（与 GitHub MyProject 同步文档树）
+/*
+!/doc/
+!/doc/**
+!.gitignore
