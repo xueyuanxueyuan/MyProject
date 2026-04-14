@@ -1,0 +1,58 @@
+--- /home/source/Jetbrains/Probject/Gjj/prod/IdeaProjects/capinfo-gjj-busi-jshs/capinfo-gjj-busi-cwhs-jzgl/capinfo-gjj-busi-cwhs-jzgl-basic-svc-busi/src/main/java/cn/capinfo/gjj/busi/cwhs/jzgl/busi/service/bean/SxfytLinyiJobHandler.java
++++ /home/source/Jetbrains/Probject/Gjj/prod/IdeaProjects/capinfo-gjj-busi-jshs/capinfo-gjj-busi-cwhs-jzgl/capinfo-gjj-busi-cwhs-jzgl-basic-svc-busi/src/main/java/cn/capinfo/gjj/busi/cwhs/jzgl/busi/service/bean/SxfytLinyiJobHandler.java
+@@ -164,30 +164,37 @@
+         }
+ 
+         String ytzq = ytsz.getYtzq();
++        PeriodContext context = null;
+         if (YTZQ_MONTH.equals(ytzq)) {
+-            // 月预提：周期格式 yyyy-MM，周期起始日为当月第一天，截止日为执行日
++            // 月预提：周期格式 yyyy-MM，周期起始日为当月第一天，截止日为月末最后一天
+             Date startDate = DateUtil.beginOfMonth(executeDate);
+-            return new PeriodContext("y", DateUtil.format(executeDate, "yyyy-MM"), startDate, executeDate);
+-        }
+-        if (YTZQ_QUARTER.equals(ytzq)) {
+-            // 季预提：周期格式 yyyy-Q，起始日取本季度第一天，截止日为执行日
++            Date endDate = DateUtil.endOfMonth(executeDate);
++            context = new PeriodContext("y", DateUtil.format(executeDate, "yyyy-MM"), startDate, endDate);
++        } else if (YTZQ_QUARTER.equals(ytzq)) {
++            // 季预提：周期格式 yyyy-Q，起始日取本季度第一天，截止日为季末最后一天
+             Calendar calendar = Calendar.getInstance();
+             calendar.setTime(executeDate);
+             int startMonth = (calendar.get(Calendar.MONTH) / 3) * 3;
+             calendar.set(Calendar.MONTH, startMonth);
+             calendar.set(Calendar.DAY_OF_MONTH, 1);
+             setBeginTime(calendar);
+             Date startDate = calendar.getTime();
++            calendar.add(Calendar.MONTH, 3);
++            calendar.add(Calendar.DAY_OF_MONTH, -1);
++            Date endDate = DateUtil.endOfDay(calendar.getTime());
+             String jszq = DateUtil.year(executeDate) + "-" + ((month - 1) / 3 + 1);
+-            return new PeriodContext("q", jszq, startDate, executeDate);
+-        }
+-        if (YTZQ_YEAR.equals(ytzq)) {
+-            // 年预提：周期格式 yyyy，起始日取当年第一天，截止日为执行日
++            context = new PeriodContext("q", jszq, startDate, endDate);
++        } else if (YTZQ_YEAR.equals(ytzq)) {
++            // 年预提：周期格式 yyyy，起始日取当年第一天，截止日为年末最后一天
+             Calendar calendar = Calendar.getInstance();
+             calendar.setTime(executeDate);
+             calendar.set(Calendar.MONTH, Calendar.JANUARY);
+             calendar.set(Calendar.DAY_OF_MONTH, 1);
+             setBeginTime(calendar);
+             Date startDate = calendar.getTime();
+-            return new PeriodContext("n", String.valueOf(DateUtil.year(executeDate)), startDate, executeDate);
+-        }
+-        throw new IllegalArgumentException("不支持的手续费预提周期:" + ytzq);
++            calendar.set(Calendar.MONTH, Calendar.DECEMBER);
++            calendar.set(Calendar.DAY_OF_MONTH, 31);
++            Date endDate = DateUtil.endOfDay(calendar.getTime());
++            context = new PeriodContext("n", String.valueOf(DateUtil.year(executeDate)), startDate, endDate);
++        } else {
++            throw new IllegalArgumentException("不支持的手续费预提周期:" + ytzq);
++        }
++
++        if (businessDate.compareTo(context.getEndDate()) <= 0) {
++            return null;
++        }
++        return context;
