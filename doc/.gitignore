@@ -1,5 +1,5 @@
 # 本地数据库加密配置（含敏感信息，禁止入库）
-skills/python-db-encrypted-auth/config/db.secure.json
+技能库/python-db-encrypted-auth/config/db.secure.json
 
 # 常见临时文件
 .DS_Store
