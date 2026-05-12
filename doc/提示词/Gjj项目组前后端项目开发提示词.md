@@ -227,3 +227,72 @@
 - 编译前是否已按要求切换并校验 SDK 版本；
 - 是否已完成关键正常流、异常流、边界流验证；
 - 是否确认业务逻辑完整可用后再交付。
+
+---
+
+## 10. 项目索引提示词（prod 主索引 + 区域大索引）
+你现在要基于“同一套代码在不同区域落地”的事实进行研发，请严格按以下索引规则工作：
+- 区域定义补充：这里的“区域”指与 `prod` 同级目录，例如 `zaozhuang`、`linyi`、`wenzhou`、`jiaxing`。
+- 当前工作区的可执行索引明细见：`doc/提示词/Gjj项目-prod主索引与区域大索引提示词.md`。
+- 区域方法差异速查清单见：`doc/提示词/Gjj项目-区域差异方法清单提示词.md`。
+- 区域方法差异（模块白名单版）见：`doc/提示词/Gjj项目-区域差异方法清单-模块白名单版.md`。
+
+### 10.1 索引使用规则
+- 任何检索、定位、改造、评审任务，默认先走 `prod` 主索引定位目标文件和目标方法。
+- 若目标在区域项目存在差异，再进入“区域大索引”定位对应区域分支位置。
+- 对于未在索引中的内容，先补索引，再编码；禁止在未确认目录层级时直接改代码。
+
+### 10.2 prod 主索引（后端聚合工程）
+- 聚合根：`capinfo-gjj-busi-jshs`
+- 核心业务模块：
+  - `capinfo-gjj-busi-zjjs-ywgl`
+  - `capinfo-gjj-busi-zjjs-zhgl`
+  - `capinfo-gjj-busi-zjjs-lcgl`
+  - `capinfo-gjj-busi-zjjs-sp`
+  - `capinfo-gjj-busi-cwhs-jzgl`
+  - `capinfo-gjj-busi-jshs-gm-agg`
+  - `capinfo-gjj-busi-jhgl-zjjh`
+  - `capinfo-gjj-busi-zjjs-zbkh`
+  - `capinfo-gjj-busi-zjjs-core`
+- 每个模块固定按以下层次索引：
+  - `*-basic-svc-api` / `*-basic-svc-api-v2`：接口契约、DTO、Feign、常量
+  - `*-basic-svc-app`：启动、配置、装配
+  - `*-basic-svc-busi`：Controller、Service、Domain、DAO、Mapper、XML
+- 方法级索引编制规则（执行任务时必须遵守）：
+  - Controller：按“业务域 + 功能动词”建立接口方法索引
+  - Service：按“事务入口方法 -> 核心领域方法 -> 持久化调用方法”建立链路索引
+  - Mapper/XML：按“方法名 -> SQL 语义（查询/更新/分页/联表）”建立数据访问索引
+
+### 10.3 区域大索引（在 prod 基础上扩展）
+- 索引层级固定为：`区域 -> 子系统 -> 模块 -> 文件 -> 方法差异点`。
+- 每个区域只记录与 `prod` 的差异项，不重复抄写 `prod` 完全一致的方法。
+- 差异描述必须包含：
+  - 差异类型：`配置差异` / `业务规则差异` / `接口字段差异` / `SQL口径差异`
+  - 影响范围：涉及模块、接口、页面或任务
+  - 回归重点：该差异对应的最小验证路径
+
+### 10.4 索引输出模板（用于后续持续维护）
+```markdown
+## 项目索引
+
+### A. prod 主索引
+- 模块：<module-name>
+- 文件：<relative-path>
+- 方法：
+  - <methodName>：<职责描述>
+  - <methodName>：<职责描述>
+
+### B. 区域大索引
+- 区域：<region-name>
+- 对应模块：<module-name>
+- 差异文件：<relative-path>
+- 差异方法：
+  - <methodName>：<与prod差异说明>
+- 回归要点：<验证路径>
+```
+
+### 10.5 执行约束
+- 涉及多区域改动时，先在 `prod` 完成设计与实现，再按区域大索引做差异合并。
+- 输出结果必须包含“prod 命中项”与“区域差异项”，禁止只给其一。
+- 若当前会话中未提供区域源码路径，先按模板输出索引骨架并标记待补充区域路径。
+- 若存在区域目录但无差异变更，明确标注“与 prod 一致，无额外差异项”。

@@ -92,6 +92,52 @@ def default_dm_home() -> Path:
     return Path(os.environ.get("DM_HOME", "/home/source/snap/dm/dmdbms"))
 
 
+def is_dmpython_available() -> bool:
+    try:
+        import dmPython  # type: ignore # noqa: F401
+        return True
+    except Exception:
+        return False
+
+
+def _extract_dm_error_code(exc: Exception):
+    for attr in ("code", "errno", "error_code"):
+        value = getattr(exc, attr, None)
+        if value is not None:
+            return value
+    return None
+
+
+def should_fallback_dm_exception(exc: Exception) -> bool:
+    code = _extract_dm_error_code(exc)
+    if str(code) == "70089":
+        return True
+    if isinstance(exc, (ModuleNotFoundError, ImportError)):
+        return getattr(exc, "name", "") == "dmPython"
+    return False
+
+
+def fallback_dm_to_disql(
+    conf: dict,
+    password: str,
+    dm_host: str,
+    dm_port: int,
+    dm_schema: str,
+    sql: str,
+    reason: str,
+) -> None:
+    print("[WARN] dmPython 不可用，已自动改用 disql。原因: %s" % reason, file=sys.stderr)
+    run_dm_disql(
+        conf["user"],
+        password,
+        dm_host,
+        dm_port,
+        dm_schema or "",
+        sql,
+        health_only=not sql,
+    )
+
+
 def run_dm_disql(
     user: str,
     password: str,
@@ -210,6 +256,17 @@ def main() -> None:
 
     conn = None
     if db_type == "dm" and args.engine == "auto":
+        if not is_dmpython_available():
+            fallback_dm_to_disql(
+                conf,
+                password,
+                dm_host,
+                dm_port,
+                dm_schema or "",
+                sql,
+                reason="dmPython import unavailable",
+            )
+            return
         try:
             dm_conf = dict(conf)
             dm_conf["host"] = dm_host
@@ -217,32 +274,21 @@ def main() -> None:
             conn = connect_dm(dm_conf, password)
             if dm_schema:
                 conn.current_schema = dm_schema
-        except SystemExit as e:
-            err = str(e.args[0]) if e.args else str(e)
-            if "dmPython" in err:
-                print("[WARN] dmPython 未安装或不可用，已自动改用 disql。", file=sys.stderr)
-                run_dm_disql(
-                    conf["user"],
-                    password,
-                    dm_host,
-                    dm_port,
-                    dm_schema or "",
-                    sql,
-                    health_only=not sql,
+        except Exception as e:
+            if should_fallback_dm_exception(e):
+                code = _extract_dm_error_code(e)
+                reason = "known dmPython error %s%s" % (
+                    type(e).__name__,
+                    (" code=%s" % code) if code is not None else "",
                 )
-                return
-            raise
-        except BaseException as e:
-            if "70089" in str(e):
-                print("[WARN] dmPython 加密模块异常，已自动改用 disql。", file=sys.stderr)
-                run_dm_disql(
-                    conf["user"],
+                fallback_dm_to_disql(
+                    conf,
                     password,
                     dm_host,
                     dm_port,
                     dm_schema or "",
                     sql,
-                    health_only=not sql,
+                    reason=reason,
                 )
                 return
             raise

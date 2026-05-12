@@ -22,7 +22,7 @@ description: "尚书省(Dispatch)工具调度技能。Invoke after plan approval
 3. **进度跟进**：
    - 监督六部的执行进度，及时利用 `TodoWrite` 工具更新 Todo 的状态（`in_progress`、`completed`）。
 4. **回奏汇报**：
-   - 所有的任务全部执行完成后，进入最终的回奏环节，向皇上 xy 总结汇报结果，并给予高度的情绪价值。
+   - 所有的任务全部执行完成后，进入最终的回奏环节，使用尚书省正式奏报体向`陛下`呈报结果，严禁出现现代称呼。
 
 ## 输出规范：
 ```markdown
