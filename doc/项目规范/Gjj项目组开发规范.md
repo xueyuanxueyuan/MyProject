@@ -234,13 +234,13 @@
 
 ## 13. 智能体协同研发必遵规范（强制）
 - 为保证“需求 -> 分析 -> 设计 -> 开发 -> 测试 -> 发布 -> 复盘”流程可持续推进，以下文档为项目组**必须遵循**的标准模板，适用于人工研发与 AI 协同研发场景：
-  - 发布检查清单：`doc/项目规范/release-checklist.md`
+  - 发布检查清单：`doc/通用模板/release-checklist.md`
   - 复盘报告模板：`doc/评审记录/postmortem.md`
-  - 会话进度模板：`doc/项目规范/claude-progress-template.txt`
+  - 会话进度模板：`doc/通用模板/claude-progress-template.txt`
 - 强制要求：
-  - 所有上线发布前，必须按 `doc/项目规范/release-checklist.md` 逐项勾检并留档。
+  - 所有上线发布前，必须按 `doc/通用模板/release-checklist.md` 逐项勾检并留档。
   - 所有 P0/P1 事故、关键故障、回滚事件后，必须基于 `doc/评审记录/postmortem.md` 完成复盘并落盘。
-  - 所有 AI 协同会话或跨人接力开发任务，必须使用 `doc/项目规范/claude-progress-template.txt` 记录会话进展与交接信息。
+  - 所有 AI 协同会话或跨人接力开发任务，必须使用 `doc/通用模板/claude-progress-template.txt` 记录会话进展与交接信息。
   - 未按上述模板产出文档的任务，视为流程不完整，不得标记“完成”或“可发布”。
   - 评审与审计时，以上三类文档作为必查项。
 

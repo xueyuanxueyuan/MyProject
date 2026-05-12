@@ -18,10 +18,10 @@
 ## 4. 标准工件（强制）
 - 需求规格：`app_spec.txt`
 - 特性清单：`feature_list.json`
-- 会话进度：`claude-progress.txt`（记录结构参照 `doc/项目规范/claude-progress-template.txt`）
+- 会话进度：`claude-progress.txt`（记录结构参照 `doc/通用模板/claude-progress-template.txt`）
 - 工作日志：`daily_work_log.md`（记录每日工时、工作类型与内容，用于填报工时系统）
 - 启动脚本：`init.sh`
-- 发布清单：`doc/项目规范/release-checklist.md`
+- 发布清单：`doc/通用模板/release-checklist.md`
 - 复盘模板：`doc/评审记录/postmortem.md`
 
 ## 5. 流程阶段与门禁
@@ -53,7 +53,7 @@
 - 门禁：验证不通过不得将 `passes` 置为 `true`。
 
 ### 5.6 发布阶段
-- 发布前必须完整执行 `doc/项目规范/release-checklist.md`。
+- 发布前必须完整执行 `doc/通用模板/release-checklist.md`。
 - 门禁：清单未完成、回滚不明确、关键风险未闭环不得发布。
 
 ### 5.7 复盘阶段
