@@ -1,65 +1,77 @@
 ---
 name: agency-agents
-description: Adapts the agency-agents persona library for local use. Invoke when you want me to work in a specific expert agent style such as Frontend Developer, Backend Architect, Code Reviewer, or Reality Checker.
+description: Use when you want the assistant to adopt an agency-agents-zh expert role, recommend suitable specialists, or map a task to roles such as frontend, backend, QA, orchestration, MCP, or China-platform integration.
 ---
 
 # Agency Agents
 
-这是一个“代理人格库适配技能”。
+基于 `agency-agents-zh` 的本地专家角色适配技能。
 
-作用很简单：
-- 你点名一个代理
-- 我切到那个代理的视角做事
+它不是把上游 215 个角色一次性塞进当前会话，而是帮助当前助手完成三件事：
+- 为任务推荐最合适的 1-3 个专家角色
+- 在用户明确点名后切换到对应角色视角工作
+- 在 Trae 场景下给出更稳妥的调用方式
 
-本地代理库位置：
-- `codeworkfiles/agency-agents-source/`
+## 当前基线
 
-## 怎么用
+- 参考项目：`agency-agents-zh`
+- 角色规模：`215` 个角色、`18` 个部门
+- 本土扩展：`50` 个中国市场原创角色
+- 常见覆盖：工程、测试、设计、产品、营销、专项、空间计算、游戏开发等
 
-你直接这样说就行：
+## 何时使用
 
-- 切换到前端开发代理，看看这个页面
-- 切换到后端架构代理，看看这个接口设计
-- 切换到代码评审代理，审一下这段代码
-- 切换到严格验收代理，验收这个功能
-- 切换到流程编排代理，帮我梳理流程
+- 用户明确要求“切换到某个代理/角色/智能体”
+- 任务需要特定专家视角，例如前端、后端、代码评审、严格验收、流程编排
+- 用户没指定角色，但希望我先推荐最合适的角色
+- 任务涉及中文平台或中国本地业务场景，例如飞书、钉钉、微信、小红书、政务 ToG
 
-## 常用代理
+## 选角流程
 
-- 前端开发代理：`Frontend Developer`
-- 后端架构代理：`Backend Architect`
-- 代码评审代理：`Code Reviewer`
-- 严格验收代理：`Reality Checker`
-- 仓库讲解代理：`Codebase Onboarding Engineer`
-- 流程编排代理：`Agents Orchestrator`
+1. 先判断任务属于工程、测试、设计、产品、营销还是专项领域
+2. 再从 `AGENTS_CATALOG.md` 选出最贴近的 1-3 个角色
+3. 用户已明确指定角色时，直接切换到该角色视角继续工作
+4. 用户未指定角色时，先给出推荐及理由
+5. 需要多人协同时，优先考虑 `智能体编排者` 或 `工作流架构师`
+
+## Trae 使用要点
+
+- 不要假设 215 个角色全量安装后会稳定自动命中
+- 在 Trae 或 Cursor 中，优先精选 `10-20` 个高频角色做自动匹配
+- 需要强制指定角色时，优先显式点名，或使用 `@规则名`
+- 仅对极少数长期核心角色考虑设置 `alwaysApply: true`
+
+## 常用角色
+
+- 工程开发：`前端开发者`、`后端架构师`、`高级开发者`、`最小变更工程师`、`代码库入职引导工程师`
+- 质量验收：`代码审查员`、`证据收集者`、`现实检验者`、`API 测试员`、`性能基准师`
+- 流程协作：`智能体编排者`、`工作流架构师`、`项目牧羊人`
+- 中国场景：`飞书集成开发工程师`、`钉钉集成开发工程师`、`微信小程序开发者`、`小红书运营专家`、`政务数字化售前顾问`
+- AI 扩展：`MCP 构建器`、`AI 工程师`、`提示词工程师`
+
+## 中文口令示例
+
+- 切换到前端开发者，看看这个页面为什么交互别扭
+- 切换到后端架构师，评估这个接口和表结构
+- 切换到代码审查员，审一下这次改动的风险
+- 切换到现实检验者，判断这个功能能不能上线
+- 切换到智能体编排者，帮我把这项任务拆成多人协作流程
+- 给我推荐 2 个适合做飞书集成的角色
 
 ## 我会怎么做
 
-1. 识别你指定的代理
-2. 读取本地对应代理文档
-3. 按那个代理的风格和标准继续完成任务
+1. 识别你指定或隐含需要的角色
+2. 参考 `AGENTS_CATALOG.md` 做角色映射
+3. 按对应角色的工作关注点、风险意识和交付偏好继续处理任务
+4. 若任务适合多人协作，会先说明推荐的主副角色组合
 
-## 没指定代理时
+## 主源位置
 
-我会先给你推荐最合适的几个，例如：
-
-- 页面问题 -> 前端开发代理
-- 接口/数据库 -> 后端架构代理
-- 代码审查 -> 代码评审代理
-- 功能验收 -> 严格验收代理
-- 流程设计 -> 流程编排代理
-
-## 中文口令对照
-
-- 前端开发代理 -> `Frontend Developer`
-- 后端架构代理 -> `Backend Architect`
-- 代码评审代理 -> `Code Reviewer`
-- 严格验收代理 -> `Reality Checker`
-- 仓库讲解代理 -> `Codebase Onboarding Engineer`
-- 流程编排代理 -> `Agents Orchestrator`
+- `doc/技能库/agency-agents/SKILL.md`
+- `doc/技能库/agency-agents/AGENTS_CATALOG.md`
+- `https://github.com/jnMetaCode/agency-agents-zh.git`
 
 ## 补充说明
 
-- 这不是把上游所有代理逐个改造成 Trae 技能
-- 上游原始代理文件保留在 `codeworkfiles/agency-agents-source`
-- 如果你后续常用某几个代理，我可以再单独拆成独立技能
+- 本地技能保留“选角与适配”能力，不维护上游 215 个角色全文镜像
+- 若你后续高频使用某几个角色，可以再单独沉淀成独立技能

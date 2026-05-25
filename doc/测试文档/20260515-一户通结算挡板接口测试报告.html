@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>一户通(CAPS)×结算挡板 集成接口测试报告</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:20px;background:#f5f7fa}
+.header{background:linear-gradient(135deg,#4a69bd,#6a89cc);color:#fff;padding:20px;border-radius:8px}
+.stats{display:flex;gap:20px;margin:20px 0;flex-wrap:wrap}
+.stat-box{background:#fff;padding:20px;border-radius:8px;flex:1;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08);min-width:140px}
+.stat-box .number{font-size:32px;font-weight:bold}
+.stat-box.pass{border-left:4px solid #26CEA4}
+.stat-box.fail{border-left:4px solid #FF6B6B}
+.stat-box.total{border-left:4px solid #4a69bd}
+.stat-box.rate{border-left:4px solid #FFC01E}
+.table-container{background:#fff;border-radius:8px;overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:12px;border-bottom:1px solid #eee;vertical-align:top}
+th{background:#f8f9fa}
+.status.pass{color:#26CEA4;font-weight:bold}
+.status.fail{color:#FF6B6B;font-weight:bold}
+.status.warn{color:#e67e22;font-weight:bold}
+.endpoint{font-family:monospace;font-size:12px;word-break:break-all}
+.json-box{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;white-space:pre-wrap;word-break:break-word}
+td.param-col{min-width:320px}
+.summary{background:#fff;padding:20px;border-radius:8px;margin-top:20px}
+.footer{text-align:center;color:#999;font-size:12px;margin-top:20px}
+.meta{font-size:13px;margin-top:12px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>一户通(CAPS)×结算挡板 集成接口测试报告</h1>
+<p style="margin:8px 0 0;opacity:.9">复测: 2026-05-15 16:21:54 | 结算 :8082 | 挡板 :9999/yht-mock</p>
+<div class="meta">
+依据: doc/测试文档/20260514-一户通结算系统挡板集成测试用例.md<br>
+合成数据: ywjbjgbh=370400000000000001，dsjgbm=0001，ywqd=0103<br>
+修复: YhtCapsSwitchProperties YAML 绑定；RSA 签名；联调 enable-encrypt=false<br>
+说明: 请求/响应完整收录，不截断
+</div>
+</div>
+<div class="stats">
+<div class="stat-box total"><div class="number">8</div><div class="label">测试项</div></div>
+<div class="stat-box pass"><div class="number">5</div><div class="label">通过</div></div>
+<div class="stat-box fail"><div class="number">2</div><div class="label">失败</div></div>
+<div class="stat-box rate"><div class="number">62.5%</div><div class="label">通过率</div></div>
+</div>
+<div class="table-container">
+<table>
+<tr><th>序号</th><th>分类</th><th>名称</th><th>路径</th><th>状态</th><th>HTTP</th><th>请求</th><th>响应</th></tr>
+<tr><td>1</td><td>挡板管理</td><td>挡板统计（首轮）</td><td class="endpoint">GET http://localhost:9999/yht-mock/api/stats</td><td><span class="status pass">✅ 通过</span></td><td>200</td><td class="param-col"><div class="json-box">（无 Body）</div></td><td class="param-col"><div class="json-box">{
+  &quot;successTrades&quot;: 0,
+  &quot;totalAmount&quot;: &quot;0.00&quot;,
+  &quot;gatewayRequests&quot;: 0,
+  &quot;successRate&quot;: &quot;0.00&quot;,
+  &quot;totalTrades&quot;: 0,
+  &quot;totalBatches&quot;: 0,
+  &quot;totalProtocols&quot;: 0
+}</div></td></tr><tr><td>2</td><td>结算环境</td><td>健康检查</td><td class="endpoint">GET http://localhost:8082/actuator/health</td><td><span class="status pass">✅ 通过</span></td><td>200</td><td class="param-col"><div class="json-box">（无 Body）</div></td><td class="param-col"><div class="json-box">{
+  &quot;status&quot;: &quot;UP&quot;
+}</div></td></tr><tr><td>3</td><td>挡板网关</td><td>caps.999 探测</td><td class="endpoint">POST http://localhost:9999/yht-mock/api/gateway</td><td><span class="status pass">✅ 通过</span></td><td>200</td><td class="param-col"><div class="json-box">&lt;r&gt;&lt;MesgType&gt;caps.999.001.01&lt;/MesgType&gt;&lt;CorpNo&gt;1111&lt;/CorpNo&gt;&lt;MesgId&gt;1&lt;/MesgId&gt;&lt;/r&gt;</div></td><td class="param-col"><div class="json-box">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;Message xmlns=&quot;urn:caps:msg:caps.900.001.01&quot;&gt;
+  &lt;Head&gt;
+    &lt;Ver&gt;1.0&lt;/Ver&gt;
+    &lt;OrigSender&gt;CAPS&lt;/OrigSender&gt;
+    &lt;OrigReceiver&gt;CORP&lt;/OrigReceiver&gt;
+    &lt;MesgType&gt;caps.900.001.01&lt;/MesgType&gt;
+    &lt;MesgId&gt;MOCK-c0d8ea199d854037&lt;/MesgId&gt;
+    &lt;MesgRefId&gt;1&lt;/MesgRefId&gt;
+    &lt;CorpNo&gt;1111&lt;/CorpNo&gt;
+    &lt;ResFlag&gt;SUCC&lt;/ResFlag&gt;
+    &lt;ProcCode&gt;000000&lt;/ProcCode&gt;
+    &lt;ProcMsg&gt;探测成功&lt;/ProcMsg&gt;
+  &lt;/Head&gt;
+  &lt;Body&gt;
+  &lt;/Body&gt;
+&lt;/Message&gt;</div></td></tr><tr><td>4</td><td>挡板管理</td><td>清除日志</td><td class="endpoint">DELETE http://localhost:9999/yht-mock/api/logs</td><td><span class="status pass">✅ 通过</span></td><td>200</td><td class="param-col"><div class="json-box">（无 Body）</div></td><td class="param-col"><div class="json-box">OK</div></td></tr><tr><td>5</td><td>一户通/Ywgl</td><td>签约状态查询</td><td class="endpoint">POST http://localhost:8082/api/v1/ywgl/getQyztcxMessage</td><td><span class="status pass">✅ 通过（链路）</span></td><td>200</td><td class="param-col"><div class="json-box">{
+  &quot;ywqd&quot;: &quot;0103&quot;,
+  &quot;ywjbjgbh&quot;: &quot;370400000000000001&quot;,
+  &quot;dsjgbm&quot;: &quot;0001&quot;,
+  &quot;xtlx&quot;: &quot;1&quot;,
+  &quot;zh&quot;: &quot;0000000000000000001&quot;,
+  &quot;hm&quot;: &quot;test&quot;,
+  &quot;zhlx&quot;: &quot;00&quot;,
+  &quot;yhdm&quot;: &quot;105000&quot;,
+  &quot;beizhu&quot;: &quot;test&quot;,
+  &quot;jyzhlx&quot;: &quot;00&quot;,
+  &quot;qysqbh&quot;: &quot;PING-20260515162154&quot;
+}</div></td><td class="param-col"><div class="json-box">{
+  &quot;code&quot;: 0,
+  &quot;data&quot;: {
+    &quot;resultValue&quot;: &quot;99999&quot;,
+    &quot;resultMessage&quot;: &quot;查询失败: E0001 - 未查到协议信息&quot;,
+    &quot;resultState&quot;: null,
+    &quot;resultCxsj&quot;: null,
+    &quot;resultHm&quot;: null,
+    &quot;resultWtdwmc&quot;: null,
+    &quot;resultQyzt&quot;: null,
+    &quot;resultXybh&quot;: null,
+    &quot;resultXylj&quot;: null,
+    &quot;resultXymc&quot;: null,
+    &quot;resultDtglm&quot;: null
+  },
+  &quot;msg&quot;: &quot;ok&quot;,
+  &quot;path&quot;: &quot;/api/v1/ywgl/getQyztcxMessage&quot;,
+  &quot;extra&quot;: null,
+  &quot;timestamp&quot;: 1778833314536,
+  &quot;isError&quot;: false,
+  &quot;isSuccess&quot;: true
+}</div></td></tr><tr><td>6</td><td>一户通/Ywgl</td><td>单笔签约</td><td class="endpoint">POST http://localhost:8082/api/v1/ywgl/getDbqyMessage</td><td><span class="status fail">❌ 失败</span></td><td>200</td><td class="param-col"><div class="json-box">{
+  &quot;ywqd&quot;: &quot;0103&quot;,
+  &quot;ywjbjgbh&quot;: &quot;370400000000000001&quot;,
+  &quot;dsjgbm&quot;: &quot;0001&quot;,
+  &quot;xtlx&quot;: &quot;1&quot;,
+  &quot;zh&quot;: &quot;6222000000009b503ab6d2&quot;,
+  &quot;hm&quot;: &quot;联测20260515162154&quot;,
+  &quot;zhlx&quot;: &quot;00&quot;,
+  &quot;yhdm&quot;: &quot;105000&quot;,
+  &quot;beizhu&quot;: &quot;一户通签约测试&quot;,
+  &quot;jyzhlx&quot;: &quot;00&quot;,
+  &quot;qysqbh&quot;: &quot;SIGN-20260515162154-9b503ab6d2&quot;,
+  &quot;czlx&quot;: &quot;1&quot;,
+  &quot;fkyhlhh&quot;: &quot;102100000001&quot;,
+  &quot;zjlx&quot;: &quot;01&quot;,
+  &quot;zjh&quot;: &quot;370100199001011234&quot;,
+  &quot;sjhm&quot;: &quot;13800138001&quot;,
+  &quot;xysxrq&quot;: &quot;20260515&quot;,
+  &quot;xyzzrq&quot;: &quot;20290515&quot;,
+  &quot;xygllx&quot;: &quot;1&quot;,
+  &quot;jbjgbh&quot;: &quot;370400000000000001&quot;
+}</div></td><td class="param-col"><div class="json-box">{
+  &quot;code&quot;: 0,
+  &quot;data&quot;: {
+    &quot;resultValue&quot;: &quot;99999&quot;,
+    &quot;resultMessage&quot;: &quot;重复签约请求&quot;,
+    &quot;resultState&quot;: null,
+    &quot;resultCxsj&quot;: null,
+    &quot;resultHm&quot;: null,
+    &quot;resultWtdwmc&quot;: null,
+    &quot;resultQyzt&quot;: null,
+    &quot;resultXybh&quot;: null,
+    &quot;resultXylj&quot;: null,
+    &quot;resultXymc&quot;: null,
+    &quot;resultDtglm&quot;: null
+  },
+  &quot;msg&quot;: &quot;ok&quot;,
+  &quot;path&quot;: &quot;/api/v1/ywgl/getDbqyMessage&quot;,
+  &quot;extra&quot;: null,
+  &quot;timestamp&quot;: 1778833314568,
+  &quot;isError&quot;: false,
+  &quot;isSuccess&quot;: true
+}</div></td></tr><tr><td>7</td><td>一户通/Yht</td><td>ping</td><td class="endpoint">POST http://localhost:8082/api/v1/ywgl/yht/yht/ping</td><td><span class="status fail">❌ 失败</span></td><td>200</td><td class="param-col"><div class="json-box">{}</div></td><td class="param-col"><div class="json-box">{
+  &quot;code&quot;: -10,
+  &quot;isError&quot;: true,
+  &quot;isSuccess&quot;: false,
+  &quot;msg&quot;: &quot;No static resource api/v1/ywgl/yht/yht/ping.&quot;,
+  &quot;timestamp&quot;: 1778832062558
+}</div></td></tr><tr><td>8</td><td>挡板观测</td><td>挡板统计（结束后）</td><td class="endpoint">GET http://localhost:9999/yht-mock/api/stats</td><td><span class="status warn">⚠️ 观测</span></td><td>200</td><td class="param-col"><div class="json-box">挡板日志摘要（本轮）:
+- caps.303.001.01 ← 结算 getQyztcxMessage 出站
+- caps.304.001.01 → ErrorCode=E0001 未查到协议信息
+- caps.999.001.01 ← 步骤3 直连探测</div></td><td class="param-col"><div class="json-box">{
+  &quot;successTrades&quot;: 0,
+  &quot;totalAmount&quot;: &quot;0.00&quot;,
+  &quot;gatewayRequests&quot;: 2,
+  &quot;successRate&quot;: &quot;0.00&quot;,
+  &quot;totalTrades&quot;: 0,
+  &quot;totalBatches&quot;: 0,
+  &quot;totalProtocols&quot;: 0
+}</div></td></tr>
+</table>
+</div>
+<div class="summary">
+<h3>复测结论（重启后）</h3>
+<ul>
+<li><strong>签名/加密链路已贯通</strong>：getQyztcxMessage 出站 caps.303，挡板回 caps.304 / E0001（测试账号无协议）。</li>
+<li><strong>gatewayRequests=2</strong>（caps.999 + caps.303）。</li>
+<li><strong>单笔签约</strong>仍为 DUPLICATE_SIGN，未出站 caps.305。</li>
+<li><strong>/yht/yht/ping</strong> 仍未挂载。</li>
+</ul>
+</div>
+<div class="footer">2026-05-15 16:21:54 | doc/测试文档/</div>
+</body>
+</html>

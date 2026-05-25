@@ -12,20 +12,25 @@ description: Ensure correct SDK toolchain via vfox (JDK/Node/Maven) before build
 ## Backend (Java) standard workflow
 1. Switch JDK to the required version:
    - `vfox use java@17.0.2+8`
-2. Verify:
+   - `vfox use maven@3.9.14`
+2. **Critical**: Explicitly load vfox environment variables (required for Trae agent):
+   - `eval "$(vfox env -s bash)"`
+3. Verify:
    - `java -version` (must show 17.x)
    - `mvn -v` (must show Java 17)
-3. Build with Maven:
+4. Build with Maven:
    - Prefer module build: `mvn -pl <module> -DskipTests clean package`
    - Or reactor build: `mvn -DskipTests clean package`
 
 ## Node.js (when a frontend/tooling build is involved)
 1. Switch Node.js if the project specifies a version:
    - `vfox use nodejs@<version>`
-2. Verify:
+2. **Critical**: Explicitly load vfox environment variables (required for Trae agent):
+   - `eval "$(vfox env -s bash)"`
+3. Verify:
    - `node -v`
    - `npm -v` / `pnpm -v` (as applicable)
-3. Run the project build command.
+4. Run the project build command.
 
 ## Failure handling checklist (toolchain-related)
 - If compilation fails with “unsupported class version”, “release version”, or “invalid target release”:

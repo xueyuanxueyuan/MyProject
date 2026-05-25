@@ -15,6 +15,7 @@ description: "中书省(Planning)任务拆解技能。Invoke after triage when a
    - 每一步必须遵循“单一职责原则”。
    - 必须在最后一步安排“礼部”（生成文档留痕）。
 3. **输出结构化方案**：在对话中展示拟定的“多步执行计划”，并明确标注每一步属于“六部”中的哪一部执行。
+4. **强制回显规范块**：调用本技能后，必须在紧随其后的对用户可见回复中，显式输出下方 `输出规范` 中的完整 Markdown 规范块；不得仅以自然语言概述替代。
 
 ## 输出规范：
 ```markdown
@@ -25,3 +26,14 @@ description: "中书省(Planning)任务拆解技能。Invoke after triage when a
 ...
 *(此方案已转呈门下省 `edict-review` 审议)*
 ```
+
+## 本地补充
+- 计划中除六部分工外，还应尽量显式写清执行模式，例如 `executing-plans`、`subagent-driven-development` 或并行派发。
+- 技能中的 checklist、阶段门禁和检查点，应继续按本地总控要求落到可验证的 Todo 步骤中。
+- 仅成功调用技能工具，不代表已完成中书省环节；若未在对用户可见消息中回显 `### 📜 中书省草拟计划 (Planning)` 规范块，则视为未按 Edict 规范执行。
+- 允许在规范块之后追加简短补充说明，但不得省略、改写或弱化该规范块。
+
+## 主源位置
+- `doc/技能库/edict-planning/SKILL.md`
+- `.trae/rules/edict-workflow.md`
+- `CLAUDE.md`
