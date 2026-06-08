@@ -1,0 +1,397 @@
+{
+  "source": "/home/source/.local/share/tirith/log.jsonl",
+  "board_hint": "jshs-v3",
+  "recovered_at": "2026-06-02",
+  "note": "Partial recovery from tirith command audit log; full kanban.db/state.db not found",
+  "create_titles": [
+    {
+      "ts": "2026-05-20T08:28:41.531695238+00:00",
+      "title": "T4.1-Kafka消息发送封装",
+      "cmd": "hermes kanban create 'T4.1-Kafka消息发送封装' --assignee coder --board jsh[...redacted 349 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:28:41.969009150+00:00",
+      "title": "T4.2-Redis缓存配置",
+      "cmd": "hermes kanban create 'T4.2-Redis缓存配置' --assignee coder --board jshs-v3 -[...redacted 273 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:28:42.410406115+00:00",
+      "title": "T4.3-MyBatis+达梦自动配置",
+      "cmd": "hermes kanban create 'T4.3-MyBatis+达梦自动配置' --assignee default --boar[...redacted 318 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:28:42.849714464+00:00",
+      "title": "T5.1-PaymentController",
+      "cmd": "hermes kanban create 'T5.1-PaymentController' --assignee coder --board jshs-v3  [...redacted 256 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:28:43.290762796+00:00",
+      "title": "T5.2-CollectionController",
+      "cmd": "hermes kanban create 'T5.2-CollectionController' --assignee coder --board jshs-v[...redacted 254 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:28:43.728568152+00:00",
+      "title": "T5.3-TransferAccountController",
+      "cmd": "hermes kanban create 'T5.3-TransferAccountController' --assignee coder --board j[...redacted 321 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:28:44.171982854+00:00",
+      "title": "T5.4-全局配置+异常+文档",
+      "cmd": "hermes kanban create 'T5.4-全局配置+异常+文档' --assignee default --boar[...redacted 385 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:28:44.610425880+00:00",
+      "title": "T6.1-Gateway路由配置",
+      "cmd": "hermes kanban create 'T6.1-Gateway路由配置' --assignee default --board jshs-[...redacted 246 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:28:45.051239357+00:00",
+      "title": "T6.2-AuthGlobalFilter",
+      "cmd": "hermes kanban create 'T6.2-AuthGlobalFilter' --assignee coder --board jshs-v3 --[...redacted 240 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:28:45.492120630+00:00",
+      "title": "T6.3-限流配置",
+      "cmd": "hermes kanban create 'T6.3-限流配置' --assignee default --board jshs-v3 --bo[...redacted 213 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:28:58.210294688+00:00",
+      "title": "T4.1-Kafka消息发送封装",
+      "cmd": "hermes kanban create 'T4.1-Kafka消息发送封装' --assignee coder --board jsh[...redacted 23 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:30:21.842724701+00:00",
+      "title": "T4.1-Kafka消息发送封装",
+      "cmd": "hermes kanban create 'T4.1-Kafka消息发送封装' --assignee coder --json --bo[...redacted 336 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:30:22.282559940+00:00",
+      "title": "T4.2-Redis缓存配置",
+      "cmd": "hermes kanban create 'T4.2-Redis缓存配置' --assignee coder --json --body '[...redacted 295 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:30:22.724434501+00:00",
+      "title": "T4.3-MyBatis+达梦数据库自动配置",
+      "cmd": "hermes kanban create 'T4.3-MyBatis+达梦数据库自动配置' --assignee defau[...redacted 352 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:30:23.166540446+00:00",
+      "title": "T5.1-PaymentController付款API",
+      "cmd": "hermes kanban create 'T5.1-PaymentController付款API' --assignee coder --json -[...redacted 407 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:30:23.607962972+00:00",
+      "title": "T5.2-CollectionController收款API",
+      "cmd": "hermes kanban create 'T5.2-CollectionController收款API' --assignee coder --jso[...redacted 408 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:30:24.052245590+00:00",
+      "title": "T5.3-TransferAccountReconController",
+      "cmd": "hermes kanban create 'T5.3-TransferAccountReconController' --assignee coder --js[...redacted 458 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:30:24.497471014+00:00",
+      "title": "T5.4-全局配置+异常+Knife4j文档",
+      "cmd": "hermes kanban create 'T5.4-全局配置+异常+Knife4j文档' --assignee default[...redacted 508 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:30:24.963154805+00:00",
+      "title": "T6.1-Gateway路由配置",
+      "cmd": "hermes kanban create 'T6.1-Gateway路由配置' --assignee default --json --body[...redacted 286 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:30:25.405153618+00:00",
+      "title": "T6.2-AuthGlobalFilter鉴权",
+      "cmd": "hermes kanban create 'T6.2-AuthGlobalFilter鉴权' --assignee coder --json --bod[...redacted 350 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:30:25.848090078+00:00",
+      "title": "T6.3-限流+全项目编译验证",
+      "cmd": "hermes kanban create 'T6.3-限流+全项目编译验证' --assignee default --js[...redacted 288 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:30:32.635355038+00:00",
+      "title": "T4.1-Kafka消息发送封装",
+      "cmd": "hermes kanban create 'T4.1-Kafka消息发送封装' --assignee coder --body '在[...redacted 91 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:30:43.959098322+00:00",
+      "title": "T4.2-Redis缓存配置",
+      "cmd": "hermes kanban create 'T4.2-Redis缓存配置' --assignee coder --body '在 infra[...redacted 129 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:30:45.404479082+00:00",
+      "title": "T4.3-MyBatis+达梦自动配置",
+      "cmd": "hermes kanban create 'T4.3-MyBatis+达梦自动配置' --assignee default --body[...redacted 194 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:31:05.904349737+00:00",
+      "title": "T5.2-CollectionController收款API",
+      "cmd": "hermes kanban create 'T5.2-CollectionController收款API' --assignee coder --par[...redacted 305 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:31:07.351630724+00:00",
+      "title": "T5.3-TransferAccountReconVoucherController",
+      "cmd": "hermes kanban create 'T5.3-TransferAccountReconVoucherController' --assignee cod[...redacted 240 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:31:24.349621027+00:00",
+      "title": "T5.4-全局配置+异常+Knife4j",
+      "cmd": "hermes kanban create 'T5.4-全局配置+异常+Knife4j' --assignee default --par[...redacted 218 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:31:25.794985204+00:00",
+      "title": "T6.1-Gateway路由配置",
+      "cmd": "hermes kanban create 'T6.1-Gateway路由配置' --assignee default --body '在 g[...redacted 145 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:31:27.238986551+00:00",
+      "title": "T6.2-AuthGlobalFilter鉴权",
+      "cmd": "hermes kanban create 'T6.2-AuthGlobalFilter鉴权' --assignee coder --body '在 [...redacted 153 bytes]"
+    },
+    {
+      "ts": "2026-05-20T08:31:28.693382351+00:00",
+      "title": "T6.3-限流+编译验证",
+      "cmd": "hermes kanban create 'T6.3-限流+编译验证' --assignee default --body '1. ga[...redacted 123 bytes]"
+    },
+    {
+      "ts": "2026-06-02T04:42:02.130188057+00:00",
+      "title": "R69-0-复核付款结果查询日志治理现状",
+      "cmd": "hermes kanban create 'R69-0-复核付款结果查询日志治理现状' --assign[...redacted 1401 bytes]"
+    },
+    {
+      "ts": "2026-06-02T04:48:23.747274182+00:00",
+      "title": "R70-0-复核转账创建成功日志治理现状",
+      "cmd": "hermes kanban create 'R70-0-复核转账创建成功日志治理现状' --assign[...redacted 1264 bytes]"
+    },
+    {
+      "ts": "2026-06-02T04:56:26.145901823+00:00",
+      "title": "R71-0-复核对账创建成功日志治理现状",
+      "cmd": "hermes kanban create 'R71-0-复核对账创建成功日志治理现状' --assign[...redacted 1242 bytes]"
+    }
+  ],
+  "task_ids": [
+    "t_06e58c3a",
+    "t_44081346",
+    "t_54b4e354",
+    "t_73f7a38d",
+    "t_7968ee7f",
+    "t_875f50e0",
+    "t_8c5ce1fd",
+    "t_8cc1499c",
+    "t_966ae42c",
+    "t_9a22e70d",
+    "t_9e1f0da5",
+    "t_9fa479a2",
+    "t_9fd15450",
+    "t_a2a14cc0",
+    "t_b486c893",
+    "t_b5953a05",
+    "t_b723c82b",
+    "t_bb8ae734",
+    "t_bcd47a25",
+    "t_c01c6f94",
+    "t_cfe02b05",
+    "t_d5a754f4",
+    "t_f4ee130b",
+    "t_f6710462",
+    "t_f9578a0f"
+  ],
+  "task_events": {
+    "t_9e1f0da5": [
+      {
+        "ts": "2026-05-20T02:40:48.060720637+00:00",
+        "cmd": "export HERMES_KANBAN_BOARD=jshs-v3 && hermes kanban claim t_9e1f0da5 2>&1"
+      },
+      {
+        "ts": "2026-05-20T07:13:03.529513717+00:00",
+        "cmd": "hermes kanban show t_9e1f0da5 2>&1"
+      },
+      {
+        "ts": "2026-05-20T07:14:26.197088993+00:00",
+        "cmd": "hermes kanban reclaim t_9e1f0da5 2>&1"
+      },
+      {
+        "ts": "2026-05-20T07:15:03.948868726+00:00",
+        "cmd": "hermes kanban claim t_9e1f0da5 2>&1"
+      },
+      {
+        "ts": "2026-05-20T07:20:56.905139778+00:00",
+        "cmd": "hermes kanban complete t_9e1f0da5 --summary \"付款域+收款域领域模型完[...redacted 305 bytes]"
+      }
+    ],
+    "t_9fd15450": [
+      {
+        "ts": "2026-05-20T07:13:04.971369118+00:00",
+        "cmd": "hermes kanban show t_9fd15450 2>&1"
+      },
+      {
+        "ts": "2026-05-20T07:14:24.744255677+00:00",
+        "cmd": "hermes kanban archive t_9fd15450 2>&1"
+      }
+    ],
+    "t_875f50e0": [
+      {
+        "ts": "2026-05-20T07:13:06.420247325+00:00",
+        "cmd": "hermes kanban show t_875f50e0 2>&1"
+      },
+      {
+        "ts": "2026-05-20T07:23:20.148626386+00:00",
+        "cmd": "hermes kanban complete t_875f50e0 --summary \"转账/凭证/账户/对账域完[...redacted 228 bytes]"
+      }
+    ],
+    "t_cfe02b05": [
+      {
+        "ts": "2026-05-20T07:13:40.957015038+00:00",
+        "cmd": "hermes kanban show t_cfe02b05 2>&1; echo \"---\"; hermes kanban show t_7968ee7f 2>[...redacted 98 bytes]"
+      },
+      {
+        "ts": "2026-05-20T08:26:59.008091829+00:00",
+        "cmd": "hermes kanban complete t_cfe02b05 --summary \"T3完成: 6个Entity+6个Mapper+6[...redacted 135 bytes]"
+      }
+    ],
+    "t_7968ee7f": [
+      {
+        "ts": "2026-05-20T07:13:40.957015038+00:00",
+        "cmd": "hermes kanban show t_cfe02b05 2>&1; echo \"---\"; hermes kanban show t_7968ee7f 2>[...redacted 98 bytes]"
+      },
+      {
+        "ts": "2026-05-20T08:27:29.776301108+00:00",
+        "cmd": "hermes kanban archive t_7968ee7f 2>&1 && hermes kanban archive t_b723c82b 2>&1 &[...redacted 68 bytes]"
+      }
+    ],
+    "t_b723c82b": [
+      {
+        "ts": "2026-05-20T08:27:29.776301108+00:00",
+        "cmd": "hermes kanban archive t_7968ee7f 2>&1 && hermes kanban archive t_b723c82b 2>&1 &[...redacted 68 bytes]"
+      }
+    ],
+    "t_c01c6f94": [
+      {
+        "ts": "2026-05-20T08:32:18.178688379+00:00",
+        "cmd": "hermes kanban archive t_c01c6f94"
+      }
+    ],
+    "t_73f7a38d": [
+      {
+        "ts": "2026-05-20T08:32:18.620149209+00:00",
+        "cmd": "hermes kanban archive t_73f7a38d"
+      }
+    ],
+    "t_b486c893": [
+      {
+        "ts": "2026-05-20T08:32:19.056689712+00:00",
+        "cmd": "hermes kanban archive t_b486c893"
+      }
+    ],
+    "t_bb8ae734": [
+      {
+        "ts": "2026-05-20T08:32:19.495433595+00:00",
+        "cmd": "hermes kanban archive t_bb8ae734"
+      }
+    ],
+    "t_f9578a0f": [
+      {
+        "ts": "2026-05-20T08:32:19.936215287+00:00",
+        "cmd": "hermes kanban archive t_f9578a0f"
+      }
+    ],
+    "t_44081346": [
+      {
+        "ts": "2026-05-20T08:32:20.379920485+00:00",
+        "cmd": "hermes kanban archive t_44081346"
+      }
+    ],
+    "t_54b4e354": [
+      {
+        "ts": "2026-05-20T08:32:20.819294823+00:00",
+        "cmd": "hermes kanban archive t_54b4e354"
+      }
+    ],
+    "t_f4ee130b": [
+      {
+        "ts": "2026-05-20T08:32:21.257284027+00:00",
+        "cmd": "hermes kanban archive t_f4ee130b"
+      }
+    ],
+    "t_d5a754f4": [
+      {
+        "ts": "2026-05-20T08:32:21.699723815+00:00",
+        "cmd": "hermes kanban archive t_d5a754f4"
+      }
+    ],
+    "t_a2a14cc0": [
+      {
+        "ts": "2026-05-20T08:32:22.137444576+00:00",
+        "cmd": "hermes kanban archive t_a2a14cc0"
+      }
+    ],
+    "t_9fa479a2": [
+      {
+        "ts": "2026-05-20T08:35:08.623820819+00:00",
+        "cmd": "cd /home/source/Jetbrains/Probject/Gjj && hermes kanban complete t_9fa479a2"
+      }
+    ],
+    "t_b5953a05": [
+      {
+        "ts": "2026-05-20T08:37:26.938422279+00:00",
+        "cmd": "cd /home/source/Jetbrains/Probject/Gjj && hermes kanban complete t_b5953a05 2>&1"
+      }
+    ],
+    "t_966ae42c": [
+      {
+        "ts": "2026-05-20T08:38:45.588466577+00:00",
+        "cmd": "hermes kanban complete t_966ae42c --summary \"T4.3完成: MyBatisConfig(@MapperSc[...redacted 159 bytes]"
+      }
+    ],
+    "t_8cc1499c": [
+      {
+        "ts": "2026-05-20T08:44:21.684563547+00:00",
+        "cmd": "cd /home/source/Jetbrains/Probject/Gjj && hermes kanban complete t_8cc1499c 2>&1"
+      }
+    ],
+    "t_f6710462": [
+      {
+        "ts": "2026-05-20T08:44:42.574883889+00:00",
+        "cmd": "cd /home/source/Jetbrains/Probject/Gjj && hermes kanban complete t_f6710462 2>&1"
+      }
+    ],
+    "t_9a22e70d": [
+      {
+        "ts": "2026-05-20T08:46:26.681111851+00:00",
+        "cmd": "cd /home/source/Jetbrains/Probject/Gjj && hermes kanban complete t_9a22e70d 2>&1"
+      }
+    ],
+    "t_bcd47a25": [
+      {
+        "ts": "2026-05-20T08:47:15.259666272+00:00",
+        "cmd": "hermes kanban show t_bcd47a25 2>&1"
+      },
+      {
+        "ts": "2026-05-20T08:47:37.582797711+00:00",
+        "cmd": "hermes kanban unblock t_bcd47a25 2>&1"
+      },
+      {
+        "ts": "2026-05-20T08:47:46.714937617+00:00",
+        "cmd": "hermes kanban complete t_bcd47a25 --summary \"AuthGlobalFilter已创建: GlobalFi[...redacted 125 bytes]"
+      }
+    ],
+    "t_06e58c3a": [
+      {
+        "ts": "2026-06-02T04:46:30.905245959+00:00",
+        "cmd": "hermes kanban complete t_06e58c3a '已复核 YwglPaymentController#result 现状[...redacted 882 bytes]"
+      }
+    ],
+    "t_8c5ce1fd": [
+      {
+        "ts": "2026-06-02T08:36:20.721764413+00:00",
+        "cmd": "# Kanban blocked tasks details\nhermes kanban view t_8c5ce1fd 2>/dev/null | head [...redacted 67 bytes]"
+      }
+    ]
+  },
+  "stats": {
+    "create_titles": 33,
+    "task_ids": 25,
+    "log_entries": 103
+  }
+}

@@ -1,0 +1,2918 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>嘉兴市公积金资金预决算系统 - v11 (补齐增值收益分配原型)</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <style>
+    body { font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f2f5; height: 100vh; }
+    #app { height: 100vh; display: flex; }
+    .sidebar { width: 220px; background-color: #304156; color: #fff; display: flex; flex-direction: column; }
+    .sidebar .logo { height: 60px; line-height: 60px; text-align: center; font-size: 18px; font-weight: bold; background-color: #2b3643; }
+    .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .header { min-height: 60px; background-color: #fff; box-shadow: 0 1px 4px rgba(0, 21, 41, .08); display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; gap: 12px; flex-wrap: wrap; }
+    .header-title { font-size: 18px; font-weight: bold; }
+    .content-body { flex: 1; padding: 20px; overflow-y: auto; }
+    .box-card { background: #fff; padding: 20px; border-radius: 4px; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1); min-height: calc(100vh - 150px); }
+    .toolbar { margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-start; background: #f8f8f9; padding: 10px 12px; border-radius: 4px; gap: 12px; }
+    .toolbar-left { display: flex; flex-direction: column; gap: 8px; }
+    .toolbar-title { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .toolbar-meta { color: #666; font-size: 13px; display: flex; flex-wrap: wrap; gap: 14px; }
+    .formula-cell { background-color: #fdf5e6; color: #e6a23c; font-weight: bold; }
+    .readonly-cell { background-color: #f5f7fa; color: #909399; }
+    .el-table th { background-color: #f5f7fa !important; color: #333; }
+    .table-footer { margin-top: 20px; display: flex; justify-content: space-between; padding: 15px 30px; background-color: #f8f8f9; border: 1px solid #ebeef5; border-top: none; gap: 12px; flex-wrap: wrap; }
+    .signature-item { display: flex; align-items: center; }
+    .signature-item span { font-weight: bold; margin-right: 10px; color: #606266; }
+    .sub-tip { margin-bottom: 12px; color: #909399; font-size: 13px; }
+    .table-hint { margin-top: 10px; font-size: 12px; color: #909399; }
+    .ratio-text { color: #409eff; font-weight: 600; }
+    .empty-text { color: #c0c4cc; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="sidebar">
+      <div class="logo">预决算及执行系统</div>
+      <el-menu :default-active="activeMenu" background-color="#304156" text-color="#bfcbd9" active-text-color="#409EFF" @select="handleMenuSelect">
+        <el-menu-item index="zjsyys"><i class="el-icon-money"></i><span slot="title">资金使用预算</span></el-menu-item>
+        <el-menu-item index="ywszys"><i class="el-icon-wallet"></i><span slot="title">业务收支预算</span></el-menu-item>
+        <el-menu-item index="zjsyzx"><i class="el-icon-data-line"></i><span slot="title">资金使用执行</span></el-menu-item>
+        <el-menu-item index="ywszzx"><i class="el-icon-trend-charts"></i><span slot="title">业务收支执行</span></el-menu-item>
+        <el-menu-item index="gjsyjs"><i class="el-icon-document-checked"></i><span slot="title">归集使用决算</span></el-menu-item>
+        <el-menu-item index="ywszjs"><i class="el-icon-collection"></i><span slot="title">业务收支决算</span></el-menu-item>
+        <el-menu-item index="zzsyfp"><i class="el-icon-pie-chart"></i><span slot="title">增值收益分配</span></el-menu-item>
+        <el-menu-item index="kmgz"><i class="el-icon-s-custom"></i><span slot="title">扩面工作完成</span></el-menu-item>
+      </el-menu>
+    </div>
+
+    <div class="main-content">
+      <div class="header">
+        <div class="header-title">{{ menuTitles[activeMenu] }}</div>
+        <div>
+          <span style="font-size: 14px; margin-right: 10px; color: #606266;">当前角色身份：</span>
+          <el-select v-model="currentRole" size="small" placeholder="请选择角色" @change="handleRoleChange" style="width: 220px;">
+            <el-option v-for="role in roleOptions" :key="role.code" :label="role.label" :value="role.code"></el-option>
+          </el-select>
+        </div>
+      </div>
+
+      <div class="content-body">
+        <div class="box-card">
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <div class="toolbar-title">
+                <span style="font-weight:bold; font-size:16px;">{{ reportHeaderTitle }}</span>
+                <el-tag type="info" size="small">编号：{{ currentMeta.bbbh }}</el-tag>
+                <el-tag :type="currentStatusType" size="small">{{ currentMeta.bbztLabel }}</el-tag>
+                <el-tag v-if="isBudgetMenu" type="success" size="small">{{ activeBudgetTab === 'zb' ? '总表视图' : '附表视图' }}</el-tag>
+                <el-tag v-else-if="isYwszysMenu" type="success" size="small">{{ activeYwszysTab === 'zb' ? '总表视图' : '附表视图' }}</el-tag>
+                <el-tag v-else-if="isGjsyjsMenu" type="success" size="small">{{ activeGjsyjsTab === 'zb' ? '总表视图' : '附表视图' }}</el-tag>
+                <el-tag v-else-if="isYwszjsMenu" type="success" size="small">{{ activeYwszjsTab === 'zb' ? '总表视图' : '附表视图' }}</el-tag>
+                <el-tag v-else-if="isZzsyfpMenu" type="success" size="small">{{ activeZzsyfpTab === 'zb' ? '总表视图' : '附表视图' }}</el-tag>
+                <el-tag v-else-if="isZjsyzxMenu || isKmgzMenu" type="success" size="small">{{ currentRole === '330400' ? '单表审核视图' : '单表填报视图' }}</el-tag>
+              </div>
+              <div class="toolbar-meta">
+                <span>年度：{{ currentMeta.nd }}</span>
+                <span v-if="isZjsyzxMenu || isKmgzMenu">月份：{{ currentMeta.yf }}月</span>
+                <span>编制单位：{{ currentMeta.bzdw }}</span>
+                <span>当前角色：{{ currentRoleLabel }}</span>
+                <span v-if="isZjsyzxMenu || isKmgzMenu || isGjsyjsMenu || isYwszjsMenu || isZzsyfpMenu">最近取数：{{ currentMeta.qssj }}</span>
+                <span v-if="isKmgzMenu">截止日期：{{ currentMeta.jzrq }}</span>
+              </div>
+            </div>
+            <div>
+              <template v-if="showBranchButtons && isGjsyjsMenu">
+                <el-button type="primary" icon="el-icon-refresh" size="small" @click="handleGjsyjsFetch">同步来源</el-button>
+                <el-button type="primary" icon="el-icon-upload2" size="small" @click="handleGjsyjsSubmit">提交确认</el-button>
+              </template>
+              <template v-else-if="showBranchButtons && isYwszjsMenu">
+                <el-button type="primary" icon="el-icon-refresh" size="small" @click="handleYwszjsFetch">同步来源</el-button>
+                <el-button type="primary" icon="el-icon-upload2" size="small" @click="handleYwszjsSubmit">提交确认</el-button>
+              </template>
+              <template v-else-if="showBranchButtons && isZzsyfpMenu">
+                <el-button type="primary" icon="el-icon-refresh" size="small" @click="handleZzsyfpFetch">同步来源</el-button>
+                <el-button type="success" icon="el-icon-check" size="small" @click="handleZzsyfpSaveDraft">保存草稿</el-button>
+                <el-button type="primary" icon="el-icon-upload2" size="small" @click="handleZzsyfpSubmit">提交确认</el-button>
+              </template>
+              <template v-else-if="showBranchButtons && isKmgzMenu">
+                <el-button type="primary" icon="el-icon-refresh" size="small" @click="handleKmgzFetch">自动取数</el-button>
+                <el-button type="success" icon="el-icon-check" size="small" @click="handleKmgzSaveDraft">保存草稿</el-button>
+                <el-button type="primary" icon="el-icon-upload2" size="small" @click="handleKmgzSubmit">提交审核</el-button>
+              </template>
+              <template v-else-if="isGjsyjsMenu && currentRole === '330400'">
+                <el-button type="primary" icon="el-icon-check" size="small" @click="handleGjsyjsApprove">审核通过</el-button>
+                <el-button type="danger" icon="el-icon-close" size="small" @click="handleGjsyjsReject">退回</el-button>
+                <el-button type="warning" icon="el-icon-lock" size="small" @click="handleGjsyjsLock">锁定</el-button>
+                <el-button type="warning" icon="el-icon-download" size="small" @click="handleGjsyjsExport">导出完整报表</el-button>
+              </template>
+              <template v-else-if="isYwszjsMenu && currentRole === '330400'">
+                <el-button type="primary" icon="el-icon-check" size="small" @click="handleYwszjsApprove">审核通过</el-button>
+                <el-button type="danger" icon="el-icon-close" size="small" @click="handleYwszjsReject">退回</el-button>
+                <el-button type="warning" icon="el-icon-lock" size="small" @click="handleYwszjsLock">锁定</el-button>
+                <el-button type="warning" icon="el-icon-download" size="small" @click="handleYwszjsExport">导出完整报表</el-button>
+              </template>
+              <template v-else-if="isZzsyfpMenu && currentRole === '330400'">
+                <el-button type="primary" icon="el-icon-check" size="small" @click="handleZzsyfpApprove">审核通过</el-button>
+                <el-button type="danger" icon="el-icon-close" size="small" @click="handleZzsyfpReject">退回</el-button>
+                <el-button type="warning" icon="el-icon-lock" size="small" @click="handleZzsyfpLock">锁定</el-button>
+                <el-button type="warning" icon="el-icon-download" size="small" @click="handleZzsyfpExport">导出完整报表</el-button>
+              </template>
+              <template v-else-if="showBranchButtons">
+                <el-button v-if="isZjsyzxMenu" type="primary" icon="el-icon-refresh" size="small">自动取数</el-button>
+                <el-button type="success" icon="el-icon-check" size="small">保存草稿</el-button>
+                <el-button type="primary" icon="el-icon-upload2" size="small">提交审核</el-button>
+              </template>
+              <template v-else-if="isKmgzMenu && currentRole === '330400'">
+                <el-button type="primary" icon="el-icon-check" size="small" @click="handleKmgzApprove">审核通过</el-button>
+                <el-button type="danger" icon="el-icon-close" size="small" @click="handleKmgzReject">退回</el-button>
+                <el-button type="warning" icon="el-icon-lock" size="small" @click="handleKmgzLock">锁定</el-button>
+                <el-button type="warning" icon="el-icon-download" size="small" @click="handleKmgzExport">导出完整报表</el-button>
+              </template>
+              <template v-else-if="isZjsyzxMenu && currentRole === '330400'">
+                <el-button type="primary" icon="el-icon-check" size="small">审核通过</el-button>
+                <el-button type="danger" icon="el-icon-close" size="small">退回</el-button>
+                <el-button type="warning" icon="el-icon-lock" size="small">锁定</el-button>
+                <el-button type="warning" icon="el-icon-download" size="small">导出完整报表</el-button>
+              </template>
+              <template v-else>
+                <el-button type="primary" icon="el-icon-check" size="small">审核通过</el-button>
+                <el-button type="danger" icon="el-icon-close" size="small">退回</el-button>
+                <el-button v-if="isBudgetMenu || isYwszysMenu || isZjsyzxMenu" type="warning" icon="el-icon-lock" size="small">锁定</el-button>
+                <el-button type="warning" icon="el-icon-download" size="small">导出完整报表</el-button>
+              </template>
+            </div>
+          </div>
+
+          <el-alert
+            v-if="isBudgetMenu && currentRole === '330400' && activeBudgetTab === 'zb'"
+            title="当前为【市中心-总表】视角：总表业务值全部由附表汇总、上年预算和上年决算自动生成，仅用于审核和导出。"
+            type="warning"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isBudgetMenu && currentRole === '330400' && activeBudgetTab === 'fb'"
+            title="当前为【市中心-附表】视角：查看所有分中心明细来源，全市列自动汇总，所有机构列均只读。"
+            type="warning"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isBudgetMenu && currentRole !== '330400' && activeBudgetTab === 'fb'"
+            title="当前为【分中心-附表】视角：仅本机构列可编辑，全市列只读，公式项和自动带入项只读。"
+            type="success"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isBudgetMenu && currentRole !== '330400' && activeBudgetTab === 'zb'"
+            title="当前为【分中心-总表】视角：总表仅用于查看全市汇总结果，不允许直接补录业务值。"
+            type="info"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isYwszysMenu && currentRole === '330400' && activeYwszysTab === 'zb'"
+            title="当前为【市中心-总表】视角：业务收支预算总表全部由附表汇总、上年预算和上年决算自动生成，仅用于审核和导出。"
+            type="warning"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isYwszysMenu && currentRole === '330400' && activeYwszysTab === 'fb'"
+            title="当前为【市中心-附表】视角：查看所有分中心业务收支预算来源数据，全市列自动汇总，所有机构列均只读。"
+            type="warning"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isYwszysMenu && currentRole !== '330400' && activeYwszysTab === 'fb'"
+            title="当前为【分中心-附表】视角：仅本机构列可编辑，全市列只读，合计行自动计算，国债投资收入按不适用显示。"
+            type="success"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isYwszysMenu && currentRole !== '330400' && activeYwszysTab === 'zb'"
+            title="当前为【分中心-总表】视角：总表仅用于查看全市汇总结果，不允许直接补录业务值。"
+            type="info"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isGjsyjsMenu && currentRole === '330400' && activeGjsyjsTab === 'zb'"
+            title="当前为【市中心-总表】视角：总表的上年同期数、本年预算数和本年实绩数均由上年决算、本年预算和附表汇总自动生成，仅用于审核和导出。"
+            type="warning"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isGjsyjsMenu && currentRole === '330400' && activeGjsyjsTab === 'fb'"
+            title="当前为【市中心-附表】视角：查看所有分中心决算来源结果，全市列自动汇总，附表不允许直接改写来源值。"
+            type="warning"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isGjsyjsMenu && currentRole !== '330400' && activeGjsyjsTab === 'fb'"
+            title="当前为【分中心-附表】视角：仅查看本机构决算来源结果，不直接改写业务值，可执行同步来源和提交确认。"
+            type="success"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isGjsyjsMenu && currentRole !== '330400' && activeGjsyjsTab === 'zb'"
+            title="当前为【分中心-总表】视角：总表仅用于查看全市汇总决算结果，不允许直接编辑。"
+            type="info"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isYwszjsMenu && currentRole === '330400' && activeYwszjsTab === 'zb'"
+            title="当前为【市中心-总表】视角：总表的上年同期数、本年预算数和本年实绩数均由上年决算、本年预算和附表汇总自动生成，仅用于审核和导出。"
+            type="warning"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isYwszjsMenu && currentRole === '330400' && activeYwszjsTab === 'fb'"
+            title="当前为【市中心-附表】视角：查看所有分中心业务收支决算来源结果，全市列自动汇总，附表不允许直接改写来源值。"
+            type="warning"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isYwszjsMenu && currentRole !== '330400' && activeYwszjsTab === 'fb'"
+            title="当前为【分中心-附表】视角：仅查看本机构决算来源结果，不直接改写业务值，可执行同步来源和提交确认。"
+            type="success"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isYwszjsMenu && currentRole !== '330400' && activeYwszjsTab === 'zb'"
+            title="当前为【分中心-总表】视角：总表仅用于查看全市汇总决算结果，不允许直接编辑。"
+            type="info"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isZzsyfpMenu && currentRole === '330400' && activeZzsyfpTab === 'zb'"
+            title="当前为【市中心-总表】视角：总表的上年实绩数、本年实绩数和同比增长均由上年分配结果与附表全市汇总自动生成，仅用于审核和导出。"
+            type="warning"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isZzsyfpMenu && currentRole === '330400' && activeZzsyfpTab === 'fb'"
+            title="当前为【市中心-附表】视角：查看所有分中心增值收益分配事实与来源结果，全市列自动汇总，不直接修改机构原始录入值。"
+            type="warning"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isZzsyfpMenu && currentRole !== '330400' && activeZzsyfpTab === 'fb'"
+            title="当前为【分中心-附表】视角：仅本机构列可编辑 5 个原始分配字段；待分配增值收益、年初余额、年末余额和全市列均只读。"
+            type="success"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isZzsyfpMenu && currentRole !== '330400' && activeZzsyfpTab === 'zb'"
+            title="当前为【分中心-总表】视角：总表仅用于查看全市汇总分配结果，不允许直接编辑。"
+            type="info"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isZjsyzxMenu && currentRole === '330400'"
+            title="当前为【市中心-审核】视角：查看全市及全部分中心数据，执行审核、退回、锁定和导出；不直接修改分中心原始录入值。"
+            type="warning"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isZjsyzxMenu && currentRole !== '330400'"
+            title="当前为【分中心-填报】视角：仅本机构原始录入项可编辑，自动取数项、公式项和全市列全部只读。"
+            type="success"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isKmgzMenu && currentRole === '330400'"
+            title="当前为【市中心-审核】视角：查看全市及全部分中心扩面结果，负责审核、退回、锁定和导出；不直接修改机构原始数据。"
+            type="warning"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="isKmgzMenu && currentRole !== '330400'"
+            title="当前为【分中心-填报】视角：本年实缴、上年实缴自动取数；本年净增、净增长率、完成率自动计算；仅目标任务在3月起可编辑。"
+            type="success"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else-if="currentRole === '330400'"
+            title="当前为【市中心】视角：后端按行获取所有核算机构(hsjgbh)的明细，前端自动 Pivot 渲染为各列。只读审核。"
+            type="warning"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+          <el-alert
+            v-else
+            title="当前为【分中心】视角：后端只下发本分中心(hsjgbh)对应的明细行，前端仅渲染本机构列。"
+            type="success"
+            show-icon
+            style="margin-bottom: 15px;">
+          </el-alert>
+
+          <template v-if="isBudgetMenu">
+            <el-tabs v-model="activeBudgetTab" @tab-click="handleBudgetTabChange">
+              <el-tab-pane label="总表" name="zb">
+                <div class="sub-tip">总表接口返回主表信息加 15 行明细数组，前端直接按 `details` 顺序渲染，不再在页面内拼固定业务字段。</div>
+                <el-table :data="budgetZbRows" border size="small" style="width: 100%" :cell-class-name="budgetZbCellClassName">
+                  <el-table-column prop="flmc" label="分类" width="90"></el-table-column>
+                  <el-table-column prop="xmmc" label="项目" width="220"></el-table-column>
+                  <el-table-column prop="hangxh" label="行次" width="60" align="center"></el-table-column>
+                  <el-table-column prop="snyss" label="上年预算数" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatBudgetZbValue(scope.row, 'snyss') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="snsjs" label="上年实绩数" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatBudgetZbValue(scope.row, 'snsjs') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="bnyss" label="本年预算数" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatBudgetZbValue(scope.row, 'bnyss') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="wsnsjbl" label="为上年实绩%" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span :class="scope.row.wsnsjbl == null ? 'empty-text' : 'ratio-text'">{{ formatPercent(scope.row.wsnsjbl) }}</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="table-hint">总表当前直接消费 `budgetZbData.details`，用于模拟后端返回“主表 + 总表明细数组”的真实接口口径。</div>
+              </el-tab-pane>
+              <el-tab-pane label="附表" name="fb">
+                <div class="sub-tip">附表为唯一填报来源。后端按机构返回行数据，前端将机构行 Pivot 为区县列。</div>
+                <el-table :data="budgetFbRows" border size="small" style="width: 100%" :cell-class-name="budgetFbCellClassName">
+                  <el-table-column prop="category" label="分类" width="90"></el-table-column>
+                  <el-table-column prop="item" label="项目" width="220"></el-table-column>
+                  <el-table-column prop="line" label="行次" width="60" align="center"></el-table-column>
+                  <el-table-column label="本年预算数" align="center">
+                    <el-table-column prop="val_qs" label="全市(自动汇总)" width="120" align="right">
+                      <template slot-scope="scope">
+                        <span>{{ formatBudgetCell(scope.row.val_qs, scope.row.isRatio) }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column v-for="org in renderBudgetOrgs" :key="org.code" :prop="'val_' + org.code" :label="org.name" width="120" align="right">
+                      <template slot-scope="scope">
+                        <el-input
+                          v-if="isBudgetEditable(scope.row, org.code)"
+                          :value="displayInputValue(scope.row['val_' + org.code])"
+                          size="mini"
+                          @input="handleBudgetCellInput(scope.row, org.code, $event)">
+                        </el-input>
+                        <span v-else>{{ formatBudgetCell(scope.row['val_' + org.code], scope.row.isRatio) }}</span>
+                      </template>
+                    </el-table-column>
+                  </el-table-column>
+                </el-table>
+                <div class="table-hint">附表完整展示 16 行业务项。当前分中心仅可编辑本机构的 6 个输入字段，其余字段自动带入或自动计算。</div>
+              </el-tab-pane>
+            </el-tabs>
+          </template>
+
+          <template v-else-if="isYwszysMenu">
+            <el-tabs v-model="activeYwszysTab" @tab-click="handleYwszysTabChange">
+              <el-tab-pane label="总表" name="zb">
+                <div class="sub-tip">总表接口返回主表信息加 12 行明细数组，前端直接按 `details` 顺序渲染，不再复用旧的单表透视逻辑。</div>
+                <el-table :data="ywszysZbRows" border size="small" style="width: 100%" :cell-class-name="ywszysZbCellClassName">
+                  <el-table-column prop="xmmc" label="项目" width="260"></el-table-column>
+                  <el-table-column prop="hangxh" label="行次" width="60" align="center"></el-table-column>
+                  <el-table-column prop="snyss" label="上年预算数" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatYwszysZbValue(scope.row, 'snyss') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="snsjs" label="上年实绩数" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatYwszysZbValue(scope.row, 'snsjs') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="bnyss" label="本年预算数" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatYwszysZbValue(scope.row, 'bnyss') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="wsnsjbl" label="为上年实绩%" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span :class="scope.row.wsnsjbl == null || scope.row.sfbsy === '1' ? 'empty-text' : 'ratio-text'">{{ formatYwszysZbValue(scope.row, 'wsnsjbl') }}</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="table-hint">总表当前直接消费 `ywszysZbData.details`，用于模拟后端返回“主表 + 总表明细数组”的真实接口口径。</div>
+              </el-tab-pane>
+              <el-tab-pane label="附表" name="fb">
+                <div class="sub-tip">附表为唯一填报来源。后端按机构返回行数据，前端将机构行 Pivot 为区县列，并在最前侧展示全市自动汇总列。</div>
+                <el-table :data="ywszysFbRows" border size="small" style="width: 100%" :cell-class-name="ywszysFbCellClassName">
+                  <el-table-column prop="item" label="项目" width="260"></el-table-column>
+                  <el-table-column prop="line" label="行次" width="60" align="center"></el-table-column>
+                  <el-table-column label="本年预算数" align="center">
+                    <el-table-column prop="val_qs" label="全市(自动汇总)" width="120" align="right">
+                      <template slot-scope="scope">
+                        <span>{{ formatYwszysFbCell(scope.row, scope.row.val_qs) }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column v-for="org in renderYwszysOrgs" :key="org.code" :prop="'val_' + org.code" :label="org.name" width="120" align="right">
+                      <template slot-scope="scope">
+                        <el-input
+                          v-if="isYwszysEditable(scope.row, org.code)"
+                          :value="displayInputValue(scope.row['val_' + org.code])"
+                          size="mini"
+                          @input="handleYwszysCellInput(scope.row, org.code, $event)">
+                        </el-input>
+                        <span v-else>{{ formatYwszysFbCell(scope.row, scope.row['val_' + org.code]) }}</span>
+                      </template>
+                    </el-table-column>
+                  </el-table-column>
+                </el-table>
+                <div class="table-hint">附表完整展示 12 行业务项。当前分中心仅可编辑本机构的 8 个输入字段，其余字段自动计算或按不适用显示。</div>
+              </el-tab-pane>
+            </el-tabs>
+          </template>
+
+          <template v-else-if="isZjsyzxMenu">
+            <div class="sub-tip">本页按月展示资金使用预算执行情况。后端返回主表信息加机构执行明细数组，前端按固定行配置还原 29 行 Excel 结构，并实时生成全市列。</div>
+            <el-table :data="zjsyzxRows" border size="small" style="width: 100%" :cell-class-name="zjsyzxCellClassName">
+              <el-table-column prop="category" label="分类" width="110"></el-table-column>
+              <el-table-column prop="item" label="项目" width="240"></el-table-column>
+              <el-table-column prop="line" label="行次" width="60" align="center"></el-table-column>
+              <el-table-column label="执行情况" align="center">
+                <el-table-column prop="val_qs" label="全市(自动汇总)" width="130" align="right">
+                  <template slot-scope="scope">
+                    <span :class="scope.row.isPercent ? 'ratio-text' : ''">{{ formatZjsyzxCell(scope.row, scope.row.val_qs) }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column v-for="org in renderZjsyzxOrgs" :key="org.code" :prop="'val_' + org.code" :label="org.name" width="120" align="right">
+                  <template slot-scope="scope">
+                    <el-input
+                      v-if="isZjsyzxEditable(scope.row, org.code)"
+                      :value="displayInputValue(scope.row['val_' + org.code])"
+                      size="mini"
+                      @input="handleZjsyzxCellInput(scope.row, org.code, $event)">
+                    </el-input>
+                    <span :class="scope.row.isPercent ? 'ratio-text' : ''">{{ formatZjsyzxCell(scope.row, scope.row['val_' + org.code]) }}</span>
+                  </template>
+                </el-table-column>
+              </el-table-column>
+            </el-table>
+            <div class="table-hint">当前已按纠偏后口径落地为单表填报页：分中心仅可维护本机构手工项 `当年统筹调剂资金`、`当年公转商贷款转出`，市中心查看全量结果并审核。</div>
+          </template>
+
+          <template v-else-if="isGjsyjsMenu">
+            <el-tabs v-model="activeGjsyjsTab" @tab-click="handleGjsyjsTabChange">
+              <el-tab-pane label="总表" name="zb">
+                <div class="sub-tip">总表接口返回主表信息加 15 行明细数组，前端直接按 `details` 顺序渲染，模拟“上年决算 + 本年预算 + 附表汇总实绩”的综合口径。</div>
+                <el-table :data="gjsyjsZbRows" border size="small" style="width: 100%" :cell-class-name="gjsyjsZbCellClassName">
+                  <el-table-column prop="flmc" label="分类" width="90"></el-table-column>
+                  <el-table-column prop="xmmc" label="项目" width="220"></el-table-column>
+                  <el-table-column prop="hangxh" label="行次" width="60" align="center"></el-table-column>
+                  <el-table-column prop="sntqs" label="上年同期数" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatGjsyjsZbValue(scope.row, 'sntqs') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="bnyss" label="本年预算数" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatGjsyjsZbValue(scope.row, 'bnyss') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="bnsjs" label="本年实绩数" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatGjsyjsZbValue(scope.row, 'bnsjs') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="yswcl" label="预算完成率" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span :class="scope.row.allowRate ? 'ratio-text' : 'empty-text'">{{ formatGjsyjsZbValue(scope.row, 'yswcl') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="bstqzz" label="比上年同期增长" width="130" align="right">
+                    <template slot-scope="scope">
+                      <span :class="scope.row.allowGrowth ? 'ratio-text' : 'empty-text'">{{ formatGjsyjsZbValue(scope.row, 'bstqzz') }}</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="table-hint">总表当前直接消费 `gjsyjsZbData.details`，用于模拟后端返回“主表 + 总表明细数组”的真实接口口径。</div>
+              </el-tab-pane>
+              <el-tab-pane label="附表" name="fb">
+                <div class="sub-tip">附表为机构决算来源展示页。后端按机构返回行数据，前端将机构行 Pivot 为区县列，并在最前侧展示全市自动汇总列。</div>
+                <el-table :data="gjsyjsFbRows" border size="small" style="width: 100%" :cell-class-name="gjsyjsFbCellClassName">
+                  <el-table-column prop="category" label="分类" width="90"></el-table-column>
+                  <el-table-column prop="item" label="项目" width="220"></el-table-column>
+                  <el-table-column prop="line" label="行次" width="60" align="center"></el-table-column>
+                  <el-table-column label="本年实绩数" align="center">
+                    <el-table-column prop="val_qs" label="全市(自动汇总)" width="130" align="right">
+                      <template slot-scope="scope">
+                        <span :class="scope.row.isRatio ? 'ratio-text' : ''">{{ formatGjsyjsFbCell(scope.row, scope.row.val_qs) }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column v-for="org in renderGjsyjsOrgs" :key="org.code" :prop="'val_' + org.code" :label="org.name" width="120" align="right">
+                      <template slot-scope="scope">
+                        <span :class="scope.row.isRatio ? 'ratio-text' : ''">{{ formatGjsyjsFbCell(scope.row, scope.row['val_' + org.code]) }}</span>
+                      </template>
+                    </el-table-column>
+                  </el-table-column>
+                </el-table>
+                <div class="table-hint">附表完整展示 16 行业务项。当前仅支持来源同步和确认流转，不开放手工改单元格。</div>
+              </el-tab-pane>
+            </el-tabs>
+          </template>
+
+          <template v-else-if="isYwszjsMenu">
+            <el-tabs v-model="activeYwszjsTab" @tab-click="handleYwszjsTabChange">
+              <el-tab-pane label="总表" name="zb">
+                <div class="sub-tip">总表接口返回主表信息加 12 行明细数组，前端直接按 `details` 顺序渲染，模拟“上年决算 + 本年预算 + 附表汇总实绩”的综合口径。</div>
+                <el-table :data="ywszjsZbRows" border size="small" style="width: 100%" :cell-class-name="ywszjsZbCellClassName">
+                  <el-table-column prop="xmmc" label="项目" width="260"></el-table-column>
+                  <el-table-column prop="hangxh" label="行次" width="60" align="center"></el-table-column>
+                  <el-table-column prop="sntqs" label="上年同期数" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatYwszjsZbValue(scope.row, 'sntqs') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="bnyss" label="本年预算数" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatYwszjsZbValue(scope.row, 'bnyss') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="bnsjs" label="本年实绩数" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatYwszjsZbValue(scope.row, 'bnsjs') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="yswcl" label="预算完成率" width="120" align="right">
+                    <template slot-scope="scope">
+                      <span :class="scope.row.allowRate ? 'ratio-text' : 'empty-text'">{{ formatYwszjsZbValue(scope.row, 'yswcl') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="bstqzz" label="比上年同期增长" width="130" align="right">
+                    <template slot-scope="scope">
+                      <span :class="scope.row.allowGrowth ? 'ratio-text' : 'empty-text'">{{ formatYwszjsZbValue(scope.row, 'bstqzz') }}</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="table-hint">总表当前直接消费 `ywszjsZbData.details`，用于模拟后端返回“主表 + 总表明细数组”的真实接口口径。</div>
+              </el-tab-pane>
+              <el-tab-pane label="附表" name="fb">
+                <div class="sub-tip">附表为机构决算来源展示页。后端按机构返回行数据，前端将机构行 Pivot 为区县列，并在最前侧展示全市自动汇总列。</div>
+                <el-table :data="ywszjsFbRows" border size="small" style="width: 100%" :cell-class-name="ywszjsFbCellClassName">
+                  <el-table-column prop="item" label="项目" width="260"></el-table-column>
+                  <el-table-column prop="line" label="行次" width="60" align="center"></el-table-column>
+                  <el-table-column label="本年实绩数" align="center">
+                    <el-table-column prop="val_qs" label="全市(自动汇总)" width="120" align="right">
+                      <template slot-scope="scope">
+                        <span>{{ formatYwszjsFbCell(scope.row, scope.row.val_qs) }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column v-for="org in renderYwszjsOrgs" :key="org.code" :prop="'val_' + org.code" :label="org.name" width="120" align="right">
+                      <template slot-scope="scope">
+                        <span>{{ formatYwszjsFbCell(scope.row, scope.row['val_' + org.code]) }}</span>
+                      </template>
+                    </el-table-column>
+                  </el-table-column>
+                </el-table>
+                <div class="table-hint">附表完整展示 12 行业务项。当前仅支持来源同步和确认流转，不开放手工改单元格。</div>
+              </el-tab-pane>
+            </el-tabs>
+          </template>
+
+          <template v-else-if="isZzsyfpMenu">
+            <el-tabs v-model="activeZzsyfpTab" @tab-click="handleZzsyfpTabChange">
+              <el-tab-pane label="总表" name="zb">
+                <div class="sub-tip">总表接口返回主表信息加 10 行明细数组，前端直接按 `details` 顺序渲染，模拟“上年锁定结果 + 附表全市汇总”的年度分配口径。</div>
+                <el-table :data="zzsyfpZbRows" border size="small" style="width: 100%" :cell-class-name="zzsyfpZbCellClassName">
+                  <el-table-column prop="xmmc" label="项目" width="210"></el-table-column>
+                  <el-table-column prop="xmsm" label="说明" width="120"></el-table-column>
+                  <el-table-column prop="hangxh" label="行次" width="60" align="center"></el-table-column>
+                  <el-table-column prop="snsjs" label="上年实绩数" width="130" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatZzsyfpZbValue(scope.row, 'snsjs') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="bnsjs" label="本年实绩数" width="130" align="right">
+                    <template slot-scope="scope">
+                      <span>{{ formatZzsyfpZbValue(scope.row, 'bnsjs') }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="tbzz" label="同比增长" width="130" align="right">
+                    <template slot-scope="scope">
+                      <span :class="scope.row.allowGrowth ? 'ratio-text' : 'empty-text'">{{ formatZzsyfpZbValue(scope.row, 'tbzz') }}</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="table-hint">总表当前直接消费 `zzsyfpZbData.details`，用于模拟后端返回“主表 + 总表明细数组”的真实接口口径。</div>
+              </el-tab-pane>
+              <el-tab-pane label="附表" name="fb">
+                <div class="sub-tip">附表为机构增值收益分配事实页。后端按机构返回行数据，前端将机构行 Pivot 为区县列，并在最前侧展示全市自动汇总列。</div>
+                <el-table :data="zzsyfpFbRows" border size="small" style="width: 100%" :cell-class-name="zzsyfpFbCellClassName">
+                  <el-table-column prop="item" label="项目" width="210"></el-table-column>
+                  <el-table-column prop="note" label="说明" width="120"></el-table-column>
+                  <el-table-column prop="line" label="行次" width="60" align="center"></el-table-column>
+                  <el-table-column label="实绩数" align="center">
+                    <el-table-column prop="val_qs" label="全市(自动汇总)" width="130" align="right">
+                      <template slot-scope="scope">
+                        <span>{{ formatZzsyfpFbCell(scope.row, scope.row.val_qs) }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column v-for="org in renderZzsyfpOrgs" :key="org.code" :prop="'val_' + org.code" :label="org.name" width="120" align="right">
+                      <template slot-scope="scope">
+                        <el-input
+                          v-if="isZzsyfpEditable(scope.row, org.code)"
+                          :value="displayInputValue(scope.row['val_' + org.code])"
+                          size="mini"
+                          @input="handleZzsyfpCellInput(scope.row, org.code, $event)">
+                        </el-input>
+                        <span v-else>{{ formatZzsyfpFbCell(scope.row, scope.row['val_' + org.code]) }}</span>
+                      </template>
+                    </el-table-column>
+                  </el-table-column>
+                </el-table>
+                <div class="table-hint">附表完整展示 10 行业务项。当前分中心仅可编辑 5 个原始分配字段，其余字段自动带入或自动计算。</div>
+              </el-tab-pane>
+            </el-tabs>
+          </template>
+
+          <template v-else-if="isKmgzMenu">
+            <div class="sub-tip">本页按月展示扩面工作完成情况。后端返回主表信息加机构完成情况明细数组，前端按固定行配置还原 6 行 Excel 结构，并实时生成全市列。</div>
+            <el-table :data="kmgzRows" border size="small" style="width: 100%" :cell-class-name="kmgzCellClassName">
+              <el-table-column prop="item" label="指标" width="180"></el-table-column>
+              <el-table-column prop="unit" label="单位" width="70" align="center"></el-table-column>
+              <el-table-column label="完成情况" align="center">
+                <el-table-column prop="val_qs" label="全市(自动汇总)" width="130" align="right">
+                  <template slot-scope="scope">
+                    <span :class="scope.row.isPercent ? 'ratio-text' : ''">{{ formatKmgzCell(scope.row, scope.row.val_qs) }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column v-for="org in renderKmgzOrgs" :key="org.code" :prop="'val_' + org.code" :label="org.name" width="120" align="right">
+                  <template slot-scope="scope">
+                    <div v-if="isKmgzEditable(scope.row, org.code)" class="el-input el-input--mini">
+                      <input
+                        class="el-input__inner"
+                        type="text"
+                        :value="getKmgzInputValue(scope.row, org.code)"
+                        @input="handleKmgzCellInput(scope.row, org.code, $event.target.value)"
+                        @blur="commitKmgzCellInput(scope.row, org.code)">
+                    </div>
+                    <span v-else :class="scope.row.isPercent ? 'ratio-text' : ''">{{ formatKmgzCell(scope.row, scope.row['val_' + org.code]) }}</span>
+                  </template>
+                </el-table-column>
+              </el-table-column>
+            </el-table>
+            <div class="table-hint">本页完整展示 6 行扩面指标。当前分中心仅可在 3 月起维护本机构 `目标任务`，其余指标自动取数或自动计算。</div>
+          </template>
+
+          <template v-else>
+            <el-table :data="tableDisplayData" border style="width: 100%" size="small" :cell-class-name="cellClassName">
+              <el-table-column v-if="hasCategory" prop="category" label="分类" width="90"></el-table-column>
+              <el-table-column prop="item" label="项目" width="220"></el-table-column>
+              <el-table-column v-if="hasLine" prop="line" label="行次" width="50" align="center"></el-table-column>
+              <el-table-column v-if="hasUnit" prop="unit" label="单位" width="50" align="center"></el-table-column>
+              <el-table-column v-if="currentRole === '330400' && activeMenu === 'ywszys'" label="总表对比指标" align="center">
+                <el-table-column prop="lastActual" label="上年实绩数" width="100" align="right"></el-table-column>
+              </el-table-column>
+              <el-table-column :label="dataAreaLabel" align="center">
+                <el-table-column v-if="currentRole === '330400'" prop="val_qs" label="全市(自动汇总)" width="110" align="right"></el-table-column>
+                <el-table-column v-for="org in renderOrgs" :key="org.code" :prop="'val_' + org.code" :label="org.name" width="100" align="right">
+                  <template slot-scope="scope">
+                    <el-input v-if="isEditable(scope.row, org.code)" v-model="scope.row['val_' + org.code]" size="mini" @input="calcLegacyFormulas"></el-input>
+                    <span v-else>{{ scope.row['val_' + org.code] }}</span>
+                  </template>
+                </el-table-column>
+              </el-table-column>
+            </el-table>
+          </template>
+
+          <div class="table-footer">
+            <div class="signature-item">
+              <span>单位负责人:</span>
+              <el-input v-model="signatures.unit_leader" :disabled="currentRole !== '330400'" size="small" style="width: 120px;" placeholder="市中心签批"></el-input>
+            </div>
+            <div class="signature-item">
+              <span>会计主管:</span>
+              <el-input v-model="signatures.accounting_supervisor" :disabled="currentRole !== '330400'" size="small" style="width: 120px;" placeholder="市中心签批"></el-input>
+            </div>
+            <div class="signature-item">
+              <span>制表人:</span>
+              <el-input v-model="signatures.preparer" :disabled="currentRole === '330400' || isCurrentSummaryTab" size="small" style="width: 140px;" placeholder="分中心填报"></el-input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    const ROLE_OPTIONS = [
+      { code: '330400', label: '市中心(全局只读审核)' },
+      { code: '330401', label: '市本级(填报)' },
+      { code: '330421', label: '嘉善县(填报)' },
+      { code: '330422', label: '平湖市(填报)' },
+      { code: '330424', label: '海盐县(填报)' },
+      { code: '330481', label: '海宁市(填报)' },
+      { code: '330483', label: '桐乡市(填报)' }
+    ];
+
+    const ORG_LIST = [
+      { code: '330401', name: '市本级' },
+      { code: '330421', name: '嘉善县' },
+      { code: '330422', name: '平湖市' },
+      { code: '330424', name: '海盐县' },
+      { code: '330481', name: '海宁市' },
+      { code: '330483', name: '桐乡市' }
+    ];
+
+    const BUDGET_MAIN_META = {
+      id: 1001,
+      mainId: 1001,
+      bbbh: 'JXCW00001',
+      nd: '2025',
+      bzdw: '嘉兴市住房公积金管理服务中心（全市）',
+      bbzt: '0',
+      bbztLabel: '草稿',
+      dwfzr: '柳国彪',
+      kjzg: '郭琛',
+      zbr: '市中心制表人'
+    };
+
+    const BUDGET_FB_ROW_CONFIG = [
+      { category: '归集提取', item: '年初余额', line: 1, field: 'gjtqNcye', isFormula: false, isReadonly: true, isRatio: false },
+      { category: '归集提取', item: '当年归集数', line: 2, field: 'gjtqDngjs', isFormula: false, isReadonly: false, isRatio: false },
+      { category: '归集提取', item: '当年提取数', line: 3, field: 'gjtqDntqs', isFormula: false, isReadonly: false, isRatio: false },
+      { category: '归集提取', item: '当年统筹调剂资金', line: 4, field: 'gjtqDntcdjzj', isFormula: false, isReadonly: false, isRatio: false },
+      { category: '归集提取', item: '年末余额(1+2-3+4)', line: 5, field: 'gjtqNmye', isFormula: true, isReadonly: true, isRatio: false },
+      { category: '个人贷款', item: '年初余额', line: 6, field: 'grdkNcye', isFormula: false, isReadonly: true, isRatio: false },
+      { category: '个人贷款', item: '当年发放数', line: 7, field: 'grdkDnffs', isFormula: false, isReadonly: false, isRatio: false },
+      { category: '个人贷款', item: '当年收回数', line: 8, field: 'grdkDnshs', isFormula: false, isReadonly: false, isRatio: false },
+      { category: '个人贷款', item: '当年“公转商”贷款转出', line: 9, field: 'grdkDngzsdkzc', isFormula: false, isReadonly: false, isRatio: false },
+      { category: '个人贷款', item: '年末余额(6+7-8-9)', line: 10, field: 'grdkNmye', isFormula: true, isReadonly: true, isRatio: false },
+      { category: '个人贷款', item: '个人贷款余额占归集余额比%', line: 11, field: 'grdkDkyezbgjye', isFormula: true, isReadonly: true, isRatio: true },
+      { category: '国债投资', item: '年初余额', line: 12, field: 'gdtzNcye', isFormula: false, isReadonly: true, isRatio: false },
+      { category: '国债投资', item: '当年增加数', line: 13, field: 'gdtzDnzjs', isFormula: false, isReadonly: true, isRatio: false },
+      { category: '国债投资', item: '当年回收数', line: 14, field: 'gdtzDnhss', isFormula: false, isReadonly: true, isRatio: false },
+      { category: '国债投资', item: '年末余额(12+13-14)', line: 15, field: 'gdtzNmye', isFormula: true, isReadonly: true, isRatio: false },
+      { category: '国债投资', item: '国债投资余额占归集余额比%', line: 16, field: 'gdtzYezbgjye', isFormula: true, isReadonly: true, isRatio: true }
+    ];
+
+    const BUDGET_ZB_DETAIL_TEMPLATE = [
+      { hangxh: 1, flmc: '归集提取', xmbm: 'GJTQ_NCYE', xmmc: '年初余额', sfgs: '0' },
+      { hangxh: 2, flmc: '归集提取', xmbm: 'GJTQ_DNGJS', xmmc: '当年归集数', sfgs: '0' },
+      { hangxh: 3, flmc: '归集提取', xmbm: 'GJTQ_DNTQS', xmmc: '当年提取数', sfgs: '0' },
+      { hangxh: 4, flmc: '归集提取', xmbm: 'GJTQ_NMYE', xmmc: '年末余额', sfgs: '1' },
+      { hangxh: 5, flmc: '个人贷款', xmbm: 'GRDK_NCYE', xmmc: '年初余额', sfgs: '0' },
+      { hangxh: 6, flmc: '个人贷款', xmbm: 'GRDK_DNFFS', xmmc: '当年发放数', sfgs: '0' },
+      { hangxh: 7, flmc: '个人贷款', xmbm: 'GRDK_DNSHS', xmmc: '当年收回数', sfgs: '0' },
+      { hangxh: 8, flmc: '个人贷款', xmbm: 'GRDK_DNGZSDKZC', xmmc: '当年“公转商”贷款转出', sfgs: '0' },
+      { hangxh: 9, flmc: '个人贷款', xmbm: 'GRDK_NMYE', xmmc: '年末余额', sfgs: '1' },
+      { hangxh: 10, flmc: '个人贷款', xmbm: 'GRDK_DKYEZBGJYE', xmmc: '个人贷款余额占归集余额比%', sfgs: '1' },
+      { hangxh: 11, flmc: '国债投资', xmbm: 'GDTZ_NCYE', xmmc: '年初余额', sfgs: '0' },
+      { hangxh: 12, flmc: '国债投资', xmbm: 'GDTZ_DNZJS', xmmc: '当年增加数', sfgs: '0' },
+      { hangxh: 13, flmc: '国债投资', xmbm: 'GDTZ_DNHSS', xmmc: '当年回收数', sfgs: '0' },
+      { hangxh: 14, flmc: '国债投资', xmbm: 'GDTZ_NMYE', xmmc: '年末余额', sfgs: '1' },
+      { hangxh: 15, flmc: '国债投资', xmbm: 'GDTZ_YEZBGJYE', xmmc: '国债投资余额占归集余额比%', sfgs: '1' }
+    ];
+
+    const BUDGET_ZB_HISTORY = {
+      GJTQ_NCYE: { lastBudget: 93000, lastActual: 98000 },
+      GJTQ_DNGJS: { lastBudget: 76000, lastActual: 78500 },
+      GJTQ_DNTQS: { lastBudget: 69000, lastActual: 70200 },
+      GJTQ_NMYE: { lastBudget: 100000, lastActual: 106300 },
+      GRDK_NCYE: { lastBudget: 47000, lastActual: 50000 },
+      GRDK_DNFFS: { lastBudget: 18000, lastActual: 19500 },
+      GRDK_DNSHS: { lastBudget: 11000, lastActual: 11500 },
+      GRDK_DNGZSDKZC: { lastBudget: 500, lastActual: 600 },
+      GRDK_NMYE: { lastBudget: 53500, lastActual: 57400 },
+      GRDK_DKYEZBGJYE: { lastBudget: 0.5350, lastActual: 0.5399 },
+      GDTZ_NCYE: { lastBudget: 0, lastActual: 0 },
+      GDTZ_DNZJS: { lastBudget: 0, lastActual: 0 },
+      GDTZ_DNHSS: { lastBudget: 0, lastActual: 0 },
+      GDTZ_NMYE: { lastBudget: 0, lastActual: 0 },
+      GDTZ_YEZBGJYE: { lastBudget: 0, lastActual: 0 }
+    };
+
+    const BUDGET_ZB_FIELD_MAP = {
+      GJTQ_NCYE: 'gjtqNcye',
+      GJTQ_DNGJS: 'gjtqDngjs',
+      GJTQ_DNTQS: 'gjtqDntqs',
+      GJTQ_NMYE: 'gjtqNmye',
+      GRDK_NCYE: 'grdkNcye',
+      GRDK_DNFFS: 'grdkDnffs',
+      GRDK_DNSHS: 'grdkDnshs',
+      GRDK_DNGZSDKZC: 'grdkDngzsdkzc',
+      GRDK_NMYE: 'grdkNmye',
+      GRDK_DKYEZBGJYE: 'grdkDkyezbgjye',
+      GDTZ_NCYE: 'gdtzNcye',
+      GDTZ_DNZJS: 'gdtzDnzjs',
+      GDTZ_DNHSS: 'gdtzDnhss',
+      GDTZ_NMYE: 'gdtzNmye',
+      GDTZ_YEZBGJYE: 'gdtzYezbgjye'
+    };
+
+    const BUDGET_RATIO_CODES = ['GRDK_DKYEZBGJYE', 'GDTZ_YEZBGJYE'];
+
+    const BUDGET_FB_DETAILS = [
+      { hsjgbh: '330401', jbjgmc: '市本级', gjtqNcye: 30000, gjtqDngjs: 25000, gjtqDntqs: 22000, gjtqDntcdjzj: 1000, grdkNcye: 20000, grdkDnffs: 9000, grdkDnshs: 5000, grdkDngzsdkzc: 400, gdtzNcye: 0, gdtzDnzjs: 0, gdtzDnhss: 0 },
+      { hsjgbh: '330421', jbjgmc: '嘉善县', gjtqNcye: 12000, gjtqDngjs: 9000, gjtqDntqs: 8500, gjtqDntcdjzj: 200, grdkNcye: 7000, grdkDnffs: 3400, grdkDnshs: 1900, grdkDngzsdkzc: 120, gdtzNcye: 0, gdtzDnzjs: 0, gdtzDnhss: 0 },
+      { hsjgbh: '330422', jbjgmc: '平湖市', gjtqNcye: 11000, gjtqDngjs: 8200, gjtqDntqs: 7900, gjtqDntcdjzj: 100, grdkNcye: 6500, grdkDnffs: 3000, grdkDnshs: 1700, grdkDngzsdkzc: 80, gdtzNcye: 0, gdtzDnzjs: 0, gdtzDnhss: 0 },
+      { hsjgbh: '330424', jbjgmc: '海盐县', gjtqNcye: 9000, gjtqDngjs: 7600, gjtqDntqs: 7000, gjtqDntcdjzj: 80, grdkNcye: 5400, grdkDnffs: 2600, grdkDnshs: 1500, grdkDngzsdkzc: 60, gdtzNcye: 0, gdtzDnzjs: 0, gdtzDnhss: 0 },
+      { hsjgbh: '330481', jbjgmc: '海宁市', gjtqNcye: 15000, gjtqDngjs: 12000, gjtqDntqs: 11300, gjtqDntcdjzj: 250, grdkNcye: 9500, grdkDnffs: 4600, grdkDnshs: 2400, grdkDngzsdkzc: 150, gdtzNcye: 0, gdtzDnzjs: 0, gdtzDnhss: 0 },
+      { hsjgbh: '330483', jbjgmc: '桐乡市', gjtqNcye: 16000, gjtqDngjs: 13000, gjtqDntqs: 11800, gjtqDntcdjzj: 300, grdkNcye: 11000, grdkDnffs: 5200, grdkDnshs: 2800, grdkDngzsdkzc: 160, gdtzNcye: 0, gdtzDnzjs: 0, gdtzDnhss: 0 }
+    ];
+
+    function deepClone(data) {
+      return JSON.parse(JSON.stringify(data));
+    }
+
+    function createInitialBudgetZbData() {
+      return Object.assign({}, BUDGET_MAIN_META, { details: [] });
+    }
+
+    function createInitialBudgetFbData() {
+      return Object.assign({}, BUDGET_MAIN_META, { details: deepClone(BUDGET_FB_DETAILS) });
+    }
+
+    const GJSYJS_MAIN_META = {
+      id: 7001,
+      mainId: 7001,
+      bbbh: 'JXGJJS20240001',
+      nd: '2024',
+      bzdw: '嘉兴市住房公积金管理服务中心（全市）',
+      bbzt: '0',
+      bbztLabel: '草稿',
+      qssj: '2025-01-12 09:30:00',
+      dwfzr: '柳国彪',
+      kjzg: '郭琛',
+      zbr: '市中心制表人',
+      sfsd: '0',
+      shyj: ''
+    };
+
+    const GJSYJS_FB_ROW_CONFIG = [
+      { category: '归集提取', item: '年初余额', line: 1, field: 'gjtqNcye', isFormula: false, isRatio: false },
+      { category: '归集提取', item: '当年归集数', line: 2, field: 'gjtqDngjs', isFormula: false, isRatio: false },
+      { category: '归集提取', item: '当年提取数', line: 3, field: 'gjtqDntqs', isFormula: false, isRatio: false },
+      { category: '归集提取', item: '当年统筹调剂资金', line: 4, field: 'gjtqDntcdjzj', isFormula: false, isRatio: false },
+      { category: '归集提取', item: '年末余额', line: 5, field: 'gjtqNmye', isFormula: true, isRatio: false },
+      { category: '个人贷款', item: '年初余额', line: 6, field: 'grdkNcye', isFormula: false, isRatio: false },
+      { category: '个人贷款', item: '当年发放数', line: 7, field: 'grdkDnffs', isFormula: false, isRatio: false },
+      { category: '个人贷款', item: '当年收回数', line: 8, field: 'grdkDnshs', isFormula: false, isRatio: false },
+      { category: '个人贷款', item: '当年“公转商”贷款转出', line: 9, field: 'grdkDngzsdkzc', isFormula: false, isRatio: false },
+      { category: '个人贷款', item: '年末余额', line: 10, field: 'grdkNmye', isFormula: true, isRatio: false },
+      { category: '个人贷款', item: '个人贷款余额占归集余额比(%)', line: 11, field: 'grdkDkyezbgjye', isFormula: true, isRatio: true },
+      { category: '国债投资', item: '年初余额', line: 12, field: 'gdtzNcye', isFormula: false, isRatio: false },
+      { category: '国债投资', item: '当年增加数', line: 13, field: 'gdtzDnzjs', isFormula: false, isRatio: false },
+      { category: '国债投资', item: '当年回收数', line: 14, field: 'gdtzDnhss', isFormula: false, isRatio: false },
+      { category: '国债投资', item: '年末余额', line: 15, field: 'gdtzNmye', isFormula: true, isRatio: false },
+      { category: '国债投资', item: '国债投资余额占归集余额比(%)', line: 16, field: 'gdtzYezbgjye', isFormula: true, isRatio: true }
+    ];
+
+    const GJSYJS_ZB_DETAIL_TEMPLATE = [
+      { hangxh: 1, flmc: '归集提取', xmbm: 'GJTQ_NCYE', xmmc: '年初余额', valueType: 'money', allowBudget: true, allowRate: false, allowGrowth: false, isNotApplicable: false },
+      { hangxh: 2, flmc: '归集提取', xmbm: 'GJTQ_DNGJS', xmmc: '当年归集数', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 3, flmc: '归集提取', xmbm: 'GJTQ_DNTQS', xmmc: '当年提取数', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 4, flmc: '归集提取', xmbm: 'GJTQ_NMYE', xmmc: '年末余额', valueType: 'money', allowBudget: false, allowRate: false, allowGrowth: false, isNotApplicable: false },
+      { hangxh: 5, flmc: '个人贷款', xmbm: 'GRDK_NCYE', xmmc: '年初余额', valueType: 'money', allowBudget: true, allowRate: false, allowGrowth: false, isNotApplicable: false },
+      { hangxh: 6, flmc: '个人贷款', xmbm: 'GRDK_DNFFS', xmmc: '当年发放数', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 7, flmc: '个人贷款', xmbm: 'GRDK_DNSHS', xmmc: '当年收回数', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 8, flmc: '个人贷款', xmbm: 'GRDK_DNGZSDKZC', xmmc: '当年“公转商”贷款转出', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 9, flmc: '个人贷款', xmbm: 'GRDK_NMYE', xmmc: '年末余额', valueType: 'money', allowBudget: false, allowRate: false, allowGrowth: false, isNotApplicable: false },
+      { hangxh: 10, flmc: '个人贷款', xmbm: 'GRDK_DKYEZBGJYE', xmmc: '个人贷款余额占归集余额比(%)', valueType: 'percent', allowBudget: false, allowRate: false, allowGrowth: false, isNotApplicable: false },
+      { hangxh: 11, flmc: '国债投资', xmbm: 'GDTZ_NCYE', xmmc: '年初余额', valueType: 'money', allowBudget: false, allowRate: false, allowGrowth: false, isNotApplicable: true },
+      { hangxh: 12, flmc: '国债投资', xmbm: 'GDTZ_DNZJS', xmmc: '当年增加数', valueType: 'money', allowBudget: false, allowRate: false, allowGrowth: false, isNotApplicable: true },
+      { hangxh: 13, flmc: '国债投资', xmbm: 'GDTZ_DNHSS', xmmc: '当年回收数', valueType: 'money', allowBudget: false, allowRate: false, allowGrowth: false, isNotApplicable: true },
+      { hangxh: 14, flmc: '国债投资', xmbm: 'GDTZ_NMYE', xmmc: '年末余额', valueType: 'money', allowBudget: false, allowRate: false, allowGrowth: false, isNotApplicable: true },
+      { hangxh: 15, flmc: '国债投资', xmbm: 'GDTZ_YEZBGJYE', xmmc: '国债投资余额占归集余额比(%)', valueType: 'percent', allowBudget: false, allowRate: false, allowGrowth: false, isNotApplicable: true }
+    ];
+
+    const GJSYJS_ZB_LAST_YEAR = {
+      GJTQ_NCYE: 98000,
+      GJTQ_DNGJS: 78500,
+      GJTQ_DNTQS: 70200,
+      GJTQ_NMYE: 106300,
+      GRDK_NCYE: 50000,
+      GRDK_DNFFS: 19500,
+      GRDK_DNSHS: 11500,
+      GRDK_DNGZSDKZC: 600,
+      GRDK_NMYE: 57400,
+      GRDK_DKYEZBGJYE: 0.5399
+    };
+
+    const GJSYJS_ZB_BUDGET = {
+      GJTQ_NCYE: 93000,
+      GJTQ_DNGJS: 76800,
+      GJTQ_DNTQS: 69500,
+      GJTQ_NMYE: null,
+      GRDK_NCYE: 50000,
+      GRDK_DNFFS: 25800,
+      GRDK_DNSHS: 13800,
+      GRDK_DNGZSDKZC: 820,
+      GRDK_NMYE: null,
+      GRDK_DKYEZBGJYE: null
+    };
+
+    const GJSYJS_FB_DETAILS = [
+      { hsjgbh: '330401', jbjgmc: '市本级', bbzt: '0', qszt: '1', gjtqNcye: 30000, gjtqDngjs: 24800, gjtqDntqs: 22100, gjtqDntcdjzj: 920, grdkNcye: 20000, grdkDnffs: 7600, grdkDnshs: 4480, grdkDngzsdkzc: 280, gdtzNcye: 0, gdtzDnzjs: 0, gdtzDnhss: 0 },
+      { hsjgbh: '330421', jbjgmc: '嘉善县', bbzt: '0', qszt: '1', gjtqNcye: 12000, gjtqDngjs: 7600, gjtqDntqs: 7100, gjtqDntcdjzj: 140, grdkNcye: 7000, grdkDnffs: 2800, grdkDnshs: 1650, grdkDngzsdkzc: 95, gdtzNcye: 0, gdtzDnzjs: 0, gdtzDnhss: 0 },
+      { hsjgbh: '330422', jbjgmc: '平湖市', bbzt: '0', qszt: '1', gjtqNcye: 11000, gjtqDngjs: 6900, gjtqDntqs: 6450, gjtqDntcdjzj: 90, grdkNcye: 6500, grdkDnffs: 2520, grdkDnshs: 1490, grdkDngzsdkzc: 72, gdtzNcye: 0, gdtzDnzjs: 0, gdtzDnhss: 0 },
+      { hsjgbh: '330424', jbjgmc: '海盐县', bbzt: '0', qszt: '1', gjtqNcye: 9000, gjtqDngjs: 6200, gjtqDntqs: 5900, gjtqDntcdjzj: 70, grdkNcye: 5400, grdkDnffs: 2140, grdkDnshs: 1320, grdkDngzsdkzc: 55, gdtzNcye: 0, gdtzDnzjs: 0, gdtzDnhss: 0 },
+      { hsjgbh: '330481', jbjgmc: '海宁市', bbzt: '0', qszt: '1', gjtqNcye: 15000, gjtqDngjs: 10100, gjtqDntqs: 9300, gjtqDntcdjzj: 210, grdkNcye: 9500, grdkDnffs: 3820, grdkDnshs: 2060, grdkDngzsdkzc: 120, gdtzNcye: 0, gdtzDnzjs: 0, gdtzDnhss: 0 },
+      { hsjgbh: '330483', jbjgmc: '桐乡市', bbzt: '0', qszt: '1', gjtqNcye: 16000, gjtqDngjs: 10900, gjtqDntqs: 9950, gjtqDntcdjzj: 240, grdkNcye: 11000, grdkDnffs: 4350, grdkDnshs: 2430, grdkDngzsdkzc: 140, gdtzNcye: 0, gdtzDnzjs: 0, gdtzDnhss: 0 }
+    ];
+
+    function createInitialGjsyjsZbData() {
+      return Object.assign({}, GJSYJS_MAIN_META, { details: [] });
+    }
+
+    function createInitialGjsyjsFbData() {
+      return Object.assign({}, GJSYJS_MAIN_META, { details: deepClone(GJSYJS_FB_DETAILS) });
+    }
+
+    const YWSZJS_MAIN_META = {
+      id: 9001,
+      mainId: 9001,
+      bbbh: 'JXYWJS20240001',
+      nd: '2024',
+      bzdw: '嘉兴市住房公积金管理服务中心（全市）',
+      bbzt: '0',
+      bbztLabel: '草稿',
+      qssj: '2025-01-15 09:20:00',
+      dwfzr: '柳国彪',
+      kjzg: '郭琛',
+      zbr: '市中心制表人',
+      sfsd: '0',
+      shyj: ''
+    };
+
+    const YWSZJS_FB_ROW_CONFIG = [
+      { item: '一、业务收入', line: 1, field: 'ywsrHj', isFormula: true, isNotApplicable: false },
+      { item: '1、住房公积金利息收入', line: 2, field: 'ywsrZfgjjlxs', isFormula: false, isNotApplicable: false },
+      { item: '2、增值收益利息收入', line: 3, field: 'ywsrZzsylxs', isFormula: false, isNotApplicable: false },
+      { item: '3、委托贷款利息收入', line: 4, field: 'ywsrWtdklxs', isFormula: false, isNotApplicable: false },
+      { item: '4、国债投资收入', line: 5, field: 'ywsrGdtzsr', isFormula: false, isNotApplicable: true },
+      { item: '5、其他收入', line: 6, field: 'ywsrQtsr', isFormula: false, isNotApplicable: false },
+      { item: '二、业务支出', line: 7, field: 'ywszHj', isFormula: true, isNotApplicable: false },
+      { item: '1、住房公积金利息支出', line: 8, field: 'ywszZfgjjlxzc', isFormula: false, isNotApplicable: false },
+      { item: '2、住房公积金归集手续费支出', line: 9, field: 'ywszGjsxfzc', isFormula: false, isNotApplicable: false },
+      { item: '3、委托贷款手续费支出', line: 10, field: 'ywszWtdksxfzc', isFormula: false, isNotApplicable: false },
+      { item: '4、其他支出', line: 11, field: 'ywszQtzc', isFormula: false, isNotApplicable: false },
+      { item: '三、增值收益', line: 12, field: 'zzsy', isFormula: true, isNotApplicable: false }
+    ];
+
+    const YWSZJS_ZB_DETAIL_TEMPLATE = [
+      { hangxh: 1, xmbm: 'YWSR_HJ', xmmc: '一、业务收入', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 2, xmbm: 'YWSR_ZFGJJLXS', xmmc: '1、住房公积金利息收入', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 3, xmbm: 'YWSR_ZZSYLXS', xmmc: '2、增值收益利息收入', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 4, xmbm: 'YWSR_WTDKLXS', xmmc: '3、委托贷款利息收入', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 5, xmbm: 'YWSR_GDTZSR', xmmc: '4、国债投资收入', valueType: 'money', allowBudget: false, allowRate: false, allowGrowth: false, isNotApplicable: true },
+      { hangxh: 6, xmbm: 'YWSR_QTSR', xmmc: '5、其他收入', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 7, xmbm: 'YWSZ_HJ', xmmc: '二、业务支出', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 8, xmbm: 'YWSZ_ZFGJJLXZC', xmmc: '1、住房公积金利息支出', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 9, xmbm: 'YWSZ_GJSXFZC', xmmc: '2、住房公积金归集手续费支出', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 10, xmbm: 'YWSZ_WTDKSXFZC', xmmc: '3、委托贷款手续费支出', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 11, xmbm: 'YWSZ_QTZC', xmmc: '4、其他支出', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false },
+      { hangxh: 12, xmbm: 'ZZSY', xmmc: '三、增值收益', valueType: 'money', allowBudget: true, allowRate: true, allowGrowth: true, isNotApplicable: false }
+    ];
+
+    const YWSZJS_ZB_LAST_YEAR = {
+      YWSR_HJ: 912,
+      YWSR_ZFGJJLXS: 298,
+      YWSR_ZZSYLXS: 78,
+      YWSR_WTDKLXS: 470,
+      YWSR_GDTZSR: null,
+      YWSR_QTSR: 66,
+      YWSZ_HJ: 332,
+      YWSZ_ZFGJJLXZC: 152,
+      YWSZ_GJSXFZC: 58,
+      YWSZ_WTDKSXFZC: 102,
+      YWSZ_QTZC: 20,
+      ZZSY: 580
+    };
+
+    const YWSZJS_ZB_BUDGET = {
+      YWSR_HJ: 1210,
+      YWSR_ZFGJJLXS: 420,
+      YWSR_ZZSYLXS: 95,
+      YWSR_WTDKLXS: 640,
+      YWSR_GDTZSR: null,
+      YWSR_QTSR: 55,
+      YWSZ_HJ: 425,
+      YWSZ_ZFGJJLXZC: 205,
+      YWSZ_GJSXFZC: 72,
+      YWSZ_WTDKSXFZC: 128,
+      YWSZ_QTZC: 20,
+      ZZSY: 785
+    };
+
+    const YWSZJS_ZB_FIELD_MAP = {
+      YWSR_HJ: 'ywsrHj',
+      YWSR_ZFGJJLXS: 'ywsrZfgjjlxs',
+      YWSR_ZZSYLXS: 'ywsrZzsylxs',
+      YWSR_WTDKLXS: 'ywsrWtdklxs',
+      YWSR_GDTZSR: 'ywsrGdtzsr',
+      YWSR_QTSR: 'ywsrQtsr',
+      YWSZ_HJ: 'ywszHj',
+      YWSZ_ZFGJJLXZC: 'ywszZfgjjlxzc',
+      YWSZ_GJSXFZC: 'ywszGjsxfzc',
+      YWSZ_WTDKSXFZC: 'ywszWtdksxfzc',
+      YWSZ_QTZC: 'ywszQtzc',
+      ZZSY: 'zzsy'
+    };
+
+    const YWSZJS_FB_DETAILS = [
+      { hsjgbh: '330401', jbjgmc: '市本级', bbzt: '0', qszt: '1', ywsrZfgjjlxs: 126, ywsrZzsylxs: 35, ywsrWtdklxs: 236, ywsrGdtzsr: null, ywsrQtsr: 11, ywszZfgjjlxzc: 63, ywszGjsxfzc: 22, ywszWtdksxfzc: 38, ywszQtzc: 6 },
+      { hsjgbh: '330421', jbjgmc: '嘉善县', bbzt: '0', qszt: '1', ywsrZfgjjlxs: 55, ywsrZzsylxs: 12, ywsrWtdklxs: 78, ywsrGdtzsr: null, ywsrQtsr: 5, ywszZfgjjlxzc: 28, ywszGjsxfzc: 9, ywszWtdksxfzc: 17, ywszQtzc: 2 },
+      { hsjgbh: '330422', jbjgmc: '平湖市', bbzt: '0', qszt: '1', ywsrZfgjjlxs: 50, ywsrZzsylxs: 11, ywsrWtdklxs: 74, ywsrGdtzsr: null, ywsrQtsr: 4, ywszZfgjjlxzc: 25, ywszGjsxfzc: 8, ywszWtdksxfzc: 16, ywszQtzc: 2 },
+      { hsjgbh: '330424', jbjgmc: '海盐县', bbzt: '0', qszt: '1', ywsrZfgjjlxs: 44, ywsrZzsylxs: 10, ywsrWtdklxs: 65, ywsrGdtzsr: null, ywsrQtsr: 3, ywszZfgjjlxzc: 23, ywszGjsxfzc: 7, ywszWtdksxfzc: 14, ywszQtzc: 2 },
+      { hsjgbh: '330481', jbjgmc: '海宁市', bbzt: '0', qszt: '1', ywsrZfgjjlxs: 76, ywsrZzsylxs: 19, ywsrWtdklxs: 116, ywsrGdtzsr: null, ywsrQtsr: 6, ywszZfgjjlxzc: 37, ywszGjsxfzc: 12, ywszWtdksxfzc: 23, ywszQtzc: 3 },
+      { hsjgbh: '330483', jbjgmc: '桐乡市', bbzt: '0', qszt: '1', ywsrZfgjjlxs: 82, ywsrZzsylxs: 20, ywsrWtdklxs: 124, ywsrGdtzsr: null, ywsrQtsr: 7, ywszZfgjjlxzc: 40, ywszGjsxfzc: 13, ywszWtdksxfzc: 25, ywszQtzc: 3 }
+    ];
+
+    function createInitialYwszjsZbData() {
+      return Object.assign({}, YWSZJS_MAIN_META, { details: [] });
+    }
+
+    function createInitialYwszjsFbData() {
+      return Object.assign({}, YWSZJS_MAIN_META, { details: deepClone(YWSZJS_FB_DETAILS) });
+    }
+
+    const ZZSYFP_MAIN_META = {
+      id: 10001,
+      mainId: 10001,
+      bbbh: 'JXZZSYFP20240001',
+      nd: '2024',
+      bzdw: '嘉兴市住房公积金管理服务中心（全市）',
+      bbzt: '0',
+      bbztLabel: '草稿',
+      qssj: '2025-01-18 09:20:00',
+      dwfzr: '柳国彪',
+      kjzg: '郭琛',
+      zbr: '市中心制表人',
+      sfsd: '0',
+      shyj: ''
+    };
+
+    const ZZSYFP_FB_ROW_CONFIG = [
+      { item: '待分配增值收益', note: '', line: 11, field: 'dfpzzsy', isFormula: false, isEditable: false },
+      { item: '1、贷款风险准备金', note: '年初余额', line: 12, field: 'dkfxzbjNcye', isFormula: false, isEditable: false },
+      { item: '', note: '当年分配', line: 13, field: 'dkfxzbjDnfp', isFormula: false, isEditable: true },
+      { item: '', note: '当年支出', line: 14, field: 'dkfxzbjDnzc', isFormula: false, isEditable: true },
+      { item: '', note: '年末余额', line: 15, field: 'dkfxzbjNmye', isFormula: true, isEditable: false },
+      { item: '2、管理费用', note: '当年分配', line: 16, field: 'glfyDnfp', isFormula: false, isEditable: true },
+      { item: '3、城市廉租住房补充资金', note: '年初余额', line: 17, field: 'cslzzfbqzjNcye', isFormula: false, isEditable: false },
+      { item: '', note: '当年分配', line: 18, field: 'cslzzfbqzjDnfp', isFormula: false, isEditable: true },
+      { item: '', note: '当年上缴', line: 19, field: 'cslzzfbqzjDnsj', isFormula: false, isEditable: true },
+      { item: '', note: '年末余额', line: 20, field: 'cslzzfbqzjNmye', isFormula: true, isEditable: false }
+    ];
+
+    const ZZSYFP_ZB_DETAIL_TEMPLATE = [
+      { hangxh: 11, xmbm: 'DFPZZSY', xmmc: '待分配增值收益', xmsm: '', allowGrowth: true, isFormula: false },
+      { hangxh: 12, xmbm: 'DKFXZBJ_NCYE', xmmc: '1、贷款风险准备金', xmsm: '年初余额', allowGrowth: true, isFormula: false },
+      { hangxh: 13, xmbm: 'DKFXZBJ_DNFP', xmmc: '', xmsm: '当年分配', allowGrowth: true, isFormula: false },
+      { hangxh: 14, xmbm: 'DKFXZBJ_DNZC', xmmc: '', xmsm: '当年支出', allowGrowth: true, isFormula: false },
+      { hangxh: 15, xmbm: 'DKFXZBJ_NMYE', xmmc: '', xmsm: '年末余额', allowGrowth: true, isFormula: true },
+      { hangxh: 16, xmbm: 'GLFY_DNFP', xmmc: '2、管理费用', xmsm: '当年分配', allowGrowth: true, isFormula: false },
+      { hangxh: 17, xmbm: 'CSLZZFBQZJ_NCYE', xmmc: '3、城市廉租住房补充资金', xmsm: '年初余额', allowGrowth: true, isFormula: false },
+      { hangxh: 18, xmbm: 'CSLZZFBQZJ_DNFP', xmmc: '', xmsm: '当年分配', allowGrowth: true, isFormula: false },
+      { hangxh: 19, xmbm: 'CSLZZFBQZJ_DNSJ', xmmc: '', xmsm: '当年上缴', allowGrowth: true, isFormula: false },
+      { hangxh: 20, xmbm: 'CSLZZFBQZJ_NMYE', xmmc: '', xmsm: '年末余额', allowGrowth: true, isFormula: true }
+    ];
+
+    const ZZSYFP_ZB_LAST_YEAR = {
+      DFPZZSY: 660,
+      DKFXZBJ_NCYE: 226,
+      DKFXZBJ_DNFP: 135,
+      DKFXZBJ_DNZC: 44,
+      DKFXZBJ_NMYE: 317,
+      GLFY_DNFP: 86,
+      CSLZZFBQZJ_NCYE: 118,
+      CSLZZFBQZJ_DNFP: 52,
+      CSLZZFBQZJ_DNSJ: 34,
+      CSLZZFBQZJ_NMYE: 136
+    };
+
+    const ZZSYFP_ZB_FIELD_MAP = {
+      DFPZZSY: 'dfpzzsy',
+      DKFXZBJ_NCYE: 'dkfxzbjNcye',
+      DKFXZBJ_DNFP: 'dkfxzbjDnfp',
+      DKFXZBJ_DNZC: 'dkfxzbjDnzc',
+      DKFXZBJ_NMYE: 'dkfxzbjNmye',
+      GLFY_DNFP: 'glfyDnfp',
+      CSLZZFBQZJ_NCYE: 'cslzzfbqzjNcye',
+      CSLZZFBQZJ_DNFP: 'cslzzfbqzjDnfp',
+      CSLZZFBQZJ_DNSJ: 'cslzzfbqzjDnsj',
+      CSLZZFBQZJ_NMYE: 'cslzzfbqzjNmye'
+    };
+
+    const ZZSYFP_SOURCE_CURRENT_PROFIT = {
+      '330401': 268,
+      '330421': 92,
+      '330422': 78,
+      '330424': 66,
+      '330481': 96,
+      '330483': 108
+    };
+
+    const ZZSYFP_SOURCE_LAST_YEAR_END = {
+      '330401': { dkfxzbjNcye: 92, cslzzfbqzjNcye: 48 },
+      '330421': { dkfxzbjNcye: 31, cslzzfbqzjNcye: 17 },
+      '330422': { dkfxzbjNcye: 26, cslzzfbqzjNcye: 14 },
+      '330424': { dkfxzbjNcye: 22, cslzzfbqzjNcye: 11 },
+      '330481': { dkfxzbjNcye: 34, cslzzfbqzjNcye: 18 },
+      '330483': { dkfxzbjNcye: 39, cslzzfbqzjNcye: 20 }
+    };
+
+    const ZZSYFP_FB_DETAILS = [
+      { hsjgbh: '330401', jbjgmc: '市本级', bbzt: '0', qszt: '1', dfpzzsy: 268, dkfxzbjNcye: 92, dkfxzbjDnfp: 55, dkfxzbjDnzc: 18, glfyDnfp: 36, cslzzfbqzjNcye: 48, cslzzfbqzjDnfp: 22, cslzzfbqzjDnsj: 14, sjsm: '建议通过线上上缴模式归档往来信息' },
+      { hsjgbh: '330421', jbjgmc: '嘉善县', bbzt: '0', qszt: '1', dfpzzsy: 92, dkfxzbjNcye: 31, dkfxzbjDnfp: 18, dkfxzbjDnzc: 6, glfyDnfp: 12, cslzzfbqzjNcye: 17, cslzzfbqzjDnfp: 7, cslzzfbqzjDnsj: 4 },
+      { hsjgbh: '330422', jbjgmc: '平湖市', bbzt: '0', qszt: '1', dfpzzsy: 78, dkfxzbjNcye: 26, dkfxzbjDnfp: 16, dkfxzbjDnzc: 5, glfyDnfp: 10, cslzzfbqzjNcye: 14, cslzzfbqzjDnfp: 6, cslzzfbqzjDnsj: 4 },
+      { hsjgbh: '330424', jbjgmc: '海盐县', bbzt: '0', qszt: '1', dfpzzsy: 66, dkfxzbjNcye: 22, dkfxzbjDnfp: 14, dkfxzbjDnzc: 4, glfyDnfp: 9, cslzzfbqzjNcye: 11, cslzzfbqzjDnfp: 5, cslzzfbqzjDnsj: 3 },
+      { hsjgbh: '330481', jbjgmc: '海宁市', bbzt: '0', qszt: '1', dfpzzsy: 96, dkfxzbjNcye: 34, dkfxzbjDnfp: 21, dkfxzbjDnzc: 7, glfyDnfp: 13, cslzzfbqzjNcye: 18, cslzzfbqzjDnfp: 8, cslzzfbqzjDnsj: 5 },
+      { hsjgbh: '330483', jbjgmc: '桐乡市', bbzt: '0', qszt: '1', dfpzzsy: 108, dkfxzbjNcye: 39, dkfxzbjDnfp: 24, dkfxzbjDnzc: 8, glfyDnfp: 15, cslzzfbqzjNcye: 20, cslzzfbqzjDnfp: 9, cslzzfbqzjDnsj: 6 }
+    ];
+
+    function createInitialZzsyfpZbData() {
+      return Object.assign({}, ZZSYFP_MAIN_META, { details: [] });
+    }
+
+    function createInitialZzsyfpFbData() {
+      return Object.assign({}, ZZSYFP_MAIN_META, { details: deepClone(ZZSYFP_FB_DETAILS) });
+    }
+
+    const YWSZYS_MAIN_META = {
+      id: 3001,
+      mainId: 3001,
+      bbbh: 'JXYW20250001',
+      nd: '2025',
+      bzdw: '嘉兴市住房公积金管理服务中心（全市）',
+      bbzt: '0',
+      bbztLabel: '草稿',
+      dwfzr: '柳国彪',
+      kjzg: '郭琛',
+      zbr: '市中心制表人'
+    };
+
+    const YWSZYS_FB_ROW_CONFIG = [
+      { item: '一、业务收入', line: 1, field: 'ywsrHj', isFormula: true, isReadonly: true, isNotApplicable: false },
+      { item: '1、住房公积金利息收入', line: 2, field: 'ywsrZfgjjlxs', isFormula: false, isReadonly: false, isNotApplicable: false },
+      { item: '2、增值收益利息收入', line: 3, field: 'ywsrZzsylxs', isFormula: false, isReadonly: false, isNotApplicable: false },
+      { item: '3、委托贷款利息收入', line: 4, field: 'ywsrWtdklxs', isFormula: false, isReadonly: false, isNotApplicable: false },
+      { item: '4、国债投资收入', line: 5, field: 'ywsrGdtzsr', isFormula: false, isReadonly: true, isNotApplicable: true },
+      { item: '5、其他收入', line: 6, field: 'ywsrQtsr', isFormula: false, isReadonly: false, isNotApplicable: false },
+      { item: '二、业务支出', line: 7, field: 'ywszHj', isFormula: true, isReadonly: true, isNotApplicable: false },
+      { item: '1、住房公积金利息支出', line: 8, field: 'ywszZfgjjlxzc', isFormula: false, isReadonly: false, isNotApplicable: false },
+      { item: '2、住房公积金归集手续费支出', line: 9, field: 'ywszGjsxfzc', isFormula: false, isReadonly: false, isNotApplicable: false },
+      { item: '3、委托贷款手续费支出', line: 10, field: 'ywszWtdksxfzc', isFormula: false, isReadonly: false, isNotApplicable: false },
+      { item: '4、其他支出', line: 11, field: 'ywszQtzc', isFormula: false, isReadonly: false, isNotApplicable: false },
+      { item: '三、增值收益', line: 12, field: 'zzsy', isFormula: true, isReadonly: true, isNotApplicable: false }
+    ];
+
+    const YWSZYS_ZB_DETAIL_TEMPLATE = [
+      { hangxh: 1, xmbm: 'YWSR_HJ', xmmc: '一、业务收入', sfgs: '1', sfbsy: '0' },
+      { hangxh: 2, xmbm: 'YWSR_ZFGJJLXS', xmmc: '1、住房公积金利息收入', sfgs: '0', sfbsy: '0' },
+      { hangxh: 3, xmbm: 'YWSR_ZZSYLXS', xmmc: '2、增值收益利息收入', sfgs: '0', sfbsy: '0' },
+      { hangxh: 4, xmbm: 'YWSR_WTDKLXS', xmmc: '3、委托贷款利息收入', sfgs: '0', sfbsy: '0' },
+      { hangxh: 5, xmbm: 'YWSR_GDTZSR', xmmc: '4、国债投资收入', sfgs: '0', sfbsy: '1' },
+      { hangxh: 6, xmbm: 'YWSR_QTSR', xmmc: '5、其他收入', sfgs: '0', sfbsy: '0' },
+      { hangxh: 7, xmbm: 'YWSZ_HJ', xmmc: '二、业务支出', sfgs: '1', sfbsy: '0' },
+      { hangxh: 8, xmbm: 'YWSZ_ZFGJJLXZC', xmmc: '1、住房公积金利息支出', sfgs: '0', sfbsy: '0' },
+      { hangxh: 9, xmbm: 'YWSZ_GJSXFZC', xmmc: '2、住房公积金归集手续费支出', sfgs: '0', sfbsy: '0' },
+      { hangxh: 10, xmbm: 'YWSZ_WTDKSXFZC', xmmc: '3、委托贷款手续费支出', sfgs: '0', sfbsy: '0' },
+      { hangxh: 11, xmbm: 'YWSZ_QTZC', xmmc: '4、其他支出', sfgs: '0', sfbsy: '0' },
+      { hangxh: 12, xmbm: 'ZZSY', xmmc: '三、增值收益', sfgs: '1', sfbsy: '0' }
+    ];
+
+    const YWSZYS_ZB_HISTORY = {
+      YWSR_HJ: { lastBudget: 1020, lastActual: 998 },
+      YWSR_ZFGJJLXS: { lastBudget: 320, lastActual: 305 },
+      YWSR_ZZSYLXS: { lastBudget: 80, lastActual: 75 },
+      YWSR_WTDKLXS: { lastBudget: 560, lastActual: 548 },
+      YWSR_GDTZSR: { lastBudget: null, lastActual: null },
+      YWSR_QTSR: { lastBudget: 60, lastActual: 70 },
+      YWSZ_HJ: { lastBudget: 360, lastActual: 348 },
+      YWSZ_ZFGJJLXZC: { lastBudget: 165, lastActual: 158 },
+      YWSZ_GJSXFZC: { lastBudget: 62, lastActual: 60 },
+      YWSZ_WTDKSXFZC: { lastBudget: 110, lastActual: 108 },
+      YWSZ_QTZC: { lastBudget: 23, lastActual: 22 },
+      ZZSY: { lastBudget: 660, lastActual: 650 }
+    };
+
+    const YWSZYS_ZB_FIELD_MAP = {
+      YWSR_HJ: 'ywsrHj',
+      YWSR_ZFGJJLXS: 'ywsrZfgjjlxs',
+      YWSR_ZZSYLXS: 'ywsrZzsylxs',
+      YWSR_WTDKLXS: 'ywsrWtdklxs',
+      YWSR_GDTZSR: 'ywsrGdtzsr',
+      YWSR_QTSR: 'ywsrQtsr',
+      YWSZ_HJ: 'ywszHj',
+      YWSZ_ZFGJJLXZC: 'ywszZfgjjlxzc',
+      YWSZ_GJSXFZC: 'ywszGjsxfzc',
+      YWSZ_WTDKSXFZC: 'ywszWtdksxfzc',
+      YWSZ_QTZC: 'ywszQtzc',
+      ZZSY: 'zzsy'
+    };
+
+    const YWSZYS_FB_DETAILS = [
+      { hsjgbh: '330401', jbjgmc: '市本级', ywsrZfgjjlxs: 120, ywsrZzsylxs: 30, ywsrWtdklxs: 220, ywsrGdtzsr: null, ywsrQtsr: 8, ywszZfgjjlxzc: 60, ywszGjsxfzc: 20, ywszWtdksxfzc: 35, ywszQtzc: 5 },
+      { hsjgbh: '330421', jbjgmc: '嘉善县', ywsrZfgjjlxs: 52, ywsrZzsylxs: 11, ywsrWtdklxs: 72, ywsrGdtzsr: null, ywsrQtsr: 5, ywszZfgjjlxzc: 27, ywszGjsxfzc: 8, ywszWtdksxfzc: 16, ywszQtzc: 2 },
+      { hsjgbh: '330422', jbjgmc: '平湖市', ywsrZfgjjlxs: 48, ywsrZzsylxs: 10, ywsrWtdklxs: 68, ywsrGdtzsr: null, ywsrQtsr: 4, ywszZfgjjlxzc: 24, ywszGjsxfzc: 8, ywszWtdksxfzc: 15, ywszQtzc: 2 },
+      { hsjgbh: '330424', jbjgmc: '海盐县', ywsrZfgjjlxs: 42, ywsrZzsylxs: 9, ywsrWtdklxs: 60, ywsrGdtzsr: null, ywsrQtsr: 3, ywszZfgjjlxzc: 22, ywszGjsxfzc: 7, ywszWtdksxfzc: 13, ywszQtzc: 2 },
+      { hsjgbh: '330481', jbjgmc: '海宁市', ywsrZfgjjlxs: 72, ywsrZzsylxs: 18, ywsrWtdklxs: 110, ywsrGdtzsr: null, ywsrQtsr: 6, ywszZfgjjlxzc: 36, ywszGjsxfzc: 12, ywszWtdksxfzc: 22, ywszQtzc: 3 },
+      { hsjgbh: '330483', jbjgmc: '桐乡市', ywsrZfgjjlxs: 78, ywsrZzsylxs: 19, ywsrWtdklxs: 118, ywsrGdtzsr: null, ywsrQtsr: 7, ywszZfgjjlxzc: 39, ywszGjsxfzc: 13, ywszWtdksxfzc: 24, ywszQtzc: 3 }
+    ];
+
+    function createInitialYwszysZbData() {
+      return Object.assign({}, YWSZYS_MAIN_META, { details: [] });
+    }
+
+    function createInitialYwszysFbData() {
+      return Object.assign({}, YWSZYS_MAIN_META, { details: deepClone(YWSZYS_FB_DETAILS) });
+    }
+
+    const ZJSYZX_MAIN_META = {
+      id: 5001,
+      mainId: 5001,
+      bbbh: 'JXZX20251001',
+      nd: '2025',
+      yf: '10',
+      bzdw: '嘉兴市住房公积金管理服务中心（全市）',
+      bbzt: '0',
+      bbztLabel: '草稿',
+      qssj: '2025-11-02 09:30:00',
+      dwfzr: '柳国彪',
+      kjzg: '郭琛',
+      zbr: '分中心填报人'
+    };
+
+    const ZJSYZX_ROW_CONFIG = [
+      { category: '归集提取', item: '上年末余额', line: 1, field: 'gjtqSymye', valueType: 'money', mode: 'auto' },
+      { category: '归集提取', item: '本年归集预算数', line: 2, field: 'gjtqBngjys', valueType: 'money', mode: 'auto' },
+      { category: '归集提取', item: '本年归集实绩数', line: 3, field: 'gjtqBngjsj', valueType: 'money', mode: 'auto' },
+      { category: '归集提取', item: '归集完成预算数(%)', line: 4, field: 'gjtqGjwcl', valueType: 'percent', mode: 'formula' },
+      { category: '归集提取', item: '上年归集同期数', line: 5, field: 'gjtqSngjtqs', valueType: 'money', mode: 'auto' },
+      { category: '归集提取', item: '归集同比增长(%)', line: 6, field: 'gjtqGjtbzz', valueType: 'percent', mode: 'formula' },
+      { category: '归集提取', item: '本年提取预算数', line: 7, field: 'gjtqBntqys', valueType: 'money', mode: 'auto' },
+      { category: '归集提取', item: '本年提取实绩数', line: 8, field: 'gjtqBntqsj', valueType: 'money', mode: 'auto' },
+      { category: '归集提取', item: '提取完成预算数(%)', line: 9, field: 'gjtqTqwcl', valueType: 'percent', mode: 'formula' },
+      { category: '归集提取', item: '上年提取同期数', line: 10, field: 'gjtqSntqtqs', valueType: 'money', mode: 'auto' },
+      { category: '归集提取', item: '提取同比增长(%)', line: 11, field: 'gjtqTqtbzz', valueType: 'percent', mode: 'formula' },
+      { category: '归集提取', item: '当年统筹调剂资金', line: 12, field: 'gjtqDntctjzj', valueType: 'money', mode: 'manual' },
+      { category: '归集提取', item: '期末余额', line: 13, field: 'gjtqQmye', valueType: 'money', mode: 'formula' },
+      { category: '个人贷款', item: '上年末余额', line: 14, field: 'grdkSymye', valueType: 'money', mode: 'auto' },
+      { category: '个人贷款', item: '本年发放预算数', line: 15, field: 'grdkBnffys', valueType: 'money', mode: 'auto' },
+      { category: '个人贷款', item: '本年发放实绩数', line: 16, field: 'grdkBnffsj', valueType: 'money', mode: 'auto' },
+      { category: '个人贷款', item: '发放完成预算数(%)', line: 17, field: 'grdkFfwcl', valueType: 'percent', mode: 'formula' },
+      { category: '个人贷款', item: '上年发放同期数', line: 18, field: 'grdkSnfftqs', valueType: 'money', mode: 'auto' },
+      { category: '个人贷款', item: '发放同比增长(%)', line: 19, field: 'grdkFftbzz', valueType: 'percent', mode: 'formula' },
+      { category: '个人贷款', item: '本年收回预算数', line: 20, field: 'grdkBnshys', valueType: 'money', mode: 'auto' },
+      { category: '个人贷款', item: '本年收回实绩数', line: 21, field: 'grdkBnshsj', valueType: 'money', mode: 'auto' },
+      { category: '个人贷款', item: '收回完成预算数(%)', line: 22, field: 'grdkShwcl', valueType: 'percent', mode: 'formula' },
+      { category: '个人贷款', item: '上年收回同期数', line: 23, field: 'grdkSnshtqs', valueType: 'money', mode: 'auto' },
+      { category: '个人贷款', item: '收回同比增长(%)', line: 24, field: 'grdkShtbzz', valueType: 'percent', mode: 'formula' },
+      { category: '个人贷款', item: '当年“公转商”贷款转出', line: 25, field: 'grdkDngzsdkzc', valueType: 'money', mode: 'manual' },
+      { category: '个人贷款', item: '期末余额', line: 26, field: 'grdkQmye', valueType: 'money', mode: 'formula' },
+      { category: '个人贷款', item: '逾期贷款', line: 27, field: 'grdkYqdk', valueType: 'money', mode: 'auto' },
+      { category: '个人贷款', item: '逾期贷款率', line: 28, field: 'grdkYqdkl', valueType: 'percent', mode: 'formula' },
+      { category: '占比', item: '个人贷款余额占归集余额比(%)', line: 29, field: 'dkyezbgjye', valueType: 'percent', mode: 'formula' }
+    ];
+
+    const ZJSYZX_DETAILS = [
+      { hsjgbh: '330401', jbjgmc: '市本级', gjtqSymye: 30000, gjtqBngjys: 25000, gjtqBngjsj: 20800, gjtqSngjtqs: 19200, gjtqBntqys: 21000, gjtqBntqsj: 18400, gjtqSntqtqs: 17100, gjtqDntctjzj: 900, grdkSymye: 20000, grdkBnffys: 9000, grdkBnffsj: 7600, grdkSnfftqs: 6900, grdkBnshys: 5200, grdkBnshsj: 4480, grdkSnshtqs: 4050, grdkDngzsdkzc: 280, grdkYqdk: 210 },
+      { hsjgbh: '330421', jbjgmc: '嘉善县', gjtqSymye: 12000, gjtqBngjys: 9000, gjtqBngjsj: 7600, gjtqSngjtqs: 7000, gjtqBntqys: 8200, gjtqBntqsj: 7100, gjtqSntqtqs: 6600, gjtqDntctjzj: 140, grdkSymye: 7000, grdkBnffys: 3400, grdkBnffsj: 2800, grdkSnfftqs: 2500, grdkBnshys: 1900, grdkBnshsj: 1650, grdkSnshtqs: 1500, grdkDngzsdkzc: 95, grdkYqdk: 58 },
+      { hsjgbh: '330422', jbjgmc: '平湖市', gjtqSymye: 11000, gjtqBngjys: 8200, gjtqBngjsj: 6900, gjtqSngjtqs: 6500, gjtqBntqys: 7600, gjtqBntqsj: 6450, gjtqSntqtqs: 6100, gjtqDntctjzj: 90, grdkSymye: 6500, grdkBnffys: 3000, grdkBnffsj: 2520, grdkSnfftqs: 2300, grdkBnshys: 1700, grdkBnshsj: 1490, grdkSnshtqs: 1380, grdkDngzsdkzc: 72, grdkYqdk: 45 },
+      { hsjgbh: '330424', jbjgmc: '海盐县', gjtqSymye: 9000, gjtqBngjys: 7600, gjtqBngjsj: 6200, gjtqSngjtqs: 5900, gjtqBntqys: 7000, gjtqBntqsj: 5900, gjtqSntqtqs: 5520, gjtqDntctjzj: 70, grdkSymye: 5400, grdkBnffys: 2600, grdkBnffsj: 2140, grdkSnfftqs: 1950, grdkBnshys: 1500, grdkBnshsj: 1320, grdkSnshtqs: 1210, grdkDngzsdkzc: 55, grdkYqdk: 39 },
+      { hsjgbh: '330481', jbjgmc: '海宁市', gjtqSymye: 15000, gjtqBngjys: 12000, gjtqBngjsj: 10100, gjtqSngjtqs: 9500, gjtqBntqys: 10800, gjtqBntqsj: 9300, gjtqSntqtqs: 8800, gjtqDntctjzj: 210, grdkSymye: 9500, grdkBnffys: 4600, grdkBnffsj: 3820, grdkSnfftqs: 3440, grdkBnshys: 2400, grdkBnshsj: 2060, grdkSnshtqs: 1880, grdkDngzsdkzc: 120, grdkYqdk: 70 },
+      { hsjgbh: '330483', jbjgmc: '桐乡市', gjtqSymye: 16000, gjtqBngjys: 13000, gjtqBngjsj: 10900, gjtqSngjtqs: 10200, gjtqBntqys: 11600, gjtqBntqsj: 9950, gjtqSntqtqs: 9420, gjtqDntctjzj: 240, grdkSymye: 11000, grdkBnffys: 5200, grdkBnffsj: 4350, grdkSnfftqs: 3980, grdkBnshys: 2800, grdkBnshsj: 2430, grdkSnshtqs: 2200, grdkDngzsdkzc: 140, grdkYqdk: 82 }
+    ];
+
+    function createInitialZjsyzxData() {
+      return Object.assign({}, ZJSYZX_MAIN_META, { details: deepClone(ZJSYZX_DETAILS) });
+    }
+
+    const KMGZ_MAIN_META = {
+      id: 6001,
+      mainId: 6001,
+      bbbh: 'JXKMGZ20251001',
+      nd: '2025',
+      yf: '10',
+      jzrq: '2025-10-31',
+      bzdw: '嘉兴市住房公积金管理服务中心（全市）',
+      bbzt: '0',
+      bbztLabel: '草稿',
+      qssj: '2025-11-02 10:15:00',
+      qscs: 1,
+      dwfzr: '柳国彪',
+      kjzg: '郭琛',
+      zbr: '分中心填报人',
+      sfsd: '0',
+      shyj: ''
+    };
+
+    const KMGZ_ROW_CONFIG = [
+      { item: '本年实缴', unit: '人', field: 'bnSj', valueType: 'number', mode: 'auto' },
+      { item: '上年实缴', unit: '人', field: 'snSj', valueType: 'number', mode: 'auto' },
+      { item: '本年净增', unit: '人', field: 'bnJz', valueType: 'number', mode: 'formula' },
+      { item: '净增长率', unit: '%', field: 'jzzl', valueType: 'percent', mode: 'formula' },
+      { item: '目标任务', unit: '人', field: 'mbRw', valueType: 'number', mode: 'manual' },
+      { item: '完成率', unit: '%', field: 'wcl', valueType: 'percent', mode: 'formula' }
+    ];
+
+    const KMGZ_DETAILS = [
+      { hsjgbh: '330401', jbjgmc: '市本级', bbzt: '0', qszt: '1', bnSj: 14520, snSj: 13860, mbRw: 15000 },
+      { hsjgbh: '330421', jbjgmc: '嘉善县', bbzt: '0', qszt: '1', bnSj: 8420, snSj: 7980, mbRw: 8650 },
+      { hsjgbh: '330422', jbjgmc: '平湖市', bbzt: '0', qszt: '1', bnSj: 7810, snSj: 7350, mbRw: 8100 },
+      { hsjgbh: '330424', jbjgmc: '海盐县', bbzt: '0', qszt: '1', bnSj: 6520, snSj: 6180, mbRw: 6800 },
+      { hsjgbh: '330481', jbjgmc: '海宁市', bbzt: '0', qszt: '1', bnSj: 11230, snSj: 10560, mbRw: 11600 },
+      { hsjgbh: '330483', jbjgmc: '桐乡市', bbzt: '0', qszt: '1', bnSj: 10460, snSj: 9800, mbRw: 10800 }
+    ];
+
+    function createInitialKmgzData() {
+      return Object.assign({}, KMGZ_MAIN_META, { details: deepClone(KMGZ_DETAILS) });
+    }
+
+    const MOCK_API_DATA = {
+      ywszys: {
+        dict: [
+          { category: '', item: '一、业务收入(2+3)', line: 1, isFormula: true, isReadonly: true },
+          { category: '', item: '1、住房公积金利息收入', line: 2, isFormula: false, isReadonly: false },
+          { category: '', item: '2、增值收益利息收入', line: 3, isFormula: false, isReadonly: false }
+        ],
+        details: [
+          { hangxh: 2, hsjgbh: '330401', bnyss: 1500, snsjs: 3000 },
+          { hangxh: 3, hsjgbh: '330401', bnyss: 1000, snsjs: 2000 },
+          { hangxh: 2, hsjgbh: '330421', bnyss: 800, snsjs: 3000 },
+          { hangxh: 3, hsjgbh: '330421', bnyss: 500, snsjs: 2000 }
+        ]
+      }
+    };
+
+    new Vue({
+      el: '#app',
+      data: function() {
+        return {
+          activeMenu: 'zjsyys',
+          activeBudgetTab: 'zb',
+          activeYwszysTab: 'zb',
+          activeGjsyjsTab: 'zb',
+          activeYwszjsTab: 'zb',
+          activeZzsyfpTab: 'zb',
+          currentRole: '330400',
+          roleOptions: ROLE_OPTIONS,
+          signatures: { unit_leader: '柳国彪', accounting_supervisor: '郭琛', preparer: '' },
+          menuTitles: {
+            zjsyys: '资金使用预算管理',
+            ywszys: '业务收支预算管理',
+            zjsyzx: '资金使用执行情况',
+            ywszzx: '业务收支执行情况',
+            gjsyjs: '归集使用决算管理',
+            ywszjs: '业务收支决算管理',
+            zzsyfp: '增值收益分配情况',
+            kmgz: '扩面工作完成情况'
+          },
+          tableDisplayData: [],
+          budgetZbData: createInitialBudgetZbData(),
+          budgetFbData: createInitialBudgetFbData(),
+          budgetFbRows: [],
+          budgetZbRows: [],
+          ywszysZbData: createInitialYwszysZbData(),
+          ywszysFbData: createInitialYwszysFbData(),
+          ywszysFbRows: [],
+          ywszysZbRows: [],
+          gjsyjsZbData: createInitialGjsyjsZbData(),
+          gjsyjsFbData: createInitialGjsyjsFbData(),
+          gjsyjsZbRows: [],
+          gjsyjsFbRows: [],
+          ywszjsZbData: createInitialYwszjsZbData(),
+          ywszjsFbData: createInitialYwszjsFbData(),
+          ywszjsZbRows: [],
+          ywszjsFbRows: [],
+          zzsyfpZbData: createInitialZzsyfpZbData(),
+          zzsyfpFbData: createInitialZzsyfpFbData(),
+          zzsyfpZbRows: [],
+          zzsyfpFbRows: [],
+          zjsyzxData: createInitialZjsyzxData(),
+          zjsyzxRows: [],
+          kmgzData: createInitialKmgzData(),
+          kmgzRows: [],
+          kmgzInputBuffer: {}
+        };
+      },
+      computed: {
+        isBudgetMenu: function() {
+          return this.activeMenu === 'zjsyys';
+        },
+        isYwszysMenu: function() {
+          return this.activeMenu === 'ywszys';
+        },
+        isGjsyjsMenu: function() {
+          return this.activeMenu === 'gjsyjs';
+        },
+        isYwszjsMenu: function() {
+          return this.activeMenu === 'ywszjs';
+        },
+        isZzsyfpMenu: function() {
+          return this.activeMenu === 'zzsyfp';
+        },
+        isZjsyzxMenu: function() {
+          return this.activeMenu === 'zjsyzx';
+        },
+        isKmgzMenu: function() {
+          return this.activeMenu === 'kmgz';
+        },
+        isCurrentSummaryTab: function() {
+          return (this.isBudgetMenu && this.activeBudgetTab === 'zb') || (this.isYwszysMenu && this.activeYwszysTab === 'zb') || (this.isGjsyjsMenu && this.activeGjsyjsTab === 'zb') || (this.isYwszjsMenu && this.activeYwszjsTab === 'zb') || (this.isZzsyfpMenu && this.activeZzsyfpTab === 'zb');
+        },
+        currentMeta: function() {
+          if (this.isBudgetMenu) {
+            return this.activeBudgetTab === 'zb' ? this.budgetZbData : this.budgetFbData;
+          }
+          if (this.isYwszysMenu) {
+            return this.activeYwszysTab === 'zb' ? this.ywszysZbData : this.ywszysFbData;
+          }
+          if (this.isGjsyjsMenu) {
+            return this.activeGjsyjsTab === 'zb' ? this.gjsyjsZbData : this.gjsyjsFbData;
+          }
+          if (this.isYwszjsMenu) {
+            return this.activeYwszjsTab === 'zb' ? this.ywszjsZbData : this.ywszjsFbData;
+          }
+          if (this.isZzsyfpMenu) {
+            return this.activeZzsyfpTab === 'zb' ? this.zzsyfpZbData : this.zzsyfpFbData;
+          }
+          if (this.isZjsyzxMenu) {
+            return this.zjsyzxData;
+          }
+          if (this.isKmgzMenu) {
+            return this.kmgzData;
+          }
+          return {
+            bbbh: 'JXCW00001',
+            nd: '2025',
+            bzdw: '嘉兴市住房公积金管理服务中心（全市）',
+            bbztLabel: this.currentRole === '330400' ? '审核中' : '草稿'
+          };
+        },
+        currentStatusType: function() {
+          var map = { 草稿: 'info', 已提交: 'warning', 审核退回: 'danger', 审核通过: 'success', 已锁定: 'danger', 审核中: 'warning' };
+          return map[this.currentMeta.bbztLabel] || 'info';
+        },
+        currentRoleLabel: function() {
+          var role = this.roleOptions.find(function(item) { return item.code === this.currentRole; }.bind(this));
+          return role ? role.label : '';
+        },
+        showBranchButtons: function() {
+          if (this.currentRole === '330400') {
+            return false;
+          }
+          if (this.isBudgetMenu) {
+            return this.activeBudgetTab === 'fb';
+          }
+          if (this.isYwszysMenu) {
+            return this.activeYwszysTab === 'fb';
+          }
+          if (this.isGjsyjsMenu) {
+            return this.activeGjsyjsTab === 'fb';
+          }
+          if (this.isYwszjsMenu) {
+            return this.activeYwszjsTab === 'fb';
+          }
+          if (this.isZzsyfpMenu) {
+            return this.activeZzsyfpTab === 'fb';
+          }
+          if (this.isZjsyzxMenu) {
+            return true;
+          }
+          if (this.isKmgzMenu) {
+            return true;
+          }
+          return true;
+        },
+        reportHeaderTitle: function() {
+          if (this.isBudgetMenu) {
+            return this.activeBudgetTab === 'zb'
+              ? '2025年度 嘉兴市住房公积金归集使用预算表'
+              : '2025年度 嘉兴市住房公积金归集使用预算表（附表）';
+          }
+          if (this.isYwszysMenu) {
+            return this.activeYwszysTab === 'zb'
+              ? '2025年度 嘉兴市住房公积金业务收支预算表'
+              : '2025年度 嘉兴市住房公积金业务收支预算表（附表）';
+          }
+          if (this.isGjsyjsMenu) {
+            return this.activeGjsyjsTab === 'zb'
+              ? '2024年度 嘉兴市住房公积金归集使用决算表'
+              : '2024年度 嘉兴市住房公积金归集使用决算表（附表）';
+          }
+          if (this.isYwszjsMenu) {
+            return this.activeYwszjsTab === 'zb'
+              ? '2024年度 嘉兴市住房公积金业务收支决算表'
+              : '2024年度 嘉兴市住房公积金业务收支决算表（附表）';
+          }
+          if (this.isZzsyfpMenu) {
+            return this.activeZzsyfpTab === 'zb'
+              ? '2024年度 嘉兴市住房公积金增值收益分配情况表'
+              : '2024年度 嘉兴市住房公积金增值收益分配情况表（附表）';
+          }
+          var titles = {
+            zjsyzx: '2025年10月 嘉兴市住房公积金资金使用预算执行情况表',
+            ywszzx: '2025年10月 嘉兴市住房公积金业务收支预算执行情况表',
+            zzsyfp: '2024年度 嘉兴市住房公积金增值收益分配情况表',
+            kmgz: '嘉兴市住房公积金扩面工作完成情况表'
+          };
+          return titles[this.activeMenu];
+        },
+        hasCategory: function() {
+          return ['ywszys', 'zjsyzx', 'ywszzx', 'gjsyjs'].includes(this.activeMenu);
+        },
+        hasLine: function() {
+          return ['ywszys', 'gjsyjs', 'ywszjs', 'zzsyfp'].includes(this.activeMenu);
+        },
+        hasUnit: function() {
+          return this.activeMenu === 'kmgz';
+        },
+        dataAreaLabel: function() {
+          if (this.activeMenu.includes('ys')) return '本年预算数 分解 (按机构行展示)';
+          if (this.activeMenu.includes('js')) return '本年实绩数 分解 (按机构行展示)';
+          return '区县指标分布';
+        },
+        renderOrgs: function() {
+          if (this.currentRole === '330400') return ORG_LIST;
+          return ORG_LIST.filter(function(org) { return org.code === this.currentRole; }.bind(this));
+        },
+        renderBudgetOrgs: function() {
+          if (this.currentRole === '330400') return ORG_LIST;
+          return ORG_LIST.filter(function(org) { return org.code === this.currentRole; }.bind(this));
+        },
+        renderYwszysOrgs: function() {
+          if (this.currentRole === '330400') return ORG_LIST;
+          return ORG_LIST.filter(function(org) { return org.code === this.currentRole; }.bind(this));
+        },
+        renderGjsyjsOrgs: function() {
+          if (this.currentRole === '330400') return ORG_LIST;
+          return ORG_LIST.filter(function(org) { return org.code === this.currentRole; }.bind(this));
+        },
+        renderYwszjsOrgs: function() {
+          if (this.currentRole === '330400') return ORG_LIST;
+          return ORG_LIST.filter(function(org) { return org.code === this.currentRole; }.bind(this));
+        },
+        renderZzsyfpOrgs: function() {
+          if (this.currentRole === '330400') return ORG_LIST;
+          return ORG_LIST.filter(function(org) { return org.code === this.currentRole; }.bind(this));
+        },
+        renderZjsyzxOrgs: function() {
+          if (this.currentRole === '330400') return ORG_LIST;
+          return ORG_LIST.filter(function(org) { return org.code === this.currentRole; }.bind(this));
+        },
+        renderKmgzOrgs: function() {
+          if (this.currentRole === '330400') return ORG_LIST;
+          return ORG_LIST.filter(function(org) { return org.code === this.currentRole; }.bind(this));
+        }
+      },
+      methods: {
+        handleMenuSelect: function(index) {
+          if (this.isKmgzMenu) {
+            this.flushKmgzInputBuffer();
+          }
+          this.activeMenu = index;
+          if (this.isBudgetMenu) {
+            this.activeBudgetTab = this.currentRole === '330400' ? 'zb' : 'fb';
+            this.refreshBudgetView();
+          } else if (this.isYwszysMenu) {
+            this.activeYwszysTab = this.currentRole === '330400' ? 'zb' : 'fb';
+            this.refreshYwszysView();
+          } else if (this.isGjsyjsMenu) {
+            this.activeGjsyjsTab = this.currentRole === '330400' ? 'zb' : 'fb';
+            this.refreshGjsyjsView();
+          } else if (this.isYwszjsMenu) {
+            this.activeYwszjsTab = this.currentRole === '330400' ? 'zb' : 'fb';
+            this.refreshYwszjsView();
+          } else if (this.isZzsyfpMenu) {
+            this.activeZzsyfpTab = this.currentRole === '330400' ? 'zb' : 'fb';
+            this.refreshZzsyfpView();
+          } else if (this.isZjsyzxMenu) {
+            this.refreshZjsyzxView();
+          } else if (this.isKmgzMenu) {
+            this.refreshKmgzView();
+          } else {
+            this.fetchLegacyData();
+          }
+        },
+        handleRoleChange: function() {
+          if (this.isKmgzMenu) {
+            this.flushKmgzInputBuffer();
+          }
+          this.$message.success('已切换角色身份，数据权限及展示列已重新加载。');
+          if (this.currentRole !== '330400') {
+            var currentOrg = ORG_LIST.find(function(org) { return org.code === this.currentRole; }.bind(this));
+            this.signatures.preparer = currentOrg ? currentOrg.name + '填报人' : '分中心填报人';
+          } else {
+            this.signatures.preparer = '';
+          }
+          if (this.isBudgetMenu) {
+            this.activeBudgetTab = this.currentRole === '330400' ? 'zb' : 'fb';
+            this.refreshBudgetView();
+          } else if (this.isYwszysMenu) {
+            this.activeYwszysTab = this.currentRole === '330400' ? 'zb' : 'fb';
+            this.refreshYwszysView();
+          } else if (this.isGjsyjsMenu) {
+            this.activeGjsyjsTab = this.currentRole === '330400' ? 'zb' : 'fb';
+            this.refreshGjsyjsView();
+          } else if (this.isYwszjsMenu) {
+            this.activeYwszjsTab = this.currentRole === '330400' ? 'zb' : 'fb';
+            this.refreshYwszjsView();
+          } else if (this.isZzsyfpMenu) {
+            this.activeZzsyfpTab = this.currentRole === '330400' ? 'zb' : 'fb';
+            this.refreshZzsyfpView();
+          } else if (this.isZjsyzxMenu) {
+            this.refreshZjsyzxView();
+          } else if (this.isKmgzMenu) {
+            this.refreshKmgzView();
+          } else {
+            this.fetchLegacyData();
+          }
+        },
+        handleBudgetTabChange: function() {
+          this.refreshBudgetView();
+        },
+        handleYwszysTabChange: function() {
+          this.refreshYwszysView();
+        },
+        handleGjsyjsTabChange: function() {
+          this.refreshGjsyjsView();
+        },
+        handleYwszjsTabChange: function() {
+          this.refreshYwszjsView();
+        },
+        handleZzsyfpTabChange: function() {
+          this.refreshZzsyfpView();
+        },
+        fetchLegacyData: function() {
+          var apiData = MOCK_API_DATA[this.activeMenu] || MOCK_API_DATA.ywszys;
+          var pivotTable = [];
+          apiData.dict.forEach(function(dictRow) {
+            var rowObj = {
+              category: dictRow.category,
+              item: dictRow.item,
+              line: dictRow.line,
+              isFormula: dictRow.isFormula,
+              isReadonly: dictRow.isReadonly,
+              lastActual: 0,
+              val_qs: 0
+            };
+            ORG_LIST.forEach(function(org) { rowObj['val_' + org.code] = 0; });
+            var details = apiData.details.filter(function(detail) { return detail.hangxh === dictRow.line; });
+            details.forEach(function(detail) {
+              if (this.currentRole === '330400' || this.currentRole === detail.hsjgbh) {
+                rowObj['val_' + detail.hsjgbh] = detail.bnyss || 0;
+              }
+              if (detail.snsjs) rowObj.lastActual = detail.snsjs;
+            }.bind(this));
+            pivotTable.push(rowObj);
+          }.bind(this));
+          this.tableDisplayData = pivotTable;
+          this.calcLegacyFormulas();
+        },
+        calcLegacyFormulas: function() {
+          var data = this.tableDisplayData;
+          data.forEach(function(row) {
+            var total = 0;
+            ORG_LIST.forEach(function(org) {
+              total += Number(row['val_' + org.code]) || 0;
+            });
+            row.val_qs = total.toFixed(2);
+          });
+          if (data.length >= 3 && data[0].line === 1 && this.activeMenu === 'ywszys') {
+            ['val_330401', 'val_330421', 'val_qs'].forEach(function(col) {
+              data[0][col] = ((Number(data[1][col]) || 0) + (Number(data[2][col]) || 0)).toFixed(2);
+            });
+          }
+        },
+        isEditable: function(row, orgCode) {
+          if (this.currentRole === '330400') return false;
+          if (row.isFormula || row.isReadonly) return false;
+          return this.currentRole === orgCode;
+        },
+        cellClassName: function(params) {
+          var row = params.row;
+          var property = params.column.property;
+          if (row.isFormula && property && property.indexOf('val_') === 0) return 'formula-cell';
+          if (row.isReadonly && !row.isFormula && property && property.indexOf('val_') === 0) return 'readonly-cell';
+          if (property === 'val_qs' && this.currentRole === '330400') return 'formula-cell';
+          return '';
+        },
+        refreshBudgetView: function() {
+          this.recalculateBudgetDetailFormulas();
+          this.syncBudgetZbData();
+          this.buildBudgetFbRows();
+          this.buildBudgetZbRows();
+        },
+        recalculateBudgetDetailFormulas: function() {
+          this.budgetFbData.details.forEach(function(detail) {
+            detail.gjtqNmye = this.safeNumber(detail.gjtqNcye) + this.safeNumber(detail.gjtqDngjs) - this.safeNumber(detail.gjtqDntqs) + this.safeNumber(detail.gjtqDntcdjzj);
+            detail.grdkNmye = this.safeNumber(detail.grdkNcye) + this.safeNumber(detail.grdkDnffs) - this.safeNumber(detail.grdkDnshs) - this.safeNumber(detail.grdkDngzsdkzc);
+            detail.grdkDkyezbgjye = detail.gjtqNmye ? detail.grdkNmye / detail.gjtqNmye : null;
+            detail.gdtzNmye = this.safeNumber(detail.gdtzNcye) + this.safeNumber(detail.gdtzDnzjs) - this.safeNumber(detail.gdtzDnhss);
+            detail.gdtzYezbgjye = detail.gjtqNmye ? detail.gdtzNmye / detail.gjtqNmye : null;
+          }.bind(this));
+        },
+        buildBudgetFbRows: function() {
+          var rows = [];
+          BUDGET_FB_ROW_CONFIG.forEach(function(config) {
+            var row = {
+              category: config.category,
+              item: config.item,
+              line: config.line,
+              field: config.field,
+              isFormula: config.isFormula,
+              isReadonly: config.isReadonly,
+              isRatio: config.isRatio,
+              val_qs: config.isRatio ? null : 0
+            };
+            var total = 0;
+            var totalForRatio = null;
+            ORG_LIST.forEach(function(org) {
+              var detail = this.budgetFbData.details.find(function(item) { return item.hsjgbh === org.code; });
+              var value = detail ? detail[config.field] : null;
+              row['val_' + org.code] = value;
+              if (config.isRatio) {
+                totalForRatio = null;
+              } else {
+                total += this.safeNumber(value);
+              }
+            }.bind(this));
+            if (config.field === 'grdkDkyezbgjye') {
+              var cityGjtqNmye = this.sumBudgetField('gjtqNmye');
+              var cityGrdkNmye = this.sumBudgetField('grdkNmye');
+              totalForRatio = cityGjtqNmye ? cityGrdkNmye / cityGjtqNmye : null;
+            }
+            if (config.field === 'gdtzYezbgjye') {
+              var gjtqTotal = this.sumBudgetField('gjtqNmye');
+              var gdtzTotal = this.sumBudgetField('gdtzNmye');
+              totalForRatio = gjtqTotal ? gdtzTotal / gjtqTotal : null;
+            }
+            row.val_qs = config.isRatio ? totalForRatio : total;
+            rows.push(row);
+          }.bind(this));
+          this.budgetFbRows = rows;
+        },
+        buildBudgetZbRows: function() {
+          this.budgetZbRows = this.budgetZbData.details.slice().sort(function(a, b) {
+            return a.hangxh - b.hangxh;
+          });
+        },
+        syncBudgetZbData: function() {
+          var currentValues = {};
+          Object.keys(BUDGET_ZB_FIELD_MAP).forEach(function(code) {
+            currentValues[code] = this.sumBudgetField(BUDGET_ZB_FIELD_MAP[code]);
+          }.bind(this));
+          this.budgetZbData.details = BUDGET_ZB_DETAIL_TEMPLATE.map(function(template) {
+            var history = BUDGET_ZB_HISTORY[template.xmbm] || { lastBudget: null, lastActual: null };
+            var bnyss = currentValues[template.xmbm];
+            var wsnsjbl = history.lastActual ? (bnyss == null ? null : bnyss / history.lastActual) : null;
+            return {
+              hangxh: template.hangxh,
+              flmc: template.flmc,
+              xmbm: template.xmbm,
+              xmmc: template.xmmc,
+              sfgs: template.sfgs,
+              snyss: history.lastBudget,
+              snsjs: history.lastActual,
+              bnyss: bnyss,
+              wsnsjbl: wsnsjbl
+            };
+          });
+        },
+        sumBudgetField: function(field) {
+          return this.budgetFbData.details.reduce(function(total, detail) {
+            return total + this.safeNumber(detail[field]);
+          }.bind(this), 0);
+        },
+        isBudgetEditable: function(row, orgCode) {
+          if (this.currentRole === '330400') return false;
+          if (this.currentRole !== orgCode) return false;
+          return ['gjtqDngjs', 'gjtqDntqs', 'gjtqDntcdjzj', 'grdkDnffs', 'grdkDnshs', 'grdkDngzsdkzc'].includes(row.field);
+        },
+        handleBudgetCellInput: function(row, orgCode, value) {
+          var detail = this.budgetFbData.details.find(function(item) { return item.hsjgbh === orgCode; });
+          if (!detail) return;
+          detail[row.field] = this.parseNullableNumber(value);
+          this.refreshBudgetView();
+        },
+        budgetFbCellClassName: function(params) {
+          var row = params.row;
+          var property = params.column.property;
+          if (!property || property.indexOf('val_') !== 0) return '';
+          if (row.isFormula || property === 'val_qs') return 'formula-cell';
+          if (row.isReadonly) return 'readonly-cell';
+          return '';
+        },
+        budgetZbCellClassName: function(params) {
+          var row = params.row;
+          var property = params.column.property;
+          if (property === 'bnyss' || property === 'wsnsjbl') {
+            return row.sfgs === '1' ? 'formula-cell' : 'readonly-cell';
+          }
+          if (property === 'snyss' || property === 'snsjs') {
+            return 'readonly-cell';
+          }
+          return '';
+        },
+        formatBudgetZbValue: function(row, field) {
+          return this.isBudgetRatioRow(row) ? this.formatPercent(row[field]) : this.formatMoney(row[field]);
+        },
+        isBudgetRatioRow: function(row) {
+          return BUDGET_RATIO_CODES.includes(row.xmbm);
+        },
+        refreshYwszysView: function() {
+          this.recalculateYwszysDetailFormulas();
+          this.syncYwszysZbData();
+          this.buildYwszysFbRows();
+          this.buildYwszysZbRows();
+        },
+        refreshGjsyjsView: function() {
+          this.recalculateGjsyjsDetailFormulas();
+          this.syncGjsyjsMainStatus();
+          this.buildGjsyjsFbRows();
+          this.syncGjsyjsZbData();
+          this.buildGjsyjsZbRows();
+        },
+        refreshYwszjsView: function() {
+          this.recalculateYwszjsDetailFormulas();
+          this.syncYwszjsMainStatus();
+          this.buildYwszjsFbRows();
+          this.syncYwszjsZbData();
+          this.buildYwszjsZbRows();
+        },
+        refreshZzsyfpView: function() {
+          this.recalculateZzsyfpDetailFormulas();
+          this.syncZzsyfpMainStatus();
+          this.buildZzsyfpFbRows();
+          this.syncZzsyfpZbData();
+          this.buildZzsyfpZbRows();
+        },
+        recalculateYwszysDetailFormulas: function() {
+          this.ywszysFbData.details.forEach(function(detail) {
+            detail.ywsrHj = this.safeNumber(detail.ywsrZfgjjlxs) + this.safeNumber(detail.ywsrZzsylxs) + this.safeNumber(detail.ywsrWtdklxs) + this.safeNumber(detail.ywsrGdtzsr) + this.safeNumber(detail.ywsrQtsr);
+            detail.ywszHj = this.safeNumber(detail.ywszZfgjjlxzc) + this.safeNumber(detail.ywszGjsxfzc) + this.safeNumber(detail.ywszWtdksxfzc) + this.safeNumber(detail.ywszQtzc);
+            detail.zzsy = detail.ywsrHj - detail.ywszHj;
+          }.bind(this));
+        },
+        recalculateGjsyjsDetailFormulas: function() {
+          this.gjsyjsFbData.details.forEach(function(detail) {
+            detail.gjtqNmye = this.safeNumber(detail.gjtqNcye) + this.safeNumber(detail.gjtqDngjs) - this.safeNumber(detail.gjtqDntqs) + this.safeNumber(detail.gjtqDntcdjzj);
+            detail.grdkNmye = this.safeNumber(detail.grdkNcye) + this.safeNumber(detail.grdkDnffs) - this.safeNumber(detail.grdkDnshs) - this.safeNumber(detail.grdkDngzsdkzc);
+            detail.grdkDkyezbgjye = detail.gjtqNmye ? detail.grdkNmye / detail.gjtqNmye : null;
+            detail.gdtzNmye = this.safeNumber(detail.gdtzNcye) + this.safeNumber(detail.gdtzDnzjs) - this.safeNumber(detail.gdtzDnhss);
+            detail.gdtzYezbgjye = detail.gjtqNmye ? detail.gdtzNmye / detail.gjtqNmye : null;
+          }.bind(this));
+        },
+        recalculateYwszjsDetailFormulas: function() {
+          this.ywszjsFbData.details.forEach(function(detail) {
+            detail.ywsrHj = this.safeNumber(detail.ywsrZfgjjlxs) + this.safeNumber(detail.ywsrZzsylxs) + this.safeNumber(detail.ywsrWtdklxs) + this.safeNumber(detail.ywsrGdtzsr) + this.safeNumber(detail.ywsrQtsr);
+            detail.ywszHj = this.safeNumber(detail.ywszZfgjjlxzc) + this.safeNumber(detail.ywszGjsxfzc) + this.safeNumber(detail.ywszWtdksxfzc) + this.safeNumber(detail.ywszQtzc);
+            detail.zzsy = detail.ywsrHj - detail.ywszHj;
+          }.bind(this));
+        },
+        recalculateZzsyfpDetailFormulas: function() {
+          this.zzsyfpFbData.details.forEach(function(detail) {
+            detail.dkfxzbjNmye = this.safeNumber(detail.dkfxzbjNcye) + this.safeNumber(detail.dkfxzbjDnfp) - this.safeNumber(detail.dkfxzbjDnzc);
+            detail.cslzzfbqzjNmye = this.safeNumber(detail.cslzzfbqzjNcye) + this.safeNumber(detail.cslzzfbqzjDnfp) - this.safeNumber(detail.cslzzfbqzjDnsj);
+            detail.fphj = this.safeNumber(detail.dkfxzbjDnfp) + this.safeNumber(detail.glfyDnfp) + this.safeNumber(detail.cslzzfbqzjDnfp);
+          }.bind(this));
+        },
+        buildYwszysFbRows: function() {
+          var rows = [];
+          YWSZYS_FB_ROW_CONFIG.forEach(function(config) {
+            var row = {
+              item: config.item,
+              line: config.line,
+              field: config.field,
+              isFormula: config.isFormula,
+              isReadonly: config.isReadonly,
+              isNotApplicable: config.isNotApplicable,
+              val_qs: config.isNotApplicable ? null : 0
+            };
+            var total = 0;
+            ORG_LIST.forEach(function(org) {
+              var detail = this.ywszysFbData.details.find(function(item) { return item.hsjgbh === org.code; });
+              var value = detail ? detail[config.field] : null;
+              row['val_' + org.code] = config.isNotApplicable ? null : value;
+              if (!config.isNotApplicable) {
+                total += this.safeNumber(value);
+              }
+            }.bind(this));
+            row.val_qs = config.isNotApplicable ? null : total;
+            rows.push(row);
+          }.bind(this));
+          this.ywszysFbRows = rows;
+        },
+        buildGjsyjsFbRows: function() {
+          var rows = [];
+          GJSYJS_FB_ROW_CONFIG.forEach(function(config) {
+            var row = {
+              category: config.category,
+              item: config.item,
+              line: config.line,
+              field: config.field,
+              isFormula: config.isFormula,
+              isRatio: config.isRatio,
+              val_qs: config.isRatio ? null : 0
+            };
+            var total = 0;
+            var ratioTotal = null;
+            ORG_LIST.forEach(function(org) {
+              var detail = this.gjsyjsFbData.details.find(function(item) { return item.hsjgbh === org.code; });
+              var value = detail ? detail[config.field] : null;
+              row['val_' + org.code] = value;
+              if (config.isRatio) {
+                ratioTotal = null;
+              } else {
+                total += this.safeNumber(value);
+              }
+            }.bind(this));
+            if (config.field === 'grdkDkyezbgjye') {
+              var cityGjtqNmye = this.sumGjsyjsField('gjtqNmye');
+              var cityGrdkNmye = this.sumGjsyjsField('grdkNmye');
+              ratioTotal = cityGjtqNmye ? cityGrdkNmye / cityGjtqNmye : null;
+            }
+            if (config.field === 'gdtzYezbgjye') {
+              var gjtqTotal = this.sumGjsyjsField('gjtqNmye');
+              var gdtzTotal = this.sumGjsyjsField('gdtzNmye');
+              ratioTotal = gjtqTotal ? gdtzTotal / gjtqTotal : null;
+            }
+            row.val_qs = config.isRatio ? ratioTotal : total;
+            rows.push(row);
+          }.bind(this));
+          this.gjsyjsFbRows = rows;
+        },
+        buildYwszjsFbRows: function() {
+          var rows = [];
+          YWSZJS_FB_ROW_CONFIG.forEach(function(config) {
+            var row = {
+              item: config.item,
+              line: config.line,
+              field: config.field,
+              isFormula: config.isFormula,
+              isNotApplicable: config.isNotApplicable,
+              val_qs: config.isNotApplicable ? null : 0
+            };
+            var total = 0;
+            ORG_LIST.forEach(function(org) {
+              var detail = this.ywszjsFbData.details.find(function(item) { return item.hsjgbh === org.code; });
+              var value = detail ? detail[config.field] : null;
+              row['val_' + org.code] = config.isNotApplicable ? null : value;
+              if (!config.isNotApplicable) {
+                total += this.safeNumber(value);
+              }
+            }.bind(this));
+            row.val_qs = config.isNotApplicable ? null : total;
+            rows.push(row);
+          }.bind(this));
+          this.ywszjsFbRows = rows;
+        },
+        buildZzsyfpFbRows: function() {
+          var rows = [];
+          ZZSYFP_FB_ROW_CONFIG.forEach(function(config) {
+            var row = {
+              item: config.item,
+              note: config.note,
+              line: config.line,
+              field: config.field,
+              isFormula: config.isFormula,
+              isEditable: config.isEditable,
+              val_qs: 0
+            };
+            var total = 0;
+            ORG_LIST.forEach(function(org) {
+              var detail = this.zzsyfpFbData.details.find(function(item) { return item.hsjgbh === org.code; });
+              var value = detail ? detail[config.field] : null;
+              row['val_' + org.code] = value;
+              total += this.safeNumber(value);
+            }.bind(this));
+            row.val_qs = total;
+            rows.push(row);
+          }.bind(this));
+          this.zzsyfpFbRows = rows;
+        },
+        buildYwszysZbRows: function() {
+          this.ywszysZbRows = this.ywszysZbData.details.slice().sort(function(a, b) {
+            return a.hangxh - b.hangxh;
+          });
+        },
+        buildGjsyjsZbRows: function() {
+          this.gjsyjsZbRows = this.gjsyjsZbData.details.slice().sort(function(a, b) {
+            return a.hangxh - b.hangxh;
+          });
+        },
+        buildYwszjsZbRows: function() {
+          this.ywszjsZbRows = this.ywszjsZbData.details.slice().sort(function(a, b) {
+            return a.hangxh - b.hangxh;
+          });
+        },
+        buildZzsyfpZbRows: function() {
+          this.zzsyfpZbRows = this.zzsyfpZbData.details.slice().sort(function(a, b) {
+            return a.hangxh - b.hangxh;
+          });
+        },
+        syncYwszysZbData: function() {
+          var currentValues = {};
+          Object.keys(YWSZYS_ZB_FIELD_MAP).forEach(function(code) {
+            currentValues[code] = this.sumYwszysField(YWSZYS_ZB_FIELD_MAP[code]);
+          }.bind(this));
+          this.ywszysZbData.details = YWSZYS_ZB_DETAIL_TEMPLATE.map(function(template) {
+            var history = YWSZYS_ZB_HISTORY[template.xmbm] || { lastBudget: null, lastActual: null };
+            var bnyss = template.sfbsy === '1' ? null : currentValues[template.xmbm];
+            var wsnsjbl = (template.sfbsy === '1' || !history.lastActual) ? null : (bnyss == null ? null : bnyss / history.lastActual);
+            return {
+              hangxh: template.hangxh,
+              xmbm: template.xmbm,
+              xmmc: template.xmmc,
+              sfgs: template.sfgs,
+              sfbsy: template.sfbsy,
+              snyss: template.sfbsy === '1' ? null : history.lastBudget,
+              snsjs: template.sfbsy === '1' ? null : history.lastActual,
+              bnyss: bnyss,
+              wsnsjbl: wsnsjbl
+            };
+          });
+        },
+        syncGjsyjsMainStatus: function() {
+          var statuses = this.gjsyjsFbData.details.map(function(detail) { return detail.bbzt || '0'; });
+          var mainStatus = '0';
+          if (this.gjsyjsFbData.sfsd === '1' || statuses.every(function(status) { return status === '4'; })) {
+            mainStatus = '4';
+          } else if (statuses.some(function(status) { return status === '2'; })) {
+            mainStatus = '2';
+          } else if (statuses.length && statuses.every(function(status) { return status === '3'; })) {
+            mainStatus = '3';
+          } else if (statuses.length && statuses.every(function(status) { return ['1', '3', '4'].includes(status); })) {
+            mainStatus = '1';
+          }
+          var labelMap = { '0': '草稿', '1': '已提交', '2': '审核退回', '3': '审核通过', '4': '已锁定' };
+          this.gjsyjsZbData.bbzt = mainStatus;
+          this.gjsyjsFbData.bbzt = mainStatus;
+          this.gjsyjsZbData.bbztLabel = labelMap[mainStatus];
+          this.gjsyjsFbData.bbztLabel = labelMap[mainStatus];
+        },
+        syncYwszjsMainStatus: function() {
+          var statuses = this.ywszjsFbData.details.map(function(detail) { return detail.bbzt || '0'; });
+          var mainStatus = '0';
+          if (this.ywszjsFbData.sfsd === '1' || statuses.every(function(status) { return status === '4'; })) {
+            mainStatus = '4';
+          } else if (statuses.some(function(status) { return status === '2'; })) {
+            mainStatus = '2';
+          } else if (statuses.length && statuses.every(function(status) { return status === '3'; })) {
+            mainStatus = '3';
+          } else if (statuses.length && statuses.every(function(status) { return ['1', '3', '4'].includes(status); })) {
+            mainStatus = '1';
+          }
+          var labelMap = { '0': '草稿', '1': '已提交', '2': '审核退回', '3': '审核通过', '4': '已锁定' };
+          this.ywszjsZbData.bbzt = mainStatus;
+          this.ywszjsFbData.bbzt = mainStatus;
+          this.ywszjsZbData.bbztLabel = labelMap[mainStatus];
+          this.ywszjsFbData.bbztLabel = labelMap[mainStatus];
+        },
+        syncZzsyfpMainStatus: function() {
+          var statuses = this.zzsyfpFbData.details.map(function(detail) { return detail.bbzt || '0'; });
+          var mainStatus = '0';
+          if (this.zzsyfpFbData.sfsd === '1' || statuses.every(function(status) { return status === '4'; })) {
+            mainStatus = '4';
+          } else if (statuses.some(function(status) { return status === '2'; })) {
+            mainStatus = '2';
+          } else if (statuses.length && statuses.every(function(status) { return status === '3'; })) {
+            mainStatus = '3';
+          } else if (statuses.length && statuses.every(function(status) { return ['1', '3', '4'].includes(status); })) {
+            mainStatus = '1';
+          }
+          var labelMap = { '0': '草稿', '1': '已提交', '2': '审核退回', '3': '审核通过', '4': '已锁定' };
+          this.zzsyfpZbData.bbzt = mainStatus;
+          this.zzsyfpFbData.bbzt = mainStatus;
+          this.zzsyfpZbData.bbztLabel = labelMap[mainStatus];
+          this.zzsyfpFbData.bbztLabel = labelMap[mainStatus];
+        },
+        syncGjsyjsZbData: function() {
+          var actualValues = {
+            GJTQ_NCYE: this.sumGjsyjsField('gjtqNcye'),
+            GJTQ_DNGJS: this.sumGjsyjsField('gjtqDngjs'),
+            GJTQ_DNTQS: this.sumGjsyjsField('gjtqDntqs'),
+            GJTQ_NMYE: this.sumGjsyjsField('gjtqNmye'),
+            GRDK_NCYE: this.sumGjsyjsField('grdkNcye'),
+            GRDK_DNFFS: this.sumGjsyjsField('grdkDnffs'),
+            GRDK_DNSHS: this.sumGjsyjsField('grdkDnshs'),
+            GRDK_DNGZSDKZC: this.sumGjsyjsField('grdkDngzsdkzc'),
+            GRDK_NMYE: this.sumGjsyjsField('grdkNmye'),
+            GRDK_DKYEZBGJYE: this.sumGjsyjsField('gjtqNmye') ? this.sumGjsyjsField('grdkNmye') / this.sumGjsyjsField('gjtqNmye') : null
+          };
+          this.gjsyjsZbData.details = GJSYJS_ZB_DETAIL_TEMPLATE.map(function(template) {
+            var sntqs = Object.prototype.hasOwnProperty.call(GJSYJS_ZB_LAST_YEAR, template.xmbm) ? GJSYJS_ZB_LAST_YEAR[template.xmbm] : null;
+            var bnyss = template.allowBudget ? GJSYJS_ZB_BUDGET[template.xmbm] : null;
+            var bnsjs = template.isNotApplicable ? null : actualValues[template.xmbm];
+            var yswcl = template.allowRate && bnyss ? bnsjs / bnyss : null;
+            var bstqzz = template.allowGrowth && sntqs ? bnsjs / sntqs - 1 : null;
+            return {
+              hangxh: template.hangxh,
+              flmc: template.flmc,
+              xmbm: template.xmbm,
+              xmmc: template.xmmc,
+              valueType: template.valueType,
+              allowBudget: template.allowBudget,
+              allowRate: template.allowRate,
+              allowGrowth: template.allowGrowth,
+              isNotApplicable: template.isNotApplicable,
+              sntqs: sntqs,
+              bnyss: bnyss,
+              bnsjs: bnsjs,
+              yswcl: yswcl,
+              bstqzz: bstqzz
+            };
+          });
+        },
+        syncYwszjsZbData: function() {
+          var actualValues = {};
+          Object.keys(YWSZJS_ZB_FIELD_MAP).forEach(function(code) {
+            actualValues[code] = this.sumYwszjsField(YWSZJS_ZB_FIELD_MAP[code]);
+          }.bind(this));
+          this.ywszjsZbData.details = YWSZJS_ZB_DETAIL_TEMPLATE.map(function(template) {
+            var sntqs = Object.prototype.hasOwnProperty.call(YWSZJS_ZB_LAST_YEAR, template.xmbm) ? YWSZJS_ZB_LAST_YEAR[template.xmbm] : null;
+            var bnyss = template.allowBudget ? YWSZJS_ZB_BUDGET[template.xmbm] : null;
+            var bnsjs = template.isNotApplicable ? null : actualValues[template.xmbm];
+            var yswcl = template.allowRate && bnyss ? bnsjs / bnyss : null;
+            var bstqzz = template.allowGrowth && sntqs ? bnsjs / sntqs - 1 : null;
+            return {
+              hangxh: template.hangxh,
+              xmbm: template.xmbm,
+              xmmc: template.xmmc,
+              valueType: template.valueType,
+              allowBudget: template.allowBudget,
+              allowRate: template.allowRate,
+              allowGrowth: template.allowGrowth,
+              isNotApplicable: template.isNotApplicable,
+              sntqs: sntqs,
+              bnyss: bnyss,
+              bnsjs: bnsjs,
+              yswcl: yswcl,
+              bstqzz: bstqzz
+            };
+          });
+        },
+        syncZzsyfpZbData: function() {
+          var actualValues = {};
+          Object.keys(ZZSYFP_ZB_FIELD_MAP).forEach(function(code) {
+            actualValues[code] = this.sumZzsyfpField(ZZSYFP_ZB_FIELD_MAP[code]);
+          }.bind(this));
+          this.zzsyfpZbData.details = ZZSYFP_ZB_DETAIL_TEMPLATE.map(function(template) {
+            var snsjs = Object.prototype.hasOwnProperty.call(ZZSYFP_ZB_LAST_YEAR, template.xmbm) ? ZZSYFP_ZB_LAST_YEAR[template.xmbm] : null;
+            var bnsjs = actualValues[template.xmbm];
+            var tbzz = snsjs ? (bnsjs / snsjs - 1) : null;
+            return {
+              hangxh: template.hangxh,
+              xmbm: template.xmbm,
+              xmmc: template.xmmc,
+              xmsm: template.xmsm,
+              allowGrowth: template.allowGrowth,
+              isFormula: template.isFormula,
+              snsjs: snsjs,
+              bnsjs: bnsjs,
+              tbzz: tbzz
+            };
+          });
+        },
+        sumYwszysField: function(field) {
+          return this.ywszysFbData.details.reduce(function(total, detail) {
+            return total + this.safeNumber(detail[field]);
+          }.bind(this), 0);
+        },
+        sumGjsyjsField: function(field) {
+          return this.gjsyjsFbData.details.reduce(function(total, detail) {
+            return total + this.safeNumber(detail[field]);
+          }.bind(this), 0);
+        },
+        sumYwszjsField: function(field) {
+          return this.ywszjsFbData.details.reduce(function(total, detail) {
+            return total + this.safeNumber(detail[field]);
+          }.bind(this), 0);
+        },
+        sumZzsyfpField: function(field) {
+          return this.zzsyfpFbData.details.reduce(function(total, detail) {
+            return total + this.safeNumber(detail[field]);
+          }.bind(this), 0);
+        },
+        isYwszysEditable: function(row, orgCode) {
+          if (this.currentRole === '330400') return false;
+          if (this.currentRole !== orgCode) return false;
+          if (row.isFormula || row.isReadonly || row.isNotApplicable) return false;
+          return ['ywsrZfgjjlxs', 'ywsrZzsylxs', 'ywsrWtdklxs', 'ywsrQtsr', 'ywszZfgjjlxzc', 'ywszGjsxfzc', 'ywszWtdksxfzc', 'ywszQtzc'].includes(row.field);
+        },
+        handleYwszysCellInput: function(row, orgCode, value) {
+          var detail = this.ywszysFbData.details.find(function(item) { return item.hsjgbh === orgCode; });
+          if (!detail) return;
+          detail[row.field] = this.parseNullableNumber(value);
+          this.refreshYwszysView();
+        },
+        ywszysFbCellClassName: function(params) {
+          var row = params.row;
+          var property = params.column.property;
+          if (!property || property.indexOf('val_') !== 0) return '';
+          if (row.isFormula || property === 'val_qs') return 'formula-cell';
+          if (row.isReadonly || row.isNotApplicable) return 'readonly-cell';
+          return '';
+        },
+        gjsyjsFbCellClassName: function(params) {
+          var row = params.row;
+          var property = params.column.property;
+          if (!property || property.indexOf('val_') !== 0) return '';
+          if (row.isFormula || property === 'val_qs') return 'formula-cell';
+          return 'readonly-cell';
+        },
+        ywszjsFbCellClassName: function(params) {
+          var row = params.row;
+          var property = params.column.property;
+          if (!property || property.indexOf('val_') !== 0) return '';
+          if (row.isFormula || property === 'val_qs') return 'formula-cell';
+          return 'readonly-cell';
+        },
+        zzsyfpFbCellClassName: function(params) {
+          var row = params.row;
+          var property = params.column.property;
+          if (!property || property.indexOf('val_') !== 0) return '';
+          if (row.isFormula || property === 'val_qs') return 'formula-cell';
+          if (!row.isEditable) return 'readonly-cell';
+          return '';
+        },
+        ywszysZbCellClassName: function(params) {
+          var row = params.row;
+          var property = params.column.property;
+          if (row.sfbsy === '1' && ['snyss', 'snsjs', 'bnyss', 'wsnsjbl'].includes(property)) {
+            return 'readonly-cell';
+          }
+          if (property === 'bnyss' || property === 'wsnsjbl') {
+            return row.sfgs === '1' ? 'formula-cell' : 'readonly-cell';
+          }
+          if (property === 'snyss' || property === 'snsjs') {
+            return 'readonly-cell';
+          }
+          return '';
+        },
+        gjsyjsZbCellClassName: function(params) {
+          var row = params.row;
+          var property = params.column.property;
+          if (['yswcl', 'bstqzz'].includes(property)) {
+            return row.allowRate || row.allowGrowth ? 'formula-cell' : 'readonly-cell';
+          }
+          if (property === 'bnsjs' && !row.isNotApplicable && !['GJTQ_NCYE', 'GRDK_NCYE'].includes(row.xmbm)) {
+            return 'formula-cell';
+          }
+          return 'readonly-cell';
+        },
+        ywszjsZbCellClassName: function(params) {
+          var row = params.row;
+          var property = params.column.property;
+          if (['yswcl', 'bstqzz'].includes(property)) {
+            return row.allowRate || row.allowGrowth ? 'formula-cell' : 'readonly-cell';
+          }
+          if (property === 'bnsjs' && !row.isNotApplicable) {
+            return 'formula-cell';
+          }
+          return 'readonly-cell';
+        },
+        zzsyfpZbCellClassName: function(params) {
+          var row = params.row;
+          var property = params.column.property;
+          if (property === 'bnsjs' || property === 'tbzz') {
+            return row.isFormula || property === 'tbzz' ? 'formula-cell' : 'readonly-cell';
+          }
+          if (property === 'snsjs') {
+            return 'readonly-cell';
+          }
+          return '';
+        },
+        formatYwszysZbValue: function(row, field) {
+          if (row.sfbsy === '1') return '-';
+          return field === 'wsnsjbl' ? this.formatPercent(row[field]) : this.formatMoney(row[field]);
+        },
+        formatGjsyjsZbValue: function(row, field) {
+          if (row.isNotApplicable) return '-';
+          if (field === 'bnyss' && !row.allowBudget) return '-';
+          if (field === 'yswcl' && !row.allowRate) return '-';
+          if (field === 'bstqzz' && !row.allowGrowth) return '-';
+          if (row.valueType === 'percent' && ['sntqs', 'bnyss', 'bnsjs', 'yswcl', 'bstqzz'].includes(field)) {
+            return this.formatPercent(row[field]);
+          }
+          if (['yswcl', 'bstqzz'].includes(field)) {
+            return this.formatPercent(row[field]);
+          }
+          return this.formatMoney(row[field]);
+        },
+        formatYwszjsZbValue: function(row, field) {
+          if (row.isNotApplicable) return '-';
+          if (field === 'bnyss' && !row.allowBudget) return '-';
+          if (field === 'yswcl' && !row.allowRate) return '-';
+          if (field === 'bstqzz' && !row.allowGrowth) return '-';
+          if (['yswcl', 'bstqzz'].includes(field)) {
+            return this.formatPercent(row[field]);
+          }
+          return this.formatMoney(row[field]);
+        },
+        formatZzsyfpZbValue: function(row, field) {
+          if (field === 'tbzz') {
+            return row.allowGrowth ? this.formatPercent(row[field]) : '-';
+          }
+          return this.formatMoney(row[field]);
+        },
+        formatYwszysFbCell: function(row, value) {
+          if (row.isNotApplicable) return '-';
+          return this.formatMoney(value);
+        },
+        formatGjsyjsFbCell: function(row, value) {
+          return row.isRatio ? this.formatPercent(value) : this.formatMoney(value);
+        },
+        formatYwszjsFbCell: function(row, value) {
+          if (row.isNotApplicable) return '-';
+          return this.formatMoney(value);
+        },
+        formatZzsyfpFbCell: function(row, value) {
+          return this.formatMoney(value);
+        },
+        getCurrentGjsyjsDetail: function() {
+          return this.gjsyjsFbData.details.find(function(detail) { return detail.hsjgbh === this.currentRole; }.bind(this));
+        },
+        getCurrentYwszjsDetail: function() {
+          return this.ywszjsFbData.details.find(function(detail) { return detail.hsjgbh === this.currentRole; }.bind(this));
+        },
+        getCurrentZzsyfpDetail: function() {
+          return this.zzsyfpFbData.details.find(function(detail) { return detail.hsjgbh === this.currentRole; }.bind(this));
+        },
+        getGjsyjsCurrentTimestamp: function() {
+          return '2025-01-12 09:' + String(30 + this.safeNumber(this.gjsyjsFbData.details.filter(function(item) { return item.qszt === '1'; }).length)).padStart(2, '0') + ':00';
+        },
+        getYwszjsCurrentTimestamp: function() {
+          return '2025-01-15 09:' + String(20 + this.safeNumber(this.ywszjsFbData.details.filter(function(item) { return item.qszt === '1'; }).length)).padStart(2, '0') + ':00';
+        },
+        getZzsyfpCurrentTimestamp: function() {
+          return '2025-01-18 09:' + String(20 + this.safeNumber(this.zzsyfpFbData.details.filter(function(item) { return item.qszt === '1'; }).length)).padStart(2, '0') + ':00';
+        },
+        handleGjsyjsFetch: function() {
+          if (this.currentRole === '330400') return;
+          var detail = this.getCurrentGjsyjsDetail();
+          if (!detail) return;
+          detail.gjtqDngjs = Math.round(this.safeNumber(detail.gjtqDngjs) * 1.002);
+          detail.qszt = '1';
+          detail.bbzt = '0';
+          this.gjsyjsFbData.qssj = this.getGjsyjsCurrentTimestamp();
+          this.gjsyjsZbData.qssj = this.gjsyjsFbData.qssj;
+          this.refreshGjsyjsView();
+          this.$message.success('已同步当前分中心归集使用决算来源结果，并刷新总表汇总值。');
+        },
+        handleYwszjsFetch: function() {
+          if (this.currentRole === '330400') return;
+          var detail = this.getCurrentYwszjsDetail();
+          if (!detail) return;
+          detail.ywsrQtsr = this.safeNumber(detail.ywsrQtsr) + 1;
+          detail.qszt = '1';
+          detail.bbzt = '0';
+          this.ywszjsFbData.qssj = this.getYwszjsCurrentTimestamp();
+          this.ywszjsZbData.qssj = this.ywszjsFbData.qssj;
+          this.refreshYwszjsView();
+          this.$message.success('已同步当前分中心业务收支决算来源结果，并刷新总表汇总值。');
+        },
+        handleZzsyfpFetch: function() {
+          if (this.currentRole === '330400') return;
+          var detail = this.getCurrentZzsyfpDetail();
+          if (!detail) return;
+          var sourceProfit = ZZSYFP_SOURCE_CURRENT_PROFIT[this.currentRole];
+          var lastYearEnd = ZZSYFP_SOURCE_LAST_YEAR_END[this.currentRole] || {};
+          detail.dfpzzsy = sourceProfit == null ? detail.dfpzzsy : sourceProfit;
+          detail.dkfxzbjNcye = lastYearEnd.dkfxzbjNcye == null ? detail.dkfxzbjNcye : lastYearEnd.dkfxzbjNcye;
+          detail.cslzzfbqzjNcye = lastYearEnd.cslzzfbqzjNcye == null ? detail.cslzzfbqzjNcye : lastYearEnd.cslzzfbqzjNcye;
+          detail.qszt = '1';
+          detail.bbzt = '0';
+          this.zzsyfpFbData.qssj = this.getZzsyfpCurrentTimestamp();
+          this.zzsyfpZbData.qssj = this.zzsyfpFbData.qssj;
+          this.refreshZzsyfpView();
+          this.$message.success('已同步当前分中心增值收益分配来源数据，并刷新总表汇总值。');
+        },
+        handleGjsyjsSubmit: function() {
+          if (this.currentRole === '330400') return;
+          var detail = this.getCurrentGjsyjsDetail();
+          if (!detail) return;
+          if (detail.qszt !== '1') {
+            this.$message.error('请先完成来源同步，再提交本机构决算结果。');
+            return;
+          }
+          detail.bbzt = '1';
+          this.refreshGjsyjsView();
+          this.$message.success('当前分中心归集使用决算结果已提交确认。');
+        },
+        handleYwszjsSubmit: function() {
+          if (this.currentRole === '330400') return;
+          var detail = this.getCurrentYwszjsDetail();
+          if (!detail) return;
+          if (detail.qszt !== '1') {
+            this.$message.error('请先完成来源同步，再提交本机构决算结果。');
+            return;
+          }
+          detail.bbzt = '1';
+          this.refreshYwszjsView();
+          this.$message.success('当前分中心业务收支决算结果已提交确认。');
+        },
+        handleZzsyfpSaveDraft: function() {
+          if (this.currentRole === '330400') return;
+          var detail = this.getCurrentZzsyfpDetail();
+          if (!detail) return;
+          detail.bbzt = '0';
+          this.zzsyfpFbData.zbr = this.signatures.preparer || detail.jbjgmc + '填报人';
+          this.refreshZzsyfpView();
+          this.$message.success('当前分中心增值收益分配数据已保存为草稿。');
+        },
+        handleZzsyfpSubmit: function() {
+          if (this.currentRole === '330400') return;
+          var detail = this.getCurrentZzsyfpDetail();
+          if (!detail) return;
+          if (detail.qszt !== '1') {
+            this.$message.error('请先完成来源同步，再提交本机构增值收益分配结果。');
+            return;
+          }
+          if (this.safeNumber(detail.fphj) > this.safeNumber(detail.dfpzzsy)) {
+            this.$message.error('分配合计不能大于待分配增值收益。');
+            return;
+          }
+          detail.bbzt = '1';
+          this.refreshZzsyfpView();
+          this.$message.success('当前分中心增值收益分配结果已提交确认。');
+        },
+        handleGjsyjsApprove: function() {
+          if (this.currentRole !== '330400') return;
+          this.gjsyjsFbData.details.forEach(function(detail) {
+            detail.bbzt = '3';
+          });
+          this.gjsyjsZbData.shyj = '审核通过';
+          this.gjsyjsFbData.shyj = '审核通过';
+          this.refreshGjsyjsView();
+          this.$message.success('市中心已审核通过归集使用决算表。');
+        },
+        handleYwszjsApprove: function() {
+          if (this.currentRole !== '330400') return;
+          this.ywszjsFbData.details.forEach(function(detail) {
+            detail.bbzt = '3';
+          });
+          this.ywszjsZbData.shyj = '审核通过';
+          this.ywszjsFbData.shyj = '审核通过';
+          this.refreshYwszjsView();
+          this.$message.success('市中心已审核通过业务收支决算表。');
+        },
+        handleZzsyfpApprove: function() {
+          if (this.currentRole !== '330400') return;
+          this.zzsyfpFbData.details.forEach(function(detail) {
+            detail.bbzt = '3';
+          });
+          this.zzsyfpZbData.shyj = '审核通过';
+          this.zzsyfpFbData.shyj = '审核通过';
+          this.refreshZzsyfpView();
+          this.$message.success('市中心已审核通过增值收益分配情况表。');
+        },
+        handleGjsyjsReject: function() {
+          if (this.currentRole !== '330400') return;
+          var target = this.gjsyjsFbData.details.find(function(detail) { return detail.bbzt === '1'; }) || this.gjsyjsFbData.details[0];
+          if (!target) return;
+          target.bbzt = '2';
+          this.gjsyjsZbData.shyj = target.jbjgmc + '需重新同步来源后再次确认。';
+          this.gjsyjsFbData.shyj = this.gjsyjsZbData.shyj;
+          this.refreshGjsyjsView();
+          this.$message.warning('已退回一个分中心重新确认归集使用决算结果。');
+        },
+        handleYwszjsReject: function() {
+          if (this.currentRole !== '330400') return;
+          var target = this.ywszjsFbData.details.find(function(detail) { return detail.bbzt === '1'; }) || this.ywszjsFbData.details[0];
+          if (!target) return;
+          target.bbzt = '2';
+          this.ywszjsZbData.shyj = target.jbjgmc + '需重新同步来源后再次确认。';
+          this.ywszjsFbData.shyj = this.ywszjsZbData.shyj;
+          this.refreshYwszjsView();
+          this.$message.warning('已退回一个分中心重新确认业务收支决算结果。');
+        },
+        handleZzsyfpReject: function() {
+          if (this.currentRole !== '330400') return;
+          var target = this.zzsyfpFbData.details.find(function(detail) { return detail.bbzt === '1'; }) || this.zzsyfpFbData.details[0];
+          if (!target) return;
+          target.bbzt = '2';
+          this.zzsyfpZbData.shyj = target.jbjgmc + '需重新核对分配录入与来源数据后再次确认。';
+          this.zzsyfpFbData.shyj = this.zzsyfpZbData.shyj;
+          this.refreshZzsyfpView();
+          this.$message.warning('已退回一个分中心重新确认增值收益分配结果。');
+        },
+        handleGjsyjsLock: function() {
+          if (this.currentRole !== '330400') return;
+          this.gjsyjsZbData.sfsd = '1';
+          this.gjsyjsFbData.sfsd = '1';
+          this.gjsyjsFbData.details.forEach(function(detail) {
+            detail.bbzt = '4';
+          });
+          this.refreshGjsyjsView();
+          this.$message.success('归集使用决算表已锁定。');
+        },
+        handleYwszjsLock: function() {
+          if (this.currentRole !== '330400') return;
+          this.ywszjsZbData.sfsd = '1';
+          this.ywszjsFbData.sfsd = '1';
+          this.ywszjsFbData.details.forEach(function(detail) {
+            detail.bbzt = '4';
+          });
+          this.refreshYwszjsView();
+          this.$message.success('业务收支决算表已锁定。');
+        },
+        handleZzsyfpLock: function() {
+          if (this.currentRole !== '330400') return;
+          this.zzsyfpZbData.sfsd = '1';
+          this.zzsyfpFbData.sfsd = '1';
+          this.zzsyfpFbData.details.forEach(function(detail) {
+            detail.bbzt = '4';
+          });
+          this.refreshZzsyfpView();
+          this.$message.success('增值收益分配情况表已锁定。');
+        },
+        handleGjsyjsExport: function() {
+          this.$message.success('已按当前视角导出归集使用决算表原型结果。');
+        },
+        handleYwszjsExport: function() {
+          this.$message.success('已按当前视角导出业务收支决算表原型结果。');
+        },
+        handleZzsyfpExport: function() {
+          this.$message.success('已按当前视角导出增值收益分配情况表原型结果。');
+        },
+        isZzsyfpEditable: function(row, orgCode) {
+          if (this.currentRole === '330400') return false;
+          if (this.currentRole !== orgCode) return false;
+          if (!row.isEditable) return false;
+          var detail = this.zzsyfpFbData.details.find(function(item) { return item.hsjgbh === orgCode; });
+          if (!detail) return false;
+          return detail.bbzt === '0' || detail.bbzt === '2';
+        },
+        handleZzsyfpCellInput: function(row, orgCode, value) {
+          var detail = this.zzsyfpFbData.details.find(function(item) { return item.hsjgbh === orgCode; });
+          if (!detail) return;
+          detail[row.field] = this.parseNullableNumber(value);
+          detail.bbzt = '0';
+          this.refreshZzsyfpView();
+        },
+        refreshZjsyzxView: function() {
+          this.recalculateZjsyzxDetailFormulas();
+          this.buildZjsyzxRows();
+        },
+        recalculateZjsyzxDetailFormulas: function() {
+          this.zjsyzxData.details.forEach(function(detail) {
+            detail.gjtqGjwcl = detail.gjtqBngjys ? detail.gjtqBngjsj / detail.gjtqBngjys : null;
+            detail.gjtqGjtbzz = detail.gjtqSngjtqs ? detail.gjtqBngjsj / detail.gjtqSngjtqs - 1 : null;
+            detail.gjtqTqwcl = detail.gjtqBntqys ? detail.gjtqBntqsj / detail.gjtqBntqys : null;
+            detail.gjtqTqtbzz = detail.gjtqSntqtqs ? detail.gjtqBntqsj / detail.gjtqSntqtqs - 1 : null;
+            detail.gjtqQmye = this.safeNumber(detail.gjtqSymye) + this.safeNumber(detail.gjtqBngjsj) - this.safeNumber(detail.gjtqBntqsj) + this.safeNumber(detail.gjtqDntctjzj);
+            detail.grdkFfwcl = detail.grdkBnffys ? detail.grdkBnffsj / detail.grdkBnffys : null;
+            detail.grdkFftbzz = detail.grdkSnfftqs ? detail.grdkBnffsj / detail.grdkSnfftqs - 1 : null;
+            detail.grdkShwcl = detail.grdkBnshys ? detail.grdkBnshsj / detail.grdkBnshys : null;
+            detail.grdkShtbzz = detail.grdkSnshtqs ? detail.grdkBnshsj / detail.grdkSnshtqs - 1 : null;
+            detail.grdkQmye = this.safeNumber(detail.grdkSymye) + this.safeNumber(detail.grdkBnffsj) - this.safeNumber(detail.grdkBnshsj) - this.safeNumber(detail.grdkDngzsdkzc);
+            detail.grdkYqdkl = detail.grdkQmye ? detail.grdkYqdk / detail.grdkQmye : null;
+            detail.dkyezbgjye = detail.gjtqQmye ? detail.grdkQmye / detail.gjtqQmye : null;
+          }.bind(this));
+        },
+        buildZjsyzxRows: function() {
+          this.zjsyzxRows = ZJSYZX_ROW_CONFIG.map(function(config) {
+            var row = {
+              category: config.category,
+              item: config.item,
+              line: config.line,
+              field: config.field,
+              mode: config.mode,
+              isPercent: config.valueType === 'percent',
+              val_qs: null
+            };
+            var sum = 0;
+            ORG_LIST.forEach(function(org) {
+              var detail = this.zjsyzxData.details.find(function(item) { return item.hsjgbh === org.code; });
+              var value = detail ? detail[config.field] : null;
+              row['val_' + org.code] = value;
+              if (config.valueType === 'money') {
+                sum += this.safeNumber(value);
+              }
+            }.bind(this));
+            row.val_qs = config.valueType === 'money' ? sum : this.calcZjsyzxCityPercent(config.field);
+            return row;
+          }.bind(this));
+        },
+        calcZjsyzxCityPercent: function(field) {
+          var city = {};
+          city.gjtqBngjys = this.sumZjsyzxField('gjtqBngjys');
+          city.gjtqBngjsj = this.sumZjsyzxField('gjtqBngjsj');
+          city.gjtqSngjtqs = this.sumZjsyzxField('gjtqSngjtqs');
+          city.gjtqBntqys = this.sumZjsyzxField('gjtqBntqys');
+          city.gjtqBntqsj = this.sumZjsyzxField('gjtqBntqsj');
+          city.gjtqSntqtqs = this.sumZjsyzxField('gjtqSntqtqs');
+          city.gjtqQmye = this.sumZjsyzxField('gjtqQmye');
+          city.grdkBnffys = this.sumZjsyzxField('grdkBnffys');
+          city.grdkBnffsj = this.sumZjsyzxField('grdkBnffsj');
+          city.grdkSnfftqs = this.sumZjsyzxField('grdkSnfftqs');
+          city.grdkBnshys = this.sumZjsyzxField('grdkBnshys');
+          city.grdkBnshsj = this.sumZjsyzxField('grdkBnshsj');
+          city.grdkSnshtqs = this.sumZjsyzxField('grdkSnshtqs');
+          city.grdkQmye = this.sumZjsyzxField('grdkQmye');
+          city.grdkYqdk = this.sumZjsyzxField('grdkYqdk');
+          if (field === 'gjtqGjwcl') return city.gjtqBngjys ? city.gjtqBngjsj / city.gjtqBngjys : null;
+          if (field === 'gjtqGjtbzz') return city.gjtqSngjtqs ? city.gjtqBngjsj / city.gjtqSngjtqs - 1 : null;
+          if (field === 'gjtqTqwcl') return city.gjtqBntqys ? city.gjtqBntqsj / city.gjtqBntqys : null;
+          if (field === 'gjtqTqtbzz') return city.gjtqSntqtqs ? city.gjtqBntqsj / city.gjtqSntqtqs - 1 : null;
+          if (field === 'grdkFfwcl') return city.grdkBnffys ? city.grdkBnffsj / city.grdkBnffys : null;
+          if (field === 'grdkFftbzz') return city.grdkSnfftqs ? city.grdkBnffsj / city.grdkSnfftqs - 1 : null;
+          if (field === 'grdkShwcl') return city.grdkBnshys ? city.grdkBnshsj / city.grdkBnshys : null;
+          if (field === 'grdkShtbzz') return city.grdkSnshtqs ? city.grdkBnshsj / city.grdkSnshtqs - 1 : null;
+          if (field === 'grdkYqdkl') return city.grdkQmye ? city.grdkYqdk / city.grdkQmye : null;
+          if (field === 'dkyezbgjye') return city.gjtqQmye ? city.grdkQmye / city.gjtqQmye : null;
+          return null;
+        },
+        sumZjsyzxField: function(field) {
+          return this.zjsyzxData.details.reduce(function(total, detail) {
+            return total + this.safeNumber(detail[field]);
+          }.bind(this), 0);
+        },
+        isZjsyzxEditable: function(row, orgCode) {
+          if (this.currentRole === '330400') return false;
+          if (this.currentRole !== orgCode) return false;
+          if (row.mode !== 'manual') return false;
+          return this.zjsyzxData.bbzt === '0' || this.zjsyzxData.bbzt === '2';
+        },
+        handleZjsyzxCellInput: function(row, orgCode, value) {
+          var detail = this.zjsyzxData.details.find(function(item) { return item.hsjgbh === orgCode; });
+          if (!detail) return;
+          detail[row.field] = this.parseNullableNumber(value);
+          this.refreshZjsyzxView();
+        },
+        zjsyzxCellClassName: function(params) {
+          var row = params.row;
+          var property = params.column.property;
+          if (!property || property.indexOf('val_') !== 0 && property !== 'val_qs') return '';
+          if (property === 'val_qs') return 'formula-cell';
+          if (row.mode === 'formula') return 'formula-cell';
+          if (row.mode === 'auto') return 'readonly-cell';
+          if (row.mode === 'manual') return this.currentRole === '330400' ? 'readonly-cell' : '';
+          return '';
+        },
+        formatZjsyzxCell: function(row, value) {
+          return row.isPercent ? this.formatPercent(value) : this.formatMoney(value);
+        },
+        refreshKmgzView: function() {
+          this.recalculateKmgzDetailFormulas();
+          this.syncKmgzMainStatus();
+          this.buildKmgzRows();
+        },
+        recalculateKmgzDetailFormulas: function() {
+          this.kmgzData.details.forEach(function(detail) {
+            detail.bnJz = this.safeNumber(detail.bnSj) - this.safeNumber(detail.snSj);
+            detail.jzzl = this.safeNumber(detail.snSj) ? detail.bnJz / detail.snSj : null;
+            detail.wcl = (Number(this.kmgzData.yf) >= 3 && this.safeNumber(detail.mbRw)) ? detail.bnSj / detail.mbRw : null;
+          }.bind(this));
+        },
+        syncKmgzMainStatus: function() {
+          var statuses = this.kmgzData.details.map(function(detail) { return detail.bbzt || '0'; });
+          var mainStatus = '0';
+          if (this.kmgzData.sfsd === '1' || statuses.every(function(status) { return status === '4'; })) {
+            mainStatus = '4';
+          } else if (statuses.some(function(status) { return status === '2'; })) {
+            mainStatus = '2';
+          } else if (statuses.length && statuses.every(function(status) { return status === '3'; })) {
+            mainStatus = '3';
+          } else if (statuses.length && statuses.every(function(status) { return ['1', '3', '4'].includes(status); })) {
+            mainStatus = '1';
+          }
+          var labelMap = { '0': '草稿', '1': '已提交', '2': '审核退回', '3': '审核通过', '4': '已锁定' };
+          this.kmgzData.bbzt = mainStatus;
+          this.kmgzData.bbztLabel = labelMap[mainStatus];
+        },
+        buildKmgzRows: function() {
+          this.kmgzRows = KMGZ_ROW_CONFIG.map(function(config) {
+            var row = {
+              item: config.item,
+              unit: config.unit,
+              field: config.field,
+              mode: config.mode,
+              isPercent: config.valueType === 'percent',
+              val_qs: null
+            };
+            var sum = 0;
+            ORG_LIST.forEach(function(org) {
+              var detail = this.kmgzData.details.find(function(item) { return item.hsjgbh === org.code; });
+              var value = detail ? detail[config.field] : null;
+              row['val_' + org.code] = value;
+              if (config.valueType !== 'percent') {
+                sum += this.safeNumber(value);
+              }
+            }.bind(this));
+            row.val_qs = config.valueType === 'percent' ? this.calcKmgzCityPercent(config.field) : sum;
+            return row;
+          }.bind(this));
+        },
+        calcKmgzCityPercent: function(field) {
+          var cityBnSj = this.sumKmgzField('bnSj');
+          var citySnSj = this.sumKmgzField('snSj');
+          var cityBnJz = cityBnSj - citySnSj;
+          var cityMbRw = this.sumKmgzField('mbRw');
+          if (field === 'jzzl') return citySnSj ? cityBnJz / citySnSj : null;
+          if (field === 'wcl') return (Number(this.kmgzData.yf) >= 3 && cityMbRw) ? cityBnSj / cityMbRw : null;
+          return null;
+        },
+        sumKmgzField: function(field) {
+          return this.kmgzData.details.reduce(function(total, detail) {
+            return total + this.safeNumber(detail[field]);
+          }.bind(this), 0);
+        },
+        isKmgzEditable: function(row, orgCode) {
+          if (this.currentRole === '330400') return false;
+          if (this.currentRole !== orgCode) return false;
+          if (row.field !== 'mbRw') return false;
+          if (Number(this.kmgzData.yf) < 3) return false;
+          return this.kmgzData.bbzt === '0' || this.kmgzData.bbzt === '2';
+        },
+        buildKmgzInputKey: function(field, orgCode) {
+          return orgCode + ':' + field;
+        },
+        getKmgzInputValue: function(row, orgCode) {
+          var key = this.buildKmgzInputKey(row.field, orgCode);
+          if (Object.prototype.hasOwnProperty.call(this.kmgzInputBuffer, key)) {
+            return this.kmgzInputBuffer[key];
+          }
+          var detail = this.kmgzData.details.find(function(item) { return item.hsjgbh === orgCode; });
+          return this.displayInputValue(detail ? detail[row.field] : null);
+        },
+        handleKmgzCellInput: function(row, orgCode, value) {
+          var key = this.buildKmgzInputKey(row.field, orgCode);
+          this.$set(this.kmgzInputBuffer, key, value);
+        },
+        commitKmgzCellInput: function(row, orgCode) {
+          var key = this.buildKmgzInputKey(row.field, orgCode);
+          if (!Object.prototype.hasOwnProperty.call(this.kmgzInputBuffer, key)) return;
+          var detail = this.kmgzData.details.find(function(item) { return item.hsjgbh === orgCode; });
+          if (!detail) return;
+          detail[row.field] = this.parseNullableNumber(this.kmgzInputBuffer[key]);
+          this.$delete(this.kmgzInputBuffer, key);
+          this.refreshKmgzView();
+        },
+        flushKmgzInputBuffer: function() {
+          var changed = false;
+          Object.keys(this.kmgzInputBuffer).forEach(function(key) {
+            var parts = key.split(':');
+            var orgCode = parts[0];
+            var field = parts.slice(1).join(':');
+            var detail = this.kmgzData.details.find(function(item) { return item.hsjgbh === orgCode; });
+            if (detail) {
+              detail[field] = this.parseNullableNumber(this.kmgzInputBuffer[key]);
+              changed = true;
+            }
+            this.$delete(this.kmgzInputBuffer, key);
+          }.bind(this));
+          if (changed) {
+            this.refreshKmgzView();
+          }
+        },
+        kmgzCellClassName: function(params) {
+          var row = params.row;
+          var property = params.column.property;
+          if (!property || (property.indexOf('val_') !== 0 && property !== 'val_qs')) return '';
+          if (property === 'val_qs') return 'formula-cell';
+          if (row.mode === 'formula') return 'formula-cell';
+          if (row.mode === 'auto') return 'readonly-cell';
+          if (row.mode === 'manual') return this.currentRole === '330400' ? 'readonly-cell' : '';
+          return '';
+        },
+        formatKmgzCell: function(row, value) {
+          return row.isPercent ? this.formatPercent(value) : this.formatMoney(value);
+        },
+        getKmgzCurrentTimestamp: function() {
+          return '2025-11-02 10:' + String(10 + this.safeNumber(this.kmgzData.qscs || 0)).padStart(2, '0') + ':00';
+        },
+        getCurrentKmgzDetail: function() {
+          return this.kmgzData.details.find(function(detail) { return detail.hsjgbh === this.currentRole; }.bind(this));
+        },
+        handleKmgzFetch: function() {
+          if (this.currentRole === '330400') return;
+          var detail = this.getCurrentKmgzDetail();
+          if (!detail) return;
+          detail.bnSj = Math.round(this.safeNumber(detail.bnSj) * 1.003);
+          detail.snSj = Math.round(this.safeNumber(detail.snSj) * 1.001);
+          detail.qszt = '1';
+          detail.bbzt = '0';
+          this.kmgzData.qscs = this.safeNumber(this.kmgzData.qscs) + 1;
+          this.kmgzData.qssj = this.getKmgzCurrentTimestamp();
+          this.refreshKmgzView();
+          this.$message.success('已重新获取当前分中心扩面完成情况数据，并刷新全市汇总结果。');
+        },
+        handleKmgzSaveDraft: function() {
+          if (this.currentRole === '330400') return;
+          this.flushKmgzInputBuffer();
+          var detail = this.getCurrentKmgzDetail();
+          if (!detail) return;
+          detail.bbzt = '0';
+          this.kmgzData.zbr = this.signatures.preparer || detail.jbjgmc + '填报人';
+          this.refreshKmgzView();
+          this.$message.success('当前分中心扩面工作完成情况已保存为草稿。');
+        },
+        handleKmgzSubmit: function() {
+          if (this.currentRole === '330400') return;
+          this.flushKmgzInputBuffer();
+          var detail = this.getCurrentKmgzDetail();
+          if (!detail) return;
+          if (detail.qszt !== '1') {
+            this.$message.error('请先完成自动取数，再提交本机构结果。');
+            return;
+          }
+          if (Number(this.kmgzData.yf) >= 3 && (detail.mbRw === null || detail.mbRw === undefined || detail.mbRw === '')) {
+            this.$message.error('3月起必须先填写目标任务，才能提交审核。');
+            return;
+          }
+          detail.bbzt = '1';
+          this.refreshKmgzView();
+          this.$message.success('当前分中心扩面工作完成情况已提交审核。');
+        },
+        handleKmgzApprove: function() {
+          if (this.currentRole !== '330400') return;
+          this.kmgzData.details.forEach(function(detail) {
+            detail.bbzt = '3';
+          });
+          this.kmgzData.shyj = '审核通过';
+          this.refreshKmgzView();
+          this.$message.success('市中心已审核通过扩面工作完成情况表。');
+        },
+        handleKmgzReject: function() {
+          if (this.currentRole !== '330400') return;
+          var target = this.kmgzData.details.find(function(detail) { return detail.bbzt === '1'; }) || this.kmgzData.details[0];
+          if (!target) return;
+          target.bbzt = '2';
+          this.kmgzData.shyj = target.jbjgmc + '目标任务或取数结果需复核，请重新确认后再提交。';
+          this.refreshKmgzView();
+          this.$message.warning('已退回一个分中心重新确认扩面工作完成情况。');
+        },
+        handleKmgzLock: function() {
+          if (this.currentRole !== '330400') return;
+          this.kmgzData.sfsd = '1';
+          this.kmgzData.details.forEach(function(detail) {
+            detail.bbzt = '4';
+          });
+          this.refreshKmgzView();
+          this.$message.success('扩面工作完成情况表已锁定。');
+        },
+        handleKmgzExport: function() {
+          this.$message.success('已按当前视角导出扩面工作完成情况表原型结果。');
+        },
+        formatMoney: function(value) {
+          if (value === null || value === undefined || value === '') return '-';
+          return Number(value).toFixed(2);
+        },
+        formatPercent: function(value) {
+          if (value === null || value === undefined || value === '') return '-';
+          return (Number(value) * 100).toFixed(2) + '%';
+        },
+        formatBudgetCell: function(value, isRatio) {
+          if (value === null || value === undefined || value === '') return '-';
+          return isRatio ? this.formatPercent(value) : this.formatMoney(value);
+        },
+        displayInputValue: function(value) {
+          if (value === null || value === undefined) return '';
+          return String(value);
+        },
+        parseNullableNumber: function(value) {
+          if (value === null || value === undefined) return null;
+          var text = String(value).trim();
+          if (!text) return null;
+          var number = Number(text.replace(/,/g, ''));
+          return isNaN(number) ? null : number;
+        },
+        safeNumber: function(value) {
+          var number = Number(value);
+          return isNaN(number) ? 0 : number;
+        }
+      },
+      mounted: function() {
+        this.refreshBudgetView();
+        this.refreshYwszysView();
+        this.refreshGjsyjsView();
+        this.refreshYwszjsView();
+        this.refreshZzsyfpView();
+        this.refreshZjsyzxView();
+        this.refreshKmgzView();
+      }
+    });
+  </script>
+</body>
+</html>

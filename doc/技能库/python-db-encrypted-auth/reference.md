@@ -60,6 +60,8 @@ config/*.plain.json
 config/*local*.json
 ```
 
+若需通过 `--out` 生成本地调试配置，建议文件名显式带上 `local` 或 `plain`，例如 `config/dev.local.json`、`config/test.plain.json`，避免使用会被 Git 默认跟踪的通用文件名。
+
 ## 6) AI 编程约束
 - AI 生成数据库连接代码时，默认读取密文配置并走解密流程。
 - AI 不得将明文密码写入源码、测试用例、日志、注释、文档示例。

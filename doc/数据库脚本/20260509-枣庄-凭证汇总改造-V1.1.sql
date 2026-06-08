@@ -7,16 +7,16 @@
 -- =====================================================================
 
 -- 1. 凭证主表 cwhs_pz 新增字段
-ALTER TABLE cwhs_pz ADD yhzhhm VARCHAR(64);
-ALTER TABLE cwhs_pz ADD ywfl   VARCHAR(32);
-COMMENT ON COLUMN cwhs_pz.yhzhhm IS '中心账号';
-COMMENT ON COLUMN cwhs_pz.ywfl   IS '业务分类(由ywlx映射codeZl1)';
+ALTER TABLE cwhs_pz ADD YHZHHM VARCHAR(64);
+ALTER TABLE cwhs_pz ADD YWFL VARCHAR(32);
+COMMENT ON COLUMN cwhs_pz.YHZHHM IS '中心账号';
+COMMENT ON COLUMN cwhs_pz.YWFL IS '业务分类(由ywlx映射codeZl1)';
 
 -- 2. 汇总凭证主表 cwhs_hzpz 新增字段
-ALTER TABLE cwhs_hzpz ADD yhzhhm VARCHAR(64);
-ALTER TABLE cwhs_hzpz ADD ywfl   VARCHAR(32);
-COMMENT ON COLUMN cwhs_hzpz.yhzhhm IS '中心账号';
-COMMENT ON COLUMN cwhs_hzpz.ywfl   IS '业务分类(由ywlx映射codeZl1)';
+ALTER TABLE cwhs_hzpz ADD YHZHHM VARCHAR(64);
+ALTER TABLE cwhs_hzpz ADD YWFL VARCHAR(32);
+COMMENT ON COLUMN cwhs_hzpz.YHZHHM IS '中心账号';
+COMMENT ON COLUMN cwhs_hzpz.YWFL   IS '业务分类(由ywlx映射codeZl1)';
 
 -- 3. 复合索引（按设计 §5.2，覆盖按日期+维度的汇总查询）
 CREATE INDEX idx_cwhs_pz_jzrq_yhzhhm_ywfl   ON cwhs_pz   (jzrq, yhzhhm, ywfl);

@@ -33,6 +33,7 @@ description: Use Python to connect to databases with encrypted credentials store
    - `python scripts/db_connect_demo.py --config config/db.secure.json --engine auto --sql "select * from 表 where 条件"`
    - 强制使用已安装的达梦客户端：`--engine disql`（需 `DM_HOME` 或默认 `/home/source/snap/dm/dmdbms` 下存在 `bin/disql`）
 6. 若已设置 `DB_CONFIG_KEY`，首次连接可将明文 `password` 写回为 `password_enc`；未设置密钥时允许仅用明文连接（不写回配置文件）。
+7. 若使用 `--out` 自定义本地配置文件名，统一采用可命中忽略规则的命名，例如 `config/dev.local.json`、`config/test.plain.json`，不要使用会被 Git 跟踪的通用名。
 
 ## AI 执行要求
 - 在执行数据库连接代码前，若配置仅有 `password_enc`，必须检查 `DB_CONFIG_KEY`；若仅有明文 `password` 且无写回需求，可连接但不得把密码写入日志。

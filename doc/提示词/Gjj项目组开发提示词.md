@@ -10,7 +10,26 @@
 - 本文件只保留高频后端场景模板，不重复展开项目总规范。
 - 默认仍需遵循：`Edict` 工作流、`anti-laziness-anti-hallucination`、`verification-before-completion`。
 
-## 3. 新增后端接口
+## 3. 数据库系统字段标准
+- 涉及达梦建表脚本、物理模型设计、数据库设计文档时，统一使用以下 15 个系统字段，不得擅自改名或删减：
+  - `ID BIGINT NOT NULL`
+  - `ZXBH NVARCHAR(15) NOT NULL`
+  - `REVISION INT NOT NULL`
+  - `CREATOR NVARCHAR(100)`
+  - `CREATED_TIME TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP()`
+  - `UPDATOR NVARCHAR(100)`
+  - `UPDATED_TIME TIMESTAMP(0)`
+  - `JBJGBH NVARCHAR(30) NOT NULL`
+  - `JBJGMC NVARCHAR(90) NOT NULL`
+  - `WDBH NVARCHAR(30)`
+  - `WDMC NVARCHAR(90)`
+  - `QDLX NVARCHAR(10)`
+  - `QDBM NVARCHAR(16)`
+  - `DEL_FLAG NVARCHAR(1) NOT NULL DEFAULT '0'`
+  - `HSJGBH NVARCHAR(10) NOT NULL DEFAULT '01'`
+- 输出 SQL 时，表名和字段名统一使用大写，且不带引号。
+
+## 4. 新增后端接口
 ```markdown
 请基于 Gjj 当前后端工程结构实现以下接口需求：
 【填写具体需求】
@@ -25,7 +44,7 @@
 7. 输出：修改文件清单、实现说明、风险点、验证步骤、文档路径。
 ```
 
-## 4. 缺陷修复
+## 5. 缺陷修复
 ```markdown
 请排查并修复以下 Gjj 后端问题：
 【贴现象/日志/报错】
@@ -37,7 +56,7 @@
 4. 回归用例（正常/异常/边界）
 ```
 
-## 5. SQL 优化
+## 6. SQL 优化
 ```markdown
 请优化以下 SQL 或 Mapper 方法：
 【填 SQL 或 mapper 方法】
@@ -49,7 +68,7 @@
 4. 提供验证方式
 ```
 
-## 6. Feign 降级治理
+## 7. Feign 降级治理
 ```markdown
 请治理当前模块的 Feign 降级代码，重点处理 `return null`：
 【填写模块或文件】
@@ -61,7 +80,7 @@
 4. 输出修复清单、风险清单、验证方式
 ```
 
-## 7. 代码评审
+## 8. 代码评审
 ```markdown
 请对以下后端改动做规范视角代码评审：
 【填写 MR / Diff / 文件列表】
@@ -76,7 +95,7 @@
 请按：`致命 / 高 / 中 / 建议` 输出。
 ```
 
-## 8. 提交前自检
+## 9. 提交前自检
 ```markdown
 请按 Gjj 后端规范对当前改动执行提交前自检，并逐项输出“通过 / 不通过 / 需补充说明”：
 - SDD 是否已确认

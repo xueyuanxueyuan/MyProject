@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>资金预决算及执行情况 - 交互原型</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <style>
+    body { font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif; margin: 0; padding: 20px; background-color: #f0f2f5; }
+    #app { background: #fff; padding: 20px; border-radius: 4px; min-height: 800px; box-shadow: 0 2px 12px 0 rgba(0,0,0,.1); }
+    .header-title { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #303133; text-align: center; }
+    .toolbar { margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+    .footer { margin-top: 20px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="header-title">资金预决算及执行情况管理系统</div>
+    
+    <el-tabs v-model="activeTab" @tab-click="handleTabClick">
+      <el-tab-pane label="资金使用预算" name="budget">
+        <div class="toolbar">
+          <div>
+            <el-select v-model="query.year" placeholder="请选择年度" style="width: 120px;">
+              <el-option label="2025" value="2025"></el-option>
+              <el-option label="2024" value="2024"></el-option>
+            </el-select>
+            <el-select v-model="query.type" placeholder="报表类型" style="width: 150px; margin-left: 10px;">
+              <el-option label="总表" value="main"></el-option>
+              <el-option label="附表" value="sub"></el-option>
+            </el-select>
+            <el-button type="primary" icon="el-icon-search" style="margin-left: 10px;" @click="loadData">查询</el-button>
+          </div>
+          <div>
+            <el-button type="success" icon="el-icon-plus" @click="handleAdd">新增预算</el-button>
+            <el-button type="warning" icon="el-icon-download">导出Excel</el-button>
+            <el-button type="primary" icon="el-icon-check">提交审核</el-button>
+          </div>
+        </div>
+        
+        <el-table :data="tableData" border style="width: 100%" stripe>
+          <el-table-column prop="item" label="项目" width="180"></el-table-column>
+          <el-table-column prop="line" label="行次" width="80" align="center"></el-table-column>
+          <el-table-column prop="qs" label="全市" align="right">
+            <template slot-scope="scope">
+              <el-input v-if="scope.row.isEdit" v-model="scope.row.qs" size="mini"></el-input>
+              <span v-else>{{ scope.row.qs }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="sbj" label="市本级" align="right">
+            <template slot-scope="scope">
+              <el-input v-if="scope.row.isEdit" v-model="scope.row.sbj" size="mini"></el-input>
+              <span v-else>{{ scope.row.sbj }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="jsx" label="嘉善县" align="right">
+            <template slot-scope="scope">
+              <el-input v-if="scope.row.isEdit" v-model="scope.row.jsx" size="mini"></el-input>
+              <span v-else>{{ scope.row.jsx }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="phs" label="平湖市" align="right">
+            <template slot-scope="scope">
+              <el-input v-if="scope.row.isEdit" v-model="scope.row.phs" size="mini"></el-input>
+              <span v-else>{{ scope.row.phs }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="150" align="center">
+            <template slot-scope="scope">
+              <el-button v-if="!scope.row.isEdit" type="text" size="small" @click="scope.row.isEdit = true">编辑</el-button>
+              <el-button v-else type="text" size="small" style="color: #67C23A;" @click="saveRow(scope.row)">保存</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
+      
+      <el-tab-pane label="业务收支决算" name="final">
+        <div class="toolbar">
+            <div>
+              <el-select v-model="query.year" placeholder="请选择年度" style="width: 120px;">
+                <el-option label="2024" value="2024"></el-option>
+                <el-option label="2023" value="2023"></el-option>
+              </el-select>
+              <el-button type="primary" icon="el-icon-search" style="margin-left: 10px;" @click="loadData">查询</el-button>
+            </div>
+            <div>
+              <el-button type="warning" icon="el-icon-download">导出Excel</el-button>
+            </div>
+        </div>
+        <el-empty description="请选择年度进行查询决算数据"></el-empty>
+      </el-tab-pane>
+
+      <el-tab-pane label="扩面工作完成情况" name="expansion">
+        <el-alert title="演示数据：展示扩面工作（如本年实缴人数等指标）的各区县完成情况" type="info" show-icon style="margin-bottom: 15px;"></el-alert>
+        <el-table :data="expansionData" border style="width: 100%" stripe>
+          <el-table-column prop="indexName" label="指标" width="150"></el-table-column>
+          <el-table-column prop="unit" label="单位" width="80" align="center"></el-table-column>
+          <el-table-column prop="qs" label="全市" align="right"></el-table-column>
+          <el-table-column prop="sbj" label="市本级" align="right"></el-table-column>
+          <el-table-column prop="jsx" label="嘉善县" align="right"></el-table-column>
+          <el-table-column prop="phs" label="平湖市" align="right"></el-table-column>
+        </el-table>
+      </el-tab-pane>
+    </el-tabs>
+    
+    <el-dialog title="新增预算项目" :visible.sync="dialogVisible" width="500px">
+      <el-form :model="form" label-width="80px">
+        <el-form-item label="项目名称">
+          <el-input v-model="form.item"></el-input>
+        </el-form-item>
+        <el-form-item label="行次">
+          <el-input v-model="form.line"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="confirmAdd">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+
+  <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return {
+          activeTab: 'budget',
+          query: {
+            year: '2025',
+            type: 'sub'
+          },
+          dialogVisible: false,
+          form: {
+            item: '',
+            line: ''
+          },
+          tableData: [
+            { item: '归集提取', line: 1, qs: '15000.00', sbj: '5000.00', jsx: '2000.00', phs: '3000.00', isEdit: false },
+            { item: '发放贷款', line: 2, qs: '20000.00', sbj: '8000.00', jsx: '4000.00', phs: '4000.00', isEdit: false }
+          ],
+          expansionData: [
+            { indexName: '本年实缴', unit: '人', qs: '125000', sbj: '45000', jsx: '12000', phs: '18000' },
+            { indexName: '净增实缴', unit: '人', qs: '5000', sbj: '1500', jsx: '800', phs: '900' }
+          ]
+        }
+      },
+      methods: {
+        handleTabClick(tab) {
+          console.log(tab.name);
+        },
+        loadData() {
+          this.$message.success('查询成功，数据已更新');
+        },
+        handleAdd() {
+          this.form = { item: '', line: '' };
+          this.dialogVisible = true;
+        },
+        confirmAdd() {
+          if(!this.form.item) {
+            this.$message.error('请输入项目名称');
+            return;
+          }
+          this.tableData.push({
+            item: this.form.item,
+            line: this.form.line || (this.tableData.length + 1),
+            qs: '0.00', sbj: '0.00', jsx: '0.00', phs: '0.00',
+            isEdit: false
+          });
+          this.dialogVisible = false;
+          this.$message.success('新增成功');
+        },
+        saveRow(row) {
+          row.isEdit = false;
+          this.$message.success('保存成功');
+        }
+      }
+    })
+  </script>
+</body>
+</html>

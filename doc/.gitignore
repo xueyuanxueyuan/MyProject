@@ -1,5 +1,8 @@
-# 本地数据库加密配置（含敏感信息，禁止入库）
+# python-db-encrypted-auth 本地敏感文件（含密钥、明文过渡配置与本地环境变体，禁止入库）
+技能库/python-db-encrypted-auth/.env
 技能库/python-db-encrypted-auth/config/db.secure.json
+技能库/python-db-encrypted-auth/config/*.plain.json
+技能库/python-db-encrypted-auth/config/*local*.json
 
 # 常见临时文件
 .DS_Store

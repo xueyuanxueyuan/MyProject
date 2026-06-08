@@ -35,7 +35,27 @@
   - `src/store`
   - `src/assets`
 
-## 4. 通用主提示词
+## 4. 数据库系统字段标准
+- 涉及 Gjj 达梦建表、DDL 设计、物理模型输出时，默认使用以下 15 个系统字段，不得自行删减或替换命名。
+- 标准字段顺序：
+  - `ID BIGINT NOT NULL`
+  - `ZXBH NVARCHAR(15) NOT NULL`
+  - `REVISION INT NOT NULL`
+  - `CREATOR NVARCHAR(100)`
+  - `CREATED_TIME TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP()`
+  - `UPDATOR NVARCHAR(100)`
+  - `UPDATED_TIME TIMESTAMP(0)`
+  - `JBJGBH NVARCHAR(30) NOT NULL`
+  - `JBJGMC NVARCHAR(90) NOT NULL`
+  - `WDBH NVARCHAR(30)`
+  - `WDMC NVARCHAR(90)`
+  - `QDLX NVARCHAR(10)`
+  - `QDBM NVARCHAR(16)`
+  - `DEL_FLAG NVARCHAR(1) NOT NULL DEFAULT '0'`
+  - `HSJGBH NVARCHAR(10) NOT NULL DEFAULT '01'`
+- 输出 DDL 时，表名与字段名统一使用大写，且不带引号。
+
+## 5. 通用主提示词
 ```markdown
 请作为 Gjj 当前工作区的资深研发工程师开展工作，严格基于现有项目结构与真实代码风格实现需求，不得套用脱离项目现状的通用模板。
 
@@ -53,7 +73,7 @@
 【在这里填写你的具体需求】
 ```
 
-## 5. 后端快捷模板
+## 6. 后端快捷模板
 ```markdown
 请基于 Gjj 当前后端工程结构完成以下后端需求：
 【填写需求】
@@ -67,7 +87,7 @@
 6. 输出：目标模块与目录、修改文件、实现说明、风险与回归范围、自检结果、文档路径。
 ```
 
-## 6. 前端快捷模板
+## 7. 前端快捷模板
 ```markdown
 请基于 `capinfo-gjj-frontend-jshs-gm` 现有结构完成以下前端需求：
 【填写需求】
@@ -81,7 +101,7 @@
 6. 输出：目标目录、修改文件、实现思路、风险与影响范围、验证步骤、文档路径。
 ```
 
-## 7. 重构与自检模板
+## 8. 重构与自检模板
 ```markdown
 请对以下改动执行重构评估或提交前自检：
 【填写文件 / 目标 / Diff】
@@ -94,7 +114,7 @@
 - 是否已给出影响范围、风险点与回滚思路
 ```
 
-## 8. 区域索引入口
+## 9. 区域索引入口
 - `prod` 主索引：`doc/提示词/Gjj项目-prod主索引与区域大索引提示词.md`
 - 区域差异清单：`doc/提示词/Gjj项目-区域差异方法清单提示词.md`
 - 白名单版差异清单：`doc/提示词/Gjj项目-区域差异方法清单-模块白名单版.md`
