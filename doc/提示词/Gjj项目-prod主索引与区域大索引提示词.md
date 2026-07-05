@@ -3,7 +3,8 @@
 ## 1. 使用前提
 - 当前工作区根目录：`/home/source/Jetbrains/Probject/Gjj`
 - 区域定义：与 `prod` 同级目录即“区域落地目录”，例如 `zaozhuang`、`linyi`、`wenzhou`、`jiaxing`。
-- 索引使用顺序：先命中 `prod`，再命中区域差异。
+- 索引使用顺序：先查询 `doc/项目勘查报告/02-AI工具检索用项目图谱.md`，再命中 `prod`，最后命中区域差异。
+- 若当前会话未先读取项目图谱，不得直接在 `prod`、区域项目或全仓范围内展开搜索。
 
 ## 2. 区域目录大索引（同级目录口径）
 - `prod`：通用产品主线代码（基线）。
@@ -107,9 +108,10 @@
 ## 5. 执行指令模板（建议直接复用）
 ```markdown
 请按以下索引执行：
-1. 先在 `prod/IdeaProjects/capinfo-gjj-busi-jshs` 命中目标文件与方法；
-2. 若涉及区域发布，再到 `<region>/IdeaProjects/capinfo-gjj-busi-jshs` 仅定位差异文件；
-3. 输出必须包含：
+1. 先读取 `doc/项目勘查报告/02-AI工具检索用项目图谱.md`，确认任务属于 `prod` 还是某个区域项目。
+2. 先在 `prod/IdeaProjects/capinfo-gjj-busi-jshs` 命中目标文件与方法；
+3. 若涉及区域发布，再到 `<region>/IdeaProjects/capinfo-gjj-busi-jshs` 仅定位差异文件；
+4. 输出必须包含：
    - prod 命中文件与方法
    - 区域差异文件与差异方法
    - 差异类型（配置/规则/接口字段/SQL口径）
