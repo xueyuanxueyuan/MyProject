@@ -4,5 +4,7 @@
 !/doc/**
 !.gitignore
 !/README.md
+!/yht-mock-server/
+!/yht-mock-server/**
 # Added by code-review-graph
 .code-review-graph/

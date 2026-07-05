@@ -1,0 +1,15 @@
+server:
+  port: 9999
+
+spring:
+  application:
+    name: yht-mock-server
+  jackson:
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: false
+
+logging:
+  level:
+    root: info
+    cn.capinfo.gjj.yhtmock: info
