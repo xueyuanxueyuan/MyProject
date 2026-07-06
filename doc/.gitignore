@@ -4,6 +4,29 @@
 技能库/python-db-encrypted-auth/config/*.plain.json
 技能库/python-db-encrypted-auth/config/*local*.json
 
+# 阶段性流水默认不入库，仅保留目录说明
+操作记录/**
+!操作记录/README.md
+!操作记录/20260705-一户通独立挡板项目重建记录.md
+!操作记录/20260705-一户通独立挡板项目场景规则增强记录.md
+
+# 归档压缩包与导出件
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+
+# 证书与密钥材料
+*.cer
+*.crt
+*.pem
+*.p12
+*.pfx
+*.jks
+*.key
+
 # 常见临时文件
 .DS_Store
 Thumbs.db

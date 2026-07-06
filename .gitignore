@@ -2,9 +2,13 @@
 /*
 !/doc/
 !/doc/**
+!/config/
+!/config/deploy_servers.json
 !.gitignore
 !/README.md
 !/yht-mock-server/
 !/yht-mock-server/**
+config/deploy_secrets.local.json
+config/*.local.json
 # Added by code-review-graph
 .code-review-graph/

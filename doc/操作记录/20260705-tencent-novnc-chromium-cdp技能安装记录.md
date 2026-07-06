@@ -85,3 +85,63 @@
 1. 先按 `RUNTIME-SETUP.md` 启动 Edge 的 CDP 模式
 2. 再验证 `browser-use --connect state` 或其他 CDP 客户端是否可连
 3. 若后续补齐 Docker，再追加 noVNC 容器运行模板
+
+## 2026-07-05 CDP 自动化跑通记录
+
+### 1. 启动结果
+
+已使用独立用户数据目录启动 Edge CDP 实例：
+
+- 浏览器：`C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe`
+- 用户数据目录：`d:\Probject\Gjj\.cache\edge-cdp`
+- 调试端口：`9222`
+- 监听地址：`127.0.0.1:9222`
+- 监听进程：`34020`
+
+### 2. CDP 端点验证
+
+`http://127.0.0.1:9222/json/version` 返回：
+
+- `Browser`：`Edg/150.0.4078.48`
+- `Protocol-Version`：`1.3`
+- `webSocketDebuggerUrl`：已返回浏览器级 WebSocket 地址
+
+`http://127.0.0.1:9222/json` 返回页面目标，包含：
+
+- `about:blank`
+- `https://example.com/`
+
+### 3. 自动化客户端情况
+
+本机当前未发现 `browser-use` 命令，且 Python/py 不可用。
+
+因此本次使用 PowerShell/.NET `ClientWebSocket` 作为替代 CDP 客户端进行验证。
+
+### 4. 实际自动化验收
+
+通过 CDP HTTP 接口新建页面：
+
+- `PUT http://127.0.0.1:9222/json/new?https://example.com`
+
+随后连接页面级 WebSocket，并调用 `Runtime.evaluate` 执行页面脚本，读取结果为：
+
+```json
+{"id":1,"result":{"result":{"type":"string","value":"Example Domain|https://example.com/|Example Domain"}}}
+```
+
+该结果证明：
+
+- CDP 端口已开启
+- 页面目标可枚举
+- 页面级 WebSocket 可连接
+- 可通过 CDP 执行 JavaScript 并读取 DOM 结果
+
+### 5. 当前结论
+
+当前机器已经跑通 **Edge(Chromium) + CDP** 自动化链路。
+
+后续若需要更高层封装，可继续补齐：
+
+- `browser-use` 命令行客户端
+- Node.js CDP 脚本客户端
+- Docker/noVNC 可视化容器层

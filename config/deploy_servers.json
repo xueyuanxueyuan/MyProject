@@ -1,0 +1,157 @@
+{
+  "regions": {
+    "zaozhuang": {
+      "region_root": "/home/source/Jetbrains/Probject/Gjj/zaozhuang",
+      "secret_file": "config/deploy_secrets.local.json",
+      "artifact_repository": {
+        "release_dir": "/home/source/Jetbrains/Probject/Gjj/zaozhuang/release",
+        "upload_source": "release_dir"
+      },
+      "artifacts": {
+        "capinfo-gjj-busi-cwhs-jzgl-basic-svc-app.jar": {
+          "display_name": "财务核算服务",
+          "service_key": "cwhs-jzgl",
+          "aliases": [
+            "财务核算",
+            "财务核算服务",
+            "cwhs",
+            "cwhs-jzgl",
+            "capinfo-gjj-busi-cwhs-jzgl-basic-svc-app"
+          ],
+          "type": "backend",
+          "deployment": "capinfo-gjj-busi-cwhs-jzgl-basic-svc-depl"
+        },
+        "capinfo-gjj-busi-jhgl-zjjh-basic-svc-app.jar": {
+          "display_name": "计划管理服务",
+          "service_key": "jhgl-zjjh",
+          "aliases": [
+            "计划管理",
+            "计划管理服务",
+            "jhgl",
+            "jhgl-zjjh",
+            "capinfo-gjj-busi-jhgl-zjjh-basic-svc-app"
+          ],
+          "type": "backend",
+          "deployment": "capinfo-gjj-busi-jhgl-zjjh-basic-svc-depl"
+        },
+        "capinfo-gjj-busi-jshs-gm-agg-svc-app.jar": {
+          "display_name": "聚合服务",
+          "service_key": "jshs-gm-agg",
+          "aliases": [
+            "聚合",
+            "聚合服务",
+            "gm-agg",
+            "jshs-gm-agg",
+            "capinfo-gjj-busi-jshs-gm-agg-svc-app"
+          ],
+          "type": "backend",
+          "deployment": "capinfo-gjj-busi-jshs-gm-agg-svc-depl"
+        },
+        "capinfo-gjj-busi-zjjs-lcgl-basic-svc-app.jar": {
+          "display_name": "流程管理服务",
+          "service_key": "zjjs-lcgl",
+          "aliases": [
+            "流程管理",
+            "流程管理服务",
+            "lcgl",
+            "zjjs-lcgl",
+            "capinfo-gjj-busi-zjjs-lcgl-basic-svc-app"
+          ],
+          "type": "backend",
+          "deployment": "capinfo-gjj-busi-zjjs-lcgl-basic-svc-depl"
+        },
+        "capinfo-gjj-busi-zjjs-sp-basic-svc-app.jar": {
+          "display_name": "审批服务",
+          "service_key": "zjjs-sp",
+          "aliases": [
+            "审批",
+            "审批服务",
+            "sp",
+            "zjjs-sp",
+            "capinfo-gjj-busi-zjjs-sp-basic-svc-app"
+          ],
+          "type": "backend",
+          "deployment": "capinfo-gjj-busi-zjjs-sp-basic-svc-depl"
+        },
+        "capinfo-gjj-busi-zjjs-ywgl-basic-svc-app.jar": {
+          "display_name": "业务管理服务",
+          "service_key": "zjjs-ywgl",
+          "aliases": [
+            "业务管理",
+            "业务管理服务",
+            "ywgl",
+            "zjjs-ywgl",
+            "capinfo-gjj-busi-zjjs-ywgl-basic-svc-app"
+          ],
+          "type": "backend",
+          "deployment": "capinfo-gjj-busi-zjjs-ywgl-basic-svc-depl"
+        },
+        "capinfo-gjj-busi-zjjs-zhgl-basic-svc-app.jar": {
+          "display_name": "账户管理服务",
+          "service_key": "zjjs-zhgl",
+          "aliases": [
+            "账户管理",
+            "账户管理服务",
+            "zhgl",
+            "zjjs-zhgl",
+            "capinfo-gjj-busi-zjjs-zhgl-basic-svc-app"
+          ],
+          "type": "backend",
+          "deployment": "capinfo-gjj-busi-zjjs-zhgl-basic-svc-depl"
+        },
+        "capinfo-gjj-frontend-jshs-gm.zip": {
+          "display_name": "前端聚合包",
+          "service_key": "frontend-jshs-gm",
+          "aliases": [
+            "前端",
+            "前端聚合包",
+            "frontend",
+            "frontend-jshs-gm",
+            "capinfo-gjj-frontend-jshs-gm"
+          ],
+          "type": "frontend",
+          "deployment": "capinfo-gjj-frontend-jshs-gm-depl"
+        }
+      },
+      "deploy_modes": {
+        "full": {
+          "upload": "all_artifacts_from_release_dir",
+          "restart": "all_configured_deployments"
+        },
+        "partial": {
+          "upload": "specified_artifacts_from_release_dir",
+          "restart": "deployments_for_specified_artifacts"
+        }
+      },
+      "environments": {
+        "test": {
+          "host": "100.70.0.189",
+          "port": 22022,
+          "credential_key": "zaozhuang:test",
+          "default_path": "/data/app/zzgjj-test/capinfo-gjj-jshs",
+          "namespace": "zzgjj-test"
+        },
+        "zjb-test": {
+          "host": "100.70.0.189",
+          "port": 22022,
+          "credential_key": "zaozhuang:zjb-test",
+          "default_path": "/data/app/zzgjj-test-zjb/capinfo-gjj-jshs",
+          "namespace": "zzgjj-test-zjb"
+        },
+        "prod": {
+          "host": "100.70.0.189",
+          "port": 22022,
+          "credential_key": "zaozhuang:prod",
+          "default_path": "/data/app/zzgjj-prod/capinfo-gjj-jshs",
+          "namespace": "zzgjj-prod"
+        }
+      }
+    }
+  },
+  "aliases": {
+    "zaozhuang": "zaozhuang:test",
+    "zaozhuang:test": "zaozhuang:test",
+    "zaozhuang:zjb-test": "zaozhuang:zjb-test",
+    "zaozhuang:prod": "zaozhuang:prod"
+  }
+}
