@@ -8,6 +8,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.XMLConstants;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -100,8 +101,7 @@ public class CapsCodecService {
 
     public Document parseXml(String xml) {
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(true);
+            DocumentBuilderFactory factory = newSecureDocumentBuilderFactory();
             return factory.newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
         } catch (Exception e) {
             return null;
@@ -193,6 +193,21 @@ public class CapsCodecService {
             return xmlIndex;
         }
         return rawMessage.indexOf("<Message");
+    }
+
+    private DocumentBuilderFactory newSecureDocumentBuilderFactory() throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        factory.setXIncludeAware(false);
+        factory.setExpandEntityReferences(false);
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        return factory;
     }
 
     private String rightPad(String value, int length, char padChar) {

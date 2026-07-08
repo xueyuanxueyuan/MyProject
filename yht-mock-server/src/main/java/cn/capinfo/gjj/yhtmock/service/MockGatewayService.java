@@ -34,19 +34,28 @@ public class MockGatewayService {
     public String dispatch(String rawMessage) {
         CapsCodecService.ParsedFrame frame = codecService.parseFrame(rawMessage);
         CapsHeader requestHeader = frame.header();
-        Document document = codecService.parseXml(frame.xmlBody());
         String requestMesgType = safe(requestHeader.mesgType);
         String responseMesgType;
         String responseXml;
-        String reqId = codecService.text(document, "ReqId");
-        String protocolNo = firstNonBlank(codecService.text(document, "DbtrProtocol"), codecService.text(document, "OrgnlId"));
-        String batchNo = codecService.text(document, "BatchNo");
-        String sysSeqNo = codecService.text(document, "SysSeqNo");
-        String acctNo = codecService.text(document, "DbtrActId");
+        String reqId = "";
+        String protocolNo = "";
+        String batchNo = "";
+        String sysSeqNo = "";
+        String acctNo = "";
         String status = "SUCC";
-        MockScenarioRule scenarioRule = storeService.matchScenario(buildScenarioContext(
-                requestMesgType, acctNo, protocolNo, reqId, batchNo, sysSeqNo));
+        MockScenarioRule scenarioRule = null;
         try {
+            Document document = codecService.parseXml(frame.xmlBody());
+            if (document == null) {
+                throw new IllegalArgumentException("报文XML解析失败");
+            }
+            reqId = codecService.text(document, "ReqId");
+            protocolNo = firstNonBlank(codecService.text(document, "DbtrProtocol"), codecService.text(document, "OrgnlId"));
+            batchNo = codecService.text(document, "BatchNo");
+            sysSeqNo = codecService.text(document, "SysSeqNo");
+            acctNo = codecService.text(document, "DbtrActId");
+            scenarioRule = storeService.matchScenario(buildScenarioContext(
+                    requestMesgType, acctNo, protocolNo, reqId, batchNo, sysSeqNo));
             switch (requestMesgType) {
                 case "caps.999.001.01" -> {
                     responseMesgType = "caps.900.001.01";

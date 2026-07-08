@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -29,10 +30,21 @@ public class MockStoreService {
 
     private static final int MAX_RECORDS = 5000;
 
-    private final ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-    private final Path stateFile = Paths.get("data", "mock-state.json");
+    private final ObjectMapper objectMapper;
+    private final Path stateFile;
+    private final Path backupFile;
 
     private MockStateSnapshot snapshot = new MockStateSnapshot();
+
+    public MockStoreService() {
+        this(Paths.get("data", "mock-state.json"));
+    }
+
+    MockStoreService(Path stateFile) {
+        this.objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        this.stateFile = stateFile;
+        this.backupFile = stateFile.resolveSibling(stateFile.getFileName() + ".bak");
+    }
 
     @PostConstruct
     public synchronized void init() {
@@ -223,37 +235,89 @@ public class MockStoreService {
         try {
             Files.createDirectories(stateFile.getParent());
             if (!Files.exists(stateFile)) {
+                if (Files.exists(backupFile)) {
+                    snapshot = readSnapshot(backupFile);
+                    save();
+                    return;
+                }
                 save();
                 return;
             }
-            snapshot = objectMapper.readValue(stateFile.toFile(), MockStateSnapshot.class);
-            if (snapshot.settings == null) {
-                snapshot.settings = new MockSettings();
-            }
-            if (snapshot.records == null) {
-                snapshot.records = new ArrayList<>();
-            }
-            if (snapshot.protocols == null) {
-                snapshot.protocols = new LinkedHashMap<>();
-            }
-            if (snapshot.trades == null) {
-                snapshot.trades = new LinkedHashMap<>();
-            }
-            if (snapshot.batches == null) {
-                snapshot.batches = new LinkedHashMap<>();
-            }
-            if (snapshot.scenarios == null) {
-                snapshot.scenarios = new ArrayList<>();
-            }
+            snapshot = readSnapshot(stateFile);
+            copyBackup();
         } catch (IOException e) {
-            snapshot = new MockStateSnapshot();
+            snapshot = loadFromBackupOrEmpty();
         }
     }
 
     private void save() {
+        Path tempFile = stateFile.resolveSibling(stateFile.getFileName() + ".tmp");
         try {
             Files.createDirectories(stateFile.getParent());
-            objectMapper.writeValue(stateFile.toFile(), snapshot);
+            objectMapper.writeValue(tempFile.toFile(), snapshot);
+            moveReplacing(tempFile, stateFile);
+            copyBackup();
+        } catch (IOException ignored) {
+            deleteQuietly(tempFile);
+        }
+    }
+
+    private MockStateSnapshot loadFromBackupOrEmpty() {
+        if (Files.exists(backupFile)) {
+            try {
+                MockStateSnapshot backupSnapshot = readSnapshot(backupFile);
+                snapshot = backupSnapshot;
+                save();
+                return backupSnapshot;
+            } catch (IOException ignored) {
+                deleteQuietly(backupFile);
+            }
+        }
+        return new MockStateSnapshot();
+    }
+
+    private MockStateSnapshot readSnapshot(Path file) throws IOException {
+        MockStateSnapshot loaded = objectMapper.readValue(file.toFile(), MockStateSnapshot.class);
+        normalizeSnapshot(loaded);
+        return loaded;
+    }
+
+    private void normalizeSnapshot(MockStateSnapshot loaded) {
+        if (loaded.settings == null) {
+            loaded.settings = new MockSettings();
+        }
+        if (loaded.records == null) {
+            loaded.records = new ArrayList<>();
+        }
+        if (loaded.protocols == null) {
+            loaded.protocols = new LinkedHashMap<>();
+        }
+        if (loaded.trades == null) {
+            loaded.trades = new LinkedHashMap<>();
+        }
+        if (loaded.batches == null) {
+            loaded.batches = new LinkedHashMap<>();
+        }
+        if (loaded.scenarios == null) {
+            loaded.scenarios = new ArrayList<>();
+        }
+    }
+
+    private void copyBackup() throws IOException {
+        Files.copy(stateFile, backupFile, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private void moveReplacing(Path source, Path target) throws IOException {
+        try {
+            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+        } catch (IOException ex) {
+            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    private void deleteQuietly(Path file) {
+        try {
+            Files.deleteIfExists(file);
         } catch (IOException ignored) {
         }
     }
