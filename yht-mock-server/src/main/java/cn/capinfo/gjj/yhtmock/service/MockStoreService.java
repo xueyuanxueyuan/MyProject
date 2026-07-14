@@ -233,7 +233,10 @@ public class MockStoreService {
 
     private void load() {
         try {
-            Files.createDirectories(stateFile.getParent());
+            Path parent = stateFile.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
             if (!Files.exists(stateFile)) {
                 if (Files.exists(backupFile)) {
                     snapshot = readSnapshot(backupFile);
@@ -253,7 +256,10 @@ public class MockStoreService {
     private void save() {
         Path tempFile = stateFile.resolveSibling(stateFile.getFileName() + ".tmp");
         try {
-            Files.createDirectories(stateFile.getParent());
+            Path parent = stateFile.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
             objectMapper.writeValue(tempFile.toFile(), snapshot);
             moveReplacing(tempFile, stateFile);
             copyBackup();

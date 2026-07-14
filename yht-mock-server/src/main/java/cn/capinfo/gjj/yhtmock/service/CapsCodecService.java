@@ -101,6 +101,12 @@ public class CapsCodecService {
 
     public Document parseXml(String xml) {
         try {
+            if (xml == null) {
+                return null;
+            }
+            if (xml.toUpperCase().contains("<!DOCTYPE")) {
+                return null;
+            }
             DocumentBuilderFactory factory = newSecureDocumentBuilderFactory();
             return factory.newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
         } catch (Exception e) {
@@ -195,19 +201,33 @@ public class CapsCodecService {
         return rawMessage.indexOf("<Message");
     }
 
-    private DocumentBuilderFactory newSecureDocumentBuilderFactory() throws Exception {
+    private DocumentBuilderFactory newSecureDocumentBuilderFactory() {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
-        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-        factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        trySetFeature(factory, XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        trySetFeature(factory, "http://apache.org/xml/features/disallow-doctype-decl", true);
+        trySetFeature(factory, "http://xml.org/sax/features/external-general-entities", false);
+        trySetFeature(factory, "http://xml.org/sax/features/external-parameter-entities", false);
+        trySetFeature(factory, "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
         factory.setXIncludeAware(false);
         factory.setExpandEntityReferences(false);
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        trySetAttribute(factory, XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        trySetAttribute(factory, XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
         return factory;
+    }
+
+    private void trySetFeature(DocumentBuilderFactory factory, String feature, boolean value) {
+        try {
+            factory.setFeature(feature, value);
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void trySetAttribute(DocumentBuilderFactory factory, String name, Object value) {
+        try {
+            factory.setAttribute(name, value);
+        } catch (Exception ignored) {
+        }
     }
 
     private String rightPad(String value, int length, char padChar) {
