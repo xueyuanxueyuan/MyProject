@@ -1,0 +1,38 @@
+{
+  "defaultCity": "zaozhuang",
+  "cities": {
+    "zaozhuang": {
+      "name": "枣庄",
+      "description": "当前 Apipost 示例中的城市固定参数；其他城市请复制本节点后修改 fixedParams。",
+      "fixedParams": {
+        "zxbh": "370400000000000",
+        "jbjgbh": "37040102",
+        "jbjgmc": "市中管理部",
+        "qdlx": "01",
+        "qdbm": "gt",
+        "wdbh": null,
+        "wdmc": null,
+        "ywjbjgbh": "37040102",
+        "ywqd": "gt"
+      },
+      "serviceBaseUrl": "http://100.70.1.0:31108"
+    },
+    "jiaxing": {
+      "name": "嘉兴",
+      "description": "当前 Apipost 示例中的城市固定参数；其他城市请复制本节点后修改 fixedParams。",
+      "fixedParams": {
+        "zxbh": "330400000000000",
+        "jbjgbh": "0101",
+        "jbjgmc": "市本级",
+        "qdlx": "01",
+        "qdbm": "gt",
+        "wdbh": null,
+        "wdmc": null,
+        "ywjbjgbh": "0101",
+        "ywqd": "gt",
+        "hsjgbh": "0101"
+      },
+      "serviceBaseUrl": "http://k8s.gjj.jxgjj:31129"
+    }
+  }
+}

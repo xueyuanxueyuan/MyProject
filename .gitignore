@@ -8,6 +8,15 @@
 !/README.md
 !/yht-mock-server/
 !/yht-mock-server/**
+!/zjb-openapi-auto-test/
+!/zjb-openapi-auto-test/**
+zjb-openapi-auto-test/__pycache__/
+zjb-openapi-auto-test/**/*.pyc
+zjb-openapi-auto-test/.pytest_cache/
+zjb-openapi-auto-test/.codex-run/
+zjb-openapi-auto-test/cases/
+zjb-openapi-auto-test/report.json
+zjb-openapi-auto-test/report.html
 config/deploy_secrets.local.json
 config/*.local.json
 # Added by code-review-graph
