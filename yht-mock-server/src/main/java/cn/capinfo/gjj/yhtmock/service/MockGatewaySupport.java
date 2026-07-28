@@ -10,8 +10,12 @@ import cn.capinfo.gjj.yhtmock.model.TradeState;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 @Component
 public class MockGatewaySupport {
@@ -72,11 +76,11 @@ public class MockGatewaySupport {
         tradeState.reqId = safe(codecService.text(document, "ReqId"));
         tradeState.tranCode = safe(codecService.text(document, "TranCode"), "201");
         tradeState.acctNo = safe(codecService.text(document, "DbtrActId"));
-        tradeState.amount = safe(codecService.text(document, "TxAmt"), "100.00");
+        tradeState.amount = resolveTradeAmount(document);
         tradeState.bankId = safe(codecService.text(document, "DbtrBankId"));
         tradeState.status = resolveStatus(scenarioRule, "SUCC");
         tradeState.resFlag = resolveResFlag(scenarioRule, "SUCC");
-        tradeState.retCode = resolveCode(scenarioRule, "0000");
+        tradeState.retCode = resolveCode(scenarioRule, "000000");
         tradeState.retMsg = resolveMsg(scenarioRule, "交易成功");
         tradeState.callbackEnabled = !isAutoCallbackDisabled(scenarioRule);
         tradeState.callbackMesgType = defaultString(resolveCallbackType(scenarioRule), "caps.205.001.01");
@@ -98,15 +102,108 @@ public class MockGatewaySupport {
         batchState.errorMsg = resolveMsg(scenarioRule, "");
         batchState.totalCount = safe(codecService.text(document, "TotalCount"), "1");
         batchState.totalAmount = safe(codecService.text(document, "TotalAmt"), "100.00");
+        applyBatchSummaryFromRequestFile(document, batchState);
         batchState.checkDate = safe(codecService.text(document, "CheckDate"), currentDate());
         batchState.fileName = batchState.batchNo + ".txt";
-        batchState.fileData = codecService.base64("<BatchResult><BatchNo>" + batchState.batchNo + "</BatchNo><Status>"
-                + safe(batchState.status, "SUCC") + "</Status><RetCode>" + resolveCode(scenarioRule, "0000")
-                + "</RetCode></BatchResult>");
+        batchState.fileData = buildBatchResultFileData(document, batchState, scenarioRule);
         batchState.callbackEnabled = !isAutoCallbackDisabled(scenarioRule);
         batchState.callbackMesgType = defaultString(resolveCallbackType(scenarioRule), "caps.107.001.01");
         batchState.scenarioName = scenarioRule == null ? "" : safe(scenarioRule.name, String.valueOf(scenarioRule.id));
         return batchState;
+    }
+
+    private void applyBatchSummaryFromRequestFile(Document document, BatchState batchState) {
+        String requestFileData = decodeBase64(safe(codecService.text(document, "FileData")));
+        if (requestFileData.isBlank()) {
+            return;
+        }
+        String[] lines = requestFileData.split("\\r?\\n");
+        if (lines.length == 0) {
+            return;
+        }
+        String[] summaryFields = safe(lines[0]).split("\\|", -1);
+        String requestTotalCount = field(summaryFields, 3, "");
+        String requestTotalAmount = field(summaryFields, 4, "");
+        if (!requestTotalCount.isBlank()) {
+            batchState.totalCount = requestTotalCount;
+        }
+        if (!requestTotalAmount.isBlank()) {
+            batchState.totalAmount = requestTotalAmount;
+        }
+    }
+
+    private String buildBatchResultFileData(Document document, BatchState batchState, MockScenarioRule scenarioRule) {
+        String requestFileData = decodeBase64(safe(codecService.text(document, "FileData")));
+        List<String[]> requestDetails = new ArrayList<>();
+        if (!requestFileData.isBlank()) {
+            String[] lines = requestFileData.split("\\r?\\n");
+            for (int i = 1; i < lines.length; i++) {
+                String line = safe(lines[i]);
+                if (!line.isBlank()) {
+                    requestDetails.add(line.split("\\|", -1));
+                }
+            }
+        }
+        if (requestDetails.isEmpty()) {
+            requestDetails.add(new String[]{"1", "", "", "", "", safe(batchState.totalAmount, "0.00"), "", batchState.batchNo + "-D1"});
+        }
+
+        String retCode = resolveCode(scenarioRule, "00");
+        String retMsg = resolveMsg(scenarioRule, "交易成功");
+        boolean success = "00".equals(retCode);
+        String successCount = success ? String.valueOf(requestDetails.size()) : "0";
+        String failCount = success ? "0" : String.valueOf(requestDetails.size());
+        String summary = String.join("|",
+                safe(batchState.tranCode),
+                safe(codecService.text(document, "CorpNo")),
+                safe(codecService.text(document, "FeeNo")),
+                safe(batchState.totalCount, String.valueOf(requestDetails.size())),
+                safe(batchState.totalAmount, "0.00"),
+                successCount,
+                failCount,
+                "0",
+                safe(batchState.batchNo),
+                safe(batchState.checkDate, currentDate()));
+
+        StringBuilder fileBuilder = new StringBuilder(summary);
+        String hostSerialNum = resolveBatchHostSerialNum(batchState);
+        for (int i = 0; i < requestDetails.size(); i++) {
+            String[] fields = requestDetails.get(i);
+            String detailSeq = field(fields, 0, String.valueOf(i + 1));
+            String bankId = field(fields, 1, "");
+            String acctNo = field(fields, 3, "");
+            String acctName = field(fields, 4, "");
+            String amount = field(fields, 5, "0.00");
+            fileBuilder.append("\n")
+                    .append(String.join("|", detailSeq, bankId, acctNo, amount, acctName, retCode, retMsg, hostSerialNum));
+        }
+        return codecService.base64(fileBuilder.toString());
+    }
+
+    private String resolveBatchHostSerialNum(BatchState batchState) {
+        String batchNo = batchState == null ? "" : safe(batchState.batchNo);
+        if (!batchNo.isBlank()) {
+            return batchNo;
+        }
+        return "MOCK-HOST-" + timestamp();
+    }
+
+    private String decodeBase64(String value) {
+        if (value == null || value.isBlank()) {
+            return "";
+        }
+        try {
+            return new String(Base64.getDecoder().decode(value), StandardCharsets.UTF_8);
+        } catch (Exception ex) {
+            return value;
+        }
+    }
+
+    private String field(String[] fields, int index, String defaultValue) {
+        if (fields == null || index < 0 || index >= fields.length) {
+            return safe(defaultValue);
+        }
+        return safe(fields[index], defaultValue);
     }
 
     public String buildCaps900(String corpNo, String resFlag, String procCode, String procMsg) {
@@ -206,7 +303,7 @@ public class MockGatewaySupport {
                 "<ReturnTime>" + timestamp() + "</ReturnTime>"
                         + "<SysSeqNo>" + codecService.escape(tradeState.sysSeqNo) + "</SysSeqNo>"
                         + "<SerialNum>" + codecService.escape(tradeState.reqId) + "</SerialNum>"
-                        + "<RetCode>" + codecService.escape(safe(tradeState.retCode, "0000")) + "</RetCode><RetMsg>"
+                        + "<RetCode>" + codecService.escape(safe(tradeState.retCode, "000000")) + "</RetCode><RetMsg>"
                         + codecService.escape(safe(tradeState.retMsg, "受理成功")) + "</RetMsg>");
     }
 
@@ -275,6 +372,10 @@ public class MockGatewaySupport {
         return scenarioRule == null ? "" : safe(scenarioRule.callbackMesgType);
     }
 
+    public String text(Document document, String tagName) {
+        return codecService.text(document, tagName);
+    }
+
     public String successCorp(CapsHeader requestHeader) {
         return safe(requestHeader.origSender, "33503C5801");
     }
@@ -285,6 +386,17 @@ public class MockGatewaySupport {
 
     public String timestamp() {
         return LocalDateTime.now().format(TS_FORMATTER);
+    }
+
+    public String resolveTradeAmount(Document document) {
+        String amount = firstNonBlank(codecService.text(document, "PayAmt"), codecService.text(document, "TxAmt"));
+        amount = safe(amount).trim();
+        if (amount.length() > 3 && Character.isLetter(amount.charAt(0))
+                && Character.isLetter(amount.charAt(1))
+                && Character.isLetter(amount.charAt(2))) {
+            amount = amount.substring(3);
+        }
+        return amount.isBlank() ? "100.00" : amount;
     }
 
     public String safe(String value) {

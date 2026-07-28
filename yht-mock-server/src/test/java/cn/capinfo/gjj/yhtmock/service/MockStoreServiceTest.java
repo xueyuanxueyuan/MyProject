@@ -1,5 +1,6 @@
 package cn.capinfo.gjj.yhtmock.service;
 
+import cn.capinfo.gjj.yhtmock.config.YhtMockProperties;
 import cn.capinfo.gjj.yhtmock.model.MockSettings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -70,5 +71,53 @@ class MockStoreServiceTest {
         assertThat(Files.exists(stateFile)).isTrue();
         assertThat(Files.exists(backupFile)).isTrue();
         assertThat(Files.exists(tempFile)).isFalse();
+    }
+    @Test
+    void initUsesConfiguredSettlementReceiveUrlWhenStateFileIsNew(@TempDir Path tempDir) {
+        Path stateFile = tempDir.resolve("mock-state.json");
+        YhtMockProperties properties = propertiesWithReceiveUrl("http://settlement.example.com/receive");
+
+        MockStoreService storeService = new MockStoreService(stateFile, properties);
+        storeService.init();
+
+        assertThat(storeService.getSettings().defaultTargetUrl).isEqualTo("http://settlement.example.com/receive");
+    }
+
+    @Test
+    void initKeepsStoredTargetUrlByDefault(@TempDir Path tempDir) {
+        Path stateFile = tempDir.resolve("mock-state.json");
+        MockStoreService originalStore = new MockStoreService(stateFile, propertiesWithReceiveUrl("http://configured.example.com/receive"));
+        originalStore.init();
+        MockSettings settings = new MockSettings();
+        settings.defaultTargetUrl = "http://saved.example.com/receive";
+        originalStore.updateSettings(settings);
+
+        MockStoreService restartedStore = new MockStoreService(stateFile, propertiesWithReceiveUrl("http://new-config.example.com/receive"));
+        restartedStore.init();
+
+        assertThat(restartedStore.getSettings().defaultTargetUrl).isEqualTo("http://saved.example.com/receive");
+    }
+
+    @Test
+    void initCanOverrideStoredTargetUrlWhenConfigured(@TempDir Path tempDir) {
+        Path stateFile = tempDir.resolve("mock-state.json");
+        MockStoreService originalStore = new MockStoreService(stateFile, propertiesWithReceiveUrl("http://configured.example.com/receive"));
+        originalStore.init();
+        MockSettings settings = new MockSettings();
+        settings.defaultTargetUrl = "http://saved.example.com/receive";
+        originalStore.updateSettings(settings);
+
+        YhtMockProperties overrideProperties = propertiesWithReceiveUrl("http://override.example.com/receive");
+        overrideProperties.getCallback().setOverrideStoredSettings(true);
+        MockStoreService restartedStore = new MockStoreService(stateFile, overrideProperties);
+        restartedStore.init();
+
+        assertThat(restartedStore.getSettings().defaultTargetUrl).isEqualTo("http://override.example.com/receive");
+    }
+
+    private YhtMockProperties propertiesWithReceiveUrl(String receiveUrl) {
+        YhtMockProperties properties = new YhtMockProperties();
+        properties.getSettlement().setReceiveUrl(receiveUrl);
+        return properties;
     }
 }

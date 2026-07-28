@@ -361,10 +361,11 @@ def normalize_batch_totals(node: dict[str, Any]) -> None:
 
 def enrich_payload(payload: Any, bank_data: BankData, account_type: str, bank_code: str, bank_name: str, trade_date: str, amount: float | None) -> Any:
     default_type = "private" if account_type == "both" else account_type
+    forced_type = account_type if account_type in {"private", "public"} else ""
     def visit(node: Any, current_type: str, index: int) -> Any:
         if isinstance(node, list): return [visit(item, current_type, i) for i, item in enumerate(node)]
         if isinstance(node, dict):
-            node_type = normalize_account_type(node.get("zhlx"), current_type)
+            node_type = forced_type or normalize_account_type(node.get("zhlx"), current_type)
             ctx, new_node = context_for_account(bank_data, node_type, index, bank_code, bank_name), {}
             for key, value in node.items():
                 new_node[key] = visit(value, node_type, index) if isinstance(value, (dict, list)) else field_replacement(key, value, ctx, trade_date, amount)

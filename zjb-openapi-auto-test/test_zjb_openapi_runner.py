@@ -146,6 +146,29 @@ class ZjbOpenapiRunnerTest(unittest.TestCase):
         self.assertEqual(req["skywPlmxAddReqDTOList"][0]["xtlx"], "GDGL")
         self.assertEqual(req["skywPlmxAddReqDTOList"][0]["ywlx"], "11305")
 
+
+    def test_explicit_private_account_type_overrides_template_public_zhlx(self) -> None:
+        bank = runner.BankData(
+            center_accounts=[],
+            private_accounts=[{"账号*": "P-PRIVATE", "姓名*": "对私张三", "证件类型": "身份证", "证件号码*": "330100199001010011", "开户行": "嘉兴银行"}],
+            public_accounts=[{"账号*": "C-PUBLIC", "户名*": "对公公司", "账户类型": "对公", "开户行": "嘉兴银行"}],
+            source="bank.xlsx",
+        )
+        operation = {
+            "method": "POST",
+            "path": "/api/v1/ywgl/addSkywPlsk",
+            "summary": "新增批量收款请求",
+            "tags": ["住建部"],
+            "example": '{"zjjsSFkywxxAddReqDTO":{"xtlx":"GJGL","ywlx":"11101"},"skywPlmxAddReqDTOList":[{"fkzh":"old","fkhm":"old","zhlx":"2","zjlx":"18","zjh":"old"}]}',
+        }
+        case = runner.build_case(operation, bank, "private", "313095", "嘉兴银行", "20260715", None)
+        detail = case["request"]["skywPlmxAddReqDTOList"][0]
+        self.assertEqual(detail["fkzh"], "P-PRIVATE")
+        self.assertEqual(detail["fkhm"], "对私张三")
+        self.assertEqual(detail["zhlx"], "1")
+        self.assertEqual(detail["zjlx"], "01")
+        self.assertEqual(detail["zjh"], "330100199001010011")
+
     def test_jiaxing_batch_trade_injects_extra_root_yhdm(self) -> None:
         bank = runner.BankData(
             center_accounts=[],

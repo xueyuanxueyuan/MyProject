@@ -1,5 +1,6 @@
 package cn.capinfo.gjj.yhtmock.service;
 
+import cn.capinfo.gjj.yhtmock.config.YhtMockProperties;
 import cn.capinfo.gjj.yhtmock.model.BatchState;
 import cn.capinfo.gjj.yhtmock.model.MockRecord;
 import cn.capinfo.gjj.yhtmock.model.MockScenarioContext;
@@ -33,17 +34,23 @@ public class MockStoreService {
     private final ObjectMapper objectMapper;
     private final Path stateFile;
     private final Path backupFile;
+    private final YhtMockProperties properties;
 
     private MockStateSnapshot snapshot = new MockStateSnapshot();
 
-    public MockStoreService() {
-        this(Paths.get("data", "mock-state.json"));
+    public MockStoreService(YhtMockProperties properties) {
+        this(Paths.get("data", "mock-state.json"), properties);
     }
 
     MockStoreService(Path stateFile) {
+        this(stateFile, new YhtMockProperties());
+    }
+
+    MockStoreService(Path stateFile, YhtMockProperties properties) {
         this.objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         this.stateFile = stateFile;
         this.backupFile = stateFile.resolveSibling(stateFile.getFileName() + ".bak");
+        this.properties = properties == null ? new YhtMockProperties() : properties;
     }
 
     @PostConstruct
@@ -240,16 +247,26 @@ public class MockStoreService {
             if (!Files.exists(stateFile)) {
                 if (Files.exists(backupFile)) {
                     snapshot = readSnapshot(backupFile);
+                    applyConfiguredDefaults(false);
                     save();
                     return;
                 }
+                normalizeSnapshot(snapshot);
+                applyConfiguredDefaults(true);
                 save();
                 return;
             }
             snapshot = readSnapshot(stateFile);
+            if (applyConfiguredDefaults(false)) {
+                save();
+                return;
+            }
             copyBackup();
         } catch (IOException e) {
             snapshot = loadFromBackupOrEmpty();
+            if (applyConfiguredDefaults(false)) {
+                save();
+            }
         }
     }
 
@@ -286,6 +303,40 @@ public class MockStoreService {
         MockStateSnapshot loaded = objectMapper.readValue(file.toFile(), MockStateSnapshot.class);
         normalizeSnapshot(loaded);
         return loaded;
+    }
+    private boolean applyConfiguredDefaults(boolean firstLoad) {
+        if (snapshot.settings == null) {
+            snapshot.settings = new MockSettings();
+        }
+        boolean changed = false;
+        boolean overrideStored = firstLoad || properties.getCallback().isOverrideStoredSettings();
+        String settlementReceiveUrl = trimToNull(properties.getSettlement().getReceiveUrl());
+        if (settlementReceiveUrl != null
+                && (overrideStored || isBlank(snapshot.settings.defaultTargetUrl))) {
+            snapshot.settings.defaultTargetUrl = settlementReceiveUrl;
+            changed = true;
+        }
+        if (overrideStored) {
+            snapshot.settings.autoPushEnabled = properties.getCallback().isAutoPushEnabled();
+            snapshot.settings.delayMs = properties.getCallback().getDelayMs();
+            snapshot.settings.pushCaps107 = properties.getCallback().isPushCaps107();
+            snapshot.settings.pushCaps205 = properties.getCallback().isPushCaps205();
+            snapshot.settings.pushCaps306 = properties.getCallback().isPushCaps306();
+            snapshot.settings.pushCaps308 = properties.getCallback().isPushCaps308();
+            changed = true;
+        }
+        return changed;
+    }
+
+    private String trimToNull(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        return value.trim();
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     private void normalizeSnapshot(MockStateSnapshot loaded) {

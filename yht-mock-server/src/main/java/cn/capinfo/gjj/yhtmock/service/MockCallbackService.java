@@ -76,7 +76,7 @@ public class MockCallbackService {
                         + "<ErrorCode></ErrorCode><ErrorMsg></ErrorMsg>",
                 "<TranCode>" + codecService.escape(tradeState.tranCode) + "</TranCode>"
                         + "<SysSeqNo>" + codecService.escape(tradeState.sysSeqNo) + "</SysSeqNo>"
-                        + "<RetCode>" + codecService.escape(defaultString(tradeState.retCode, "0000")) + "</RetCode>"
+                        + "<RetCode>" + codecService.escape(defaultString(tradeState.retCode, "000000")) + "</RetCode>"
                         + "<RetMsg>" + codecService.escape(defaultString(tradeState.retMsg, "交易成功")) + "</RetMsg>"
                         + "<PayAmt>" + codecService.escape(defaultString(tradeState.amount, "0")) + "</PayAmt>");
         pushAsync(buildFullMessage(requestHeader, callbackMesgType, body), callbackMesgType,
@@ -132,7 +132,7 @@ public class MockCallbackService {
                     "<OrgnlId>" + codecService.escape(defaultString(protocolNo, "MOCK-PROT")) + "</OrgnlId><CancleId>MOCK-CANCEL</CancleId><RetCode>0000</RetCode><RetMsg>撤销成功</RetMsg>");
             case "caps.205.001.01" -> xml = codecService.buildXml("caps.205.001.01",
                     "<CorpNo>33503C5801</CorpNo><ResFlag>SUCC</ResFlag><ErrorCode></ErrorCode><ErrorMsg></ErrorMsg>",
-                    "<TranCode>201</TranCode><SysSeqNo>" + codecService.escape(defaultString(sysSeqNo, "MOCK-SEQ")) + "</SysSeqNo><RetCode>0000</RetCode><RetMsg>交易成功</RetMsg><PayAmt>100.00</PayAmt>");
+                    "<TranCode>201</TranCode><SysSeqNo>" + codecService.escape(defaultString(sysSeqNo, "MOCK-SEQ")) + "</SysSeqNo><RetCode>000000</RetCode><RetMsg>交易成功</RetMsg><PayAmt>100.00</PayAmt>");
             case "caps.107.001.01" -> xml = codecService.buildXml("caps.107.001.01",
                     "<CorpNo>33503C5801</CorpNo><BatchNo>" + codecService.escape(defaultString(batchNo, "MOCK-BATCH")) + "</BatchNo><CheckDate>20260705</CheckDate><BatchStatus>SUCC</BatchStatus><Remark>manual</Remark>",
                     "<FileData>" + codecService.escape(codecService.base64("<Batch><Count>1</Count></Batch>")) + "</FileData>");
@@ -183,7 +183,7 @@ public class MockCallbackService {
         record.requestBody = fullMessage;
         try {
             HttpRequest request = HttpRequest.newBuilder(URI.create(targetUrl))
-                    .timeout(Duration.ofSeconds(10))
+                    .timeout(Duration.ofSeconds(60))
                     .header("Content-Type", "application/xml;charset=UTF-8")
                     .POST(HttpRequest.BodyPublishers.ofString(fullMessage))
                     .build();

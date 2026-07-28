@@ -1,0 +1,16 @@
+# ClawHub
+.clawhub/
+
+# Meta files
+_meta.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

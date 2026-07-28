@@ -3,7 +3,7 @@ package cn.capinfo.gjj.yhtmock.model;
 public class MockSettings {
 
     public boolean autoPushEnabled = true;
-    public String defaultTargetUrl = "http://localhost:8082/api/v1/ywgl/yht/yht/receive";
+    public String defaultTargetUrl;
     public long delayMs = 800L;
     public boolean pushCaps107 = true;
     public boolean pushCaps205 = true;

@@ -7,304 +7,448 @@
     <link rel="stylesheet" href="/yht-mock/app.css">
 </head>
 <body>
-<div class="page">
-    <header class="hero">
-        <h1>一户通独立挡板</h1>
-        <p>独立项目，包含银行 / CAPS 模拟、加密机厂商模拟、接口对接记录、场景规则编排。</p>
-    </header>
+<div class="page-shell">
+    <aside class="side-nav" aria-label="一户通挡板导航">
+        <div class="brand-card">
+            <div class="brand-mark">一</div>
+            <div>
+                <strong>一户通挡板</strong>
+                <span>YHT Mock Studio</span>
+            </div>
+        </div>
+        <nav>
+            <a href="#overview">概览</a>
+            <a href="#bank-studio">银行业务录入</a>
+            <a href="#gateway">CAPS 网关</a>
+            <a href="#hsm">加密机</a>
+            <a href="#scenario">场景规则</a>
+            <a href="#trace">链路追踪</a>
+            <a href="#state">状态仓</a>
+            <a href="#callback">回调配置</a>
+        </nav>
+    </aside>
 
-    <section class="panel">
-        <div class="toolbar">
-            <h2>挡板概览</h2>
-            <button id="refreshOverviewBtn">刷新概览</button>
-        </div>
-        <div id="statsCards" class="stats-grid"></div>
-    </section>
+    <main class="page">
+        <header class="hero">
+            <div>
+                <p class="eyebrow">Apple-like Mock Console</p>
+                <h1>一户通独立挡板</h1>
+                <p>保留现有银行 / CAPS、加密机、回调、场景规则和接口记录能力，以更清晰的分区界面支持人工模拟银行发起业务。</p>
+            </div>
+            <div class="hero-actions">
+                <button id="refreshOverviewBtn" class="button secondary">刷新概览</button>
+                <a class="button ghost" href="#trace">查看链路</a>
+            </div>
+        </header>
 
-    <section class="panel">
-        <h2>银行 / CAPS 网关</h2>
-        <div class="grid four">
-            <div>
-                <label for="requestTemplateType">示例报文</label>
-                <select id="requestTemplateType">
-                    <option value="caps.999.001.01">caps.999.001.01</option>
-                    <option value="caps.201.001.01">caps.201.001.01</option>
-                    <option value="caps.305.001.01">caps.305.001.01</option>
-                    <option value="caps.101.001.01">caps.101.001.01</option>
-                </select>
+        <section id="overview" class="panel overview-panel">
+            <div class="section-title">
+                <div>
+                    <p class="eyebrow">Dashboard</p>
+                    <h2>挡板概览</h2>
+                </div>
+                <p class="muted">展示记录、协议、交易、批次和场景规则的当前状态。</p>
             </div>
-            <div class="inline-actions">
-                <button id="fillTemplateBtn">填充示例</button>
-            </div>
-        </div>
-        <div class="grid two">
-            <div>
-                <label for="gatewayRequest">请求报文</label>
-                <textarea id="gatewayRequest" rows="16"></textarea>
-                <button id="sendGatewayBtn">发送到挡板网关</button>
-            </div>
-            <div>
-                <label for="gatewayResponse">响应报文</label>
-                <textarea id="gatewayResponse" rows="16" readonly></textarea>
-            </div>
-        </div>
-    </section>
+            <div id="statsCards" class="stats-grid"></div>
+        </section>
 
-    <section class="panel">
-        <h2>加密机厂商模拟</h2>
-        <div class="grid four">
-            <div>
-                <label for="hsmOperation">操作</label>
-                <select id="hsmOperation">
-                    <option value="sign">签名</option>
-                    <option value="verify">验签</option>
-                    <option value="encrypt">加密</option>
-                    <option value="decrypt">解密</option>
-                </select>
+        <section id="bank-studio" class="panel feature-panel">
+            <div class="section-title">
+                <div>
+                    <p class="eyebrow">Manual Bank Input</p>
+                    <h2>人工录入模拟银行业务</h2>
+                </div>
+                <p class="muted">录入银行发起的业务信息，自动生成 CAPS 报文，可预览或直接发送到挡板网关。</p>
             </div>
-            <div>
-                <label for="hsmCertId">证书 ID</label>
-                <input id="hsmCertId" value="MOCK_CERT_01">
+            <div class="grid four">
+                <div>
+                    <label for="manualBusinessType">业务类型</label>
+                    <select id="manualBusinessType">
+                        <option value="caps.201.001.01">单笔扣款 caps.201</option>
+                        <option value="caps.305.001.01">协议签约 caps.305</option>
+                        <option value="caps.101.001.01">批量代收 caps.101</option>
+                        <option value="caps.999.001.01">联机检查 caps.999</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="manualReqId">请求流水 ReqId</label>
+                    <input id="manualReqId" placeholder="留空自动生成">
+                </div>
+                <div>
+                    <label for="manualAccountNo">银行账号</label>
+                    <input id="manualAccountNo" value="62220000000000009999">
+                </div>
+                <div>
+                    <label for="manualBankId">银行行号</label>
+                    <input id="manualBankId" value="105000">
+                </div>
             </div>
-            <div>
-                <label for="hsmKeyIndex">密钥索引</label>
-                <input id="hsmKeyIndex" value="8">
+            <div class="grid four">
+                <div>
+                    <label for="manualAmount">金额</label>
+                    <input id="manualAmount" type="number" step="0.01" value="100.00">
+                </div>
+                <div>
+                    <label for="manualCustomerName">客户姓名</label>
+                    <input id="manualCustomerName" value="测试用户">
+                </div>
+                <div>
+                    <label for="manualCustomerId">客户编号</label>
+                    <input id="manualCustomerId" placeholder="留空自动生成">
+                </div>
+                <div>
+                    <label for="manualProtocolNo">协议号</label>
+                    <input id="manualProtocolNo" placeholder="签约/查询场景可填">
+                </div>
             </div>
-            <div>
-                <label for="hsmAlgorithm">算法</label>
-                <input id="hsmAlgorithm" value="SM3withSM2">
+            <div class="grid four">
+                <div>
+                    <label for="manualBatchNo">批次号</label>
+                    <input id="manualBatchNo" placeholder="批量代收可填">
+                </div>
+                <div>
+                    <label for="manualSysSeqNo">业务流水号</label>
+                    <input id="manualSysSeqNo" placeholder="留空自动生成">
+                </div>
+                <div class="wide-two">
+                    <label for="manualRemark">业务备注</label>
+                    <input id="manualRemark" value="人工模拟银行发起">
+                </div>
             </div>
-        </div>
-        <div class="grid two">
-            <div>
-                <label for="hsmInput">输入内容</label>
-                <textarea id="hsmInput" rows="8">hello yht</textarea>
+            <div class="actions left">
+                <button id="buildManualMessageBtn" class="button secondary">生成到报文编辑器</button>
+                <button id="sendManualMessageBtn" class="button primary">生成并发送</button>
+                <button id="resetManualFormBtn" class="button ghost">重置录入</button>
             </div>
-            <div>
-                <label for="hsmSignature">签名/密文</label>
-                <textarea id="hsmSignature" rows="8"></textarea>
-            </div>
-        </div>
-        <button id="runHsmBtn">执行加密机模拟</button>
-        <pre id="hsmResult" class="result"></pre>
-    </section>
+            <pre id="manualBuildResult" class="result soft">等待录入业务信息。</pre>
+        </section>
 
-    <section class="panel">
-        <h2>回调配置</h2>
-        <div class="grid four">
-            <div>
-                <label for="autoPushEnabled">自动回调</label>
-                <select id="autoPushEnabled">
-                    <option value="true">开启</option>
-                    <option value="false">关闭</option>
-                </select>
+        <section id="gateway" class="panel split-panel">
+            <div class="section-title">
+                <div>
+                    <p class="eyebrow">CAPS Gateway</p>
+                    <h2>银行 / CAPS 网关</h2>
+                </div>
+                <p class="muted">保留原始报文发送能力，适合粘贴厂商报文或调试特殊场景。</p>
             </div>
-            <div>
-                <label for="delayMs">回调延迟(ms)</label>
-                <input id="delayMs" type="number" value="800">
+            <div class="grid four compact-row">
+                <div>
+                    <label for="requestTemplateType">示例报文</label>
+                    <select id="requestTemplateType">
+                        <option value="caps.999.001.01">caps.999.001.01</option>
+                        <option value="caps.201.001.01">caps.201.001.01</option>
+                        <option value="caps.305.001.01">caps.305.001.01</option>
+                        <option value="caps.101.001.01">caps.101.001.01</option>
+                    </select>
+                </div>
+                <div class="inline-actions">
+                    <button id="fillTemplateBtn" class="button secondary">填充示例</button>
+                </div>
             </div>
-            <div>
-                <label for="defaultTargetUrl">默认回调地址</label>
-                <input id="defaultTargetUrl" value="http://localhost:8082/api/v1/ywgl/yht/yht/receive">
+            <div class="grid two">
+                <div>
+                    <label for="gatewayRequest">请求报文</label>
+                    <textarea id="gatewayRequest" rows="17" spellcheck="false"></textarea>
+                    <button id="sendGatewayBtn" class="button primary">发送到挡板网关</button>
+                </div>
+                <div>
+                    <label for="gatewayResponse">响应报文</label>
+                    <textarea id="gatewayResponse" rows="17" readonly spellcheck="false"></textarea>
+                </div>
             </div>
-            <div>
-                <label for="hsmMockKey">HSM 秘钥种子</label>
-                <input id="hsmMockKey" value="YHT-MOCK-HSM">
-            </div>
-        </div>
-        <div class="grid four">
-            <label class="checkbox"><input id="pushCaps107" type="checkbox" checked> 推送 caps.107</label>
-            <label class="checkbox"><input id="pushCaps205" type="checkbox" checked> 推送 caps.205</label>
-            <label class="checkbox"><input id="pushCaps306" type="checkbox" checked> 推送 caps.306</label>
-            <label class="checkbox"><input id="pushCaps308" type="checkbox" checked> 推送 caps.308</label>
-        </div>
-        <div class="grid four">
-            <div>
-                <label for="manualCallbackType">手动回调报文</label>
-                <select id="manualCallbackType">
-                    <option value="caps.306.001.01">caps.306.001.01</option>
-                    <option value="caps.205.001.01">caps.205.001.01</option>
-                    <option value="caps.107.001.01">caps.107.001.01</option>
-                    <option value="caps.308.001.01">caps.308.001.01</option>
-                    <option value="caps.600.001.01">caps.600.001.01</option>
-                    <option value="caps.916.001.01">caps.916.001.01</option>
-                </select>
-            </div>
-        </div>
-        <div class="actions">
-            <button id="saveConfigBtn">保存配置</button>
-            <button id="triggerCallbackBtn">手动发送回调</button>
-        </div>
-        <pre id="callbackResult" class="result"></pre>
-    </section>
+        </section>
 
-    <section class="panel">
-        <div class="toolbar">
-            <h2>场景规则</h2>
-            <div class="actions">
-                <button id="newScenarioBtn">新建规则</button>
-                <button id="refreshScenarioBtn">刷新规则</button>
+        <section id="hsm" class="panel">
+            <div class="section-title">
+                <div>
+                    <p class="eyebrow">Security Simulator</p>
+                    <h2>加密机厂商模拟</h2>
+                </div>
+                <p class="muted">模拟签名、验签、加密、解密，调用结果进入接口记录，可在链路追踪中查询。</p>
             </div>
-        </div>
-        <div class="grid four">
-            <input id="scenarioId" type="hidden">
-            <div>
-                <label for="scenarioName">规则名称</label>
-                <input id="scenarioName" placeholder="例如：账号尾号 9999 返回失败">
+            <div class="grid four">
+                <div>
+                    <label for="hsmOperation">操作</label>
+                    <select id="hsmOperation">
+                        <option value="sign">签名</option>
+                        <option value="verify">验签</option>
+                        <option value="encrypt">加密</option>
+                        <option value="decrypt">解密</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="hsmCertId">证书 ID</label>
+                    <input id="hsmCertId" value="MOCK_CERT_01">
+                </div>
+                <div>
+                    <label for="hsmKeyIndex">密钥索引</label>
+                    <input id="hsmKeyIndex" value="8">
+                </div>
+                <div>
+                    <label for="hsmAlgorithm">算法</label>
+                    <input id="hsmAlgorithm" value="SM3withSM2">
+                </div>
             </div>
-            <div>
-                <label for="scenarioMesgType">请求报文</label>
-                <input id="scenarioMesgType" placeholder="caps.201.001.01">
+            <div class="grid two">
+                <div>
+                    <label for="hsmInput">输入内容</label>
+                    <textarea id="hsmInput" rows="8">hello yht</textarea>
+                </div>
+                <div>
+                    <label for="hsmSignature">签名/密文</label>
+                    <textarea id="hsmSignature" rows="8"></textarea>
+                </div>
             </div>
-            <div>
-                <label for="scenarioAcctNo">账号精确匹配</label>
-                <input id="scenarioAcctNo" placeholder="6222...">
-            </div>
-            <div>
-                <label for="scenarioAcctSuffix">账号尾号匹配</label>
-                <input id="scenarioAcctSuffix" placeholder="9999">
-            </div>
-        </div>
-        <div class="grid four">
-            <div>
-                <label for="scenarioProtocolNo">协议号匹配</label>
-                <input id="scenarioProtocolNo" placeholder="MOCK-PROT-...">
-            </div>
-            <div>
-                <label for="scenarioReqId">ReqId 匹配</label>
-                <input id="scenarioReqId" placeholder="REQ-...">
-            </div>
-            <div>
-                <label for="scenarioBatchNo">批次号匹配</label>
-                <input id="scenarioBatchNo" placeholder="MOCK-BATCH-...">
-            </div>
-            <div>
-                <label for="scenarioSysSeqNo">流水号匹配</label>
-                <input id="scenarioSysSeqNo" placeholder="MOCK-SEQ-...">
-            </div>
-        </div>
-        <div class="grid four">
-            <div>
-                <label for="scenarioResFlag">ResFlag</label>
-                <select id="scenarioResFlag">
-                    <option value="">默认</option>
-                    <option value="SUCC">SUCC</option>
-                    <option value="FAIL">FAIL</option>
-                </select>
-            </div>
-            <div>
-                <label for="scenarioStatus">业务状态</label>
-                <select id="scenarioStatus">
-                    <option value="">默认</option>
-                    <option value="SUCC">SUCC</option>
-                    <option value="FAIL">FAIL</option>
-                    <option value="PROC">PROC</option>
-                    <option value="ACCEPTED">ACCEPTED</option>
-                </select>
-            </div>
-            <div>
-                <label for="scenarioRetCode">返回码</label>
-                <input id="scenarioRetCode" placeholder="E0001">
-            </div>
-            <div>
-                <label for="scenarioRetMsg">返回信息</label>
-                <input id="scenarioRetMsg" placeholder="模拟失败">
-            </div>
-        </div>
-        <div class="grid four">
-            <div>
-                <label for="scenarioCallbackType">回调报文</label>
-                <input id="scenarioCallbackType" placeholder="caps.205.001.01">
-            </div>
-            <label class="checkbox"><input id="scenarioEnabled" type="checkbox" checked> 规则启用</label>
-            <label class="checkbox"><input id="scenarioDisableCallback" type="checkbox"> 禁止自动回调</label>
-            <div>
-                <label for="scenarioRemark">备注</label>
-                <input id="scenarioRemark" placeholder="说明该规则用途">
-            </div>
-        </div>
-        <div class="actions">
-            <button id="saveScenarioBtn">保存规则</button>
-        </div>
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>名称</th>
-                <th>报文</th>
-                <th>匹配条件</th>
-                <th>返回</th>
-                <th>操作</th>
-            </tr>
-            </thead>
-            <tbody id="scenarioTableBody"></tbody>
-        </table>
-    </section>
+            <button id="runHsmBtn" class="button primary">执行加密机模拟</button>
+            <pre id="hsmResult" class="result"></pre>
+        </section>
 
-    <section class="panel">
-        <div class="toolbar">
-            <h2>模拟状态</h2>
-            <div class="actions">
-                <button id="refreshStateBtn">刷新状态</button>
+        <section id="scenario" class="panel">
+            <div class="section-title with-actions">
+                <div>
+                    <p class="eyebrow">Scenario Rules</p>
+                    <h2>场景规则</h2>
+                </div>
+                <div class="actions">
+                    <button id="newScenarioBtn" class="button ghost">新建规则</button>
+                    <button id="refreshScenarioBtn" class="button secondary">刷新规则</button>
+                </div>
             </div>
-        </div>
-        <div class="grid three">
-            <div>
-                <h3>协议状态</h3>
+            <div class="grid four">
+                <input id="scenarioId" type="hidden">
+                <div>
+                    <label for="scenarioName">规则名称</label>
+                    <input id="scenarioName" placeholder="例如：账号尾号 9999 返回失败">
+                </div>
+                <div>
+                    <label for="scenarioMesgType">请求报文</label>
+                    <input id="scenarioMesgType" placeholder="caps.201.001.01">
+                </div>
+                <div>
+                    <label for="scenarioAcctNo">账号精确匹配</label>
+                    <input id="scenarioAcctNo" placeholder="6222...">
+                </div>
+                <div>
+                    <label for="scenarioAcctSuffix">账号尾号匹配</label>
+                    <input id="scenarioAcctSuffix" placeholder="9999">
+                </div>
+            </div>
+            <div class="grid four">
+                <div>
+                    <label for="scenarioProtocolNo">协议号匹配</label>
+                    <input id="scenarioProtocolNo" placeholder="MOCK-PROT-...">
+                </div>
+                <div>
+                    <label for="scenarioReqId">ReqId 匹配</label>
+                    <input id="scenarioReqId" placeholder="REQ-...">
+                </div>
+                <div>
+                    <label for="scenarioBatchNo">批次号匹配</label>
+                    <input id="scenarioBatchNo" placeholder="MOCK-BATCH-...">
+                </div>
+                <div>
+                    <label for="scenarioSysSeqNo">流水号匹配</label>
+                    <input id="scenarioSysSeqNo" placeholder="MOCK-SEQ-...">
+                </div>
+            </div>
+            <div class="grid four">
+                <div>
+                    <label for="scenarioResFlag">ResFlag</label>
+                    <select id="scenarioResFlag">
+                        <option value="">默认</option>
+                        <option value="SUCC">SUCC</option>
+                        <option value="FAIL">FAIL</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="scenarioStatus">业务状态</label>
+                    <input id="scenarioStatus" placeholder="SUCCESS / FAIL / PROCESSING">
+                </div>
+                <div>
+                    <label for="scenarioRetCode">返回码</label>
+                    <input id="scenarioRetCode" placeholder="000000">
+                </div>
+                <div>
+                    <label for="scenarioRetMsg">返回信息</label>
+                    <input id="scenarioRetMsg" placeholder="交易成功 / 余额不足">
+                </div>
+            </div>
+            <div class="grid four">
+                <label class="checkbox"><input id="scenarioEnabled" type="checkbox" checked> 启用规则</label>
+                <label class="checkbox"><input id="scenarioDisableCallback" type="checkbox"> 禁止自动回调</label>
+                <div>
+                    <label for="scenarioCallbackType">指定回调报文</label>
+                    <input id="scenarioCallbackType" placeholder="caps.306.001.01">
+                </div>
+                <div>
+                    <label for="scenarioRemark">备注</label>
+                    <input id="scenarioRemark" placeholder="规则说明">
+                </div>
+            </div>
+            <button id="saveScenarioBtn" class="button primary">保存场景规则</button>
+            <div class="table-card">
                 <table>
                     <thead>
-                    <tr><th>协议号</th><th>状态</th><th>场景</th></tr>
+                    <tr><th>ID</th><th>规则</th><th>请求报文</th><th>匹配条件</th><th>响应控制</th><th>操作</th></tr>
                     </thead>
-                    <tbody id="protocolTableBody"></tbody>
+                    <tbody id="scenarioTableBody"></tbody>
                 </table>
             </div>
-            <div>
-                <h3>交易状态</h3>
-                <table>
-                    <thead>
-                    <tr><th>流水号</th><th>状态</th><th>场景</th></tr>
-                    </thead>
-                    <tbody id="tradeTableBody"></tbody>
-                </table>
-            </div>
-            <div>
-                <h3>批次状态</h3>
-                <table>
-                    <thead>
-                    <tr><th>批次号</th><th>状态</th><th>场景</th></tr>
-                    </thead>
-                    <tbody id="batchTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-        <label for="stateDetail">状态详情</label>
-        <textarea id="stateDetail" rows="10" readonly></textarea>
-    </section>
+        </section>
 
-    <section class="panel">
-        <div class="toolbar">
-            <h2>接口对接记录</h2>
-            <div class="actions">
-                <button id="refreshLogsBtn">刷新</button>
-                <button id="clearLogsBtn" class="danger">清空记录</button>
+        <section id="trace" class="panel trace-panel">
+            <div class="section-title with-actions">
+                <div>
+                    <p class="eyebrow">Trace Explorer</p>
+                    <h2>接口调用链路追踪</h2>
+                </div>
+                <div class="actions">
+                    <button id="refreshLogsBtn" class="button secondary">刷新记录</button>
+                    <button id="clearLogsBtn" class="button danger">清空记录</button>
+                </div>
             </div>
-        </div>
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>类型</th>
-                <th>报文/操作</th>
-                <th>状态</th>
-                <th>业务标识</th>
-                <th>时间</th>
-            </tr>
-            </thead>
-            <tbody id="recordTableBody"></tbody>
-        </table>
-        <label for="recordDetail">记录详情</label>
-        <textarea id="recordDetail" rows="12" readonly></textarea>
-    </section>
+            <div class="grid four">
+                <div class="wide-two">
+                    <label for="traceKeyword">链路关键词</label>
+                    <input id="traceKeyword" placeholder="可输入 ReqId、协议号、批次号、流水号、报文类型、记录 ID">
+                </div>
+                <div>
+                    <label for="traceTypeFilter">接口类型</label>
+                    <select id="traceTypeFilter">
+                        <option value="">全部接口</option>
+                        <option value="GATEWAY">银行 / CAPS</option>
+                        <option value="CALLBACK">回调</option>
+                        <option value="HSM">加密机</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="traceStatusFilter">状态</label>
+                    <select id="traceStatusFilter">
+                        <option value="">全部状态</option>
+                        <option value="SUCCESS">SUCCESS</option>
+                        <option value="FAIL">FAIL</option>
+                        <option value="ERROR">ERROR</option>
+                        <option value="PROCESSING">PROCESSING</option>
+                    </select>
+                </div>
+            </div>
+            <div class="actions left">
+                <button id="applyTraceBtn" class="button primary">查询链路</button>
+                <button id="resetTraceBtn" class="button ghost">重置筛选</button>
+                <span id="traceSummary" class="trace-summary">等待加载接口记录。</span>
+            </div>
+            <div class="grid two trace-grid">
+                <div class="trace-work-card trace-list-card">
+                    <div class="trace-card-head">
+                        <div>
+                            <h3>接口记录</h3>
+                            <p class="muted">点击任意记录，右侧会自动串联同一业务链路。</p>
+                        </div>
+                    </div>
+                    <div class="trace-table-scroll">
+                        <table>
+                            <thead>
+                            <tr><th>ID</th><th>接口</th><th>报文</th><th>状态</th><th>链路标识</th><th>时间</th></tr>
+                            </thead>
+                            <tbody id="recordTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="trace-work-card trace-chain-card">
+                    <div class="trace-card-head chain-header">
+                        <div>
+                            <h3>调用链时间线</h3>
+                            <p id="traceChainSummary" class="muted">输入链路关键词或点击记录后，按前后调用关系串联展示。</p>
+                        </div>
+                    </div>
+                    <div id="traceChainTimeline" class="trace-chain-timeline empty-chain">暂无链路，请先查询或选择一条接口记录。</div>
+                    <label for="recordDetail">调用详情</label>
+                    <textarea id="recordDetail" rows="10" readonly spellcheck="false"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <section id="state" class="panel">
+            <div class="section-title with-actions">
+                <div>
+                    <p class="eyebrow">State Store</p>
+                    <h2>业务状态仓</h2>
+                </div>
+                <button id="refreshStateBtn" class="button secondary">刷新状态</button>
+            </div>
+            <div class="grid three state-grid">
+                <div class="table-card state-table-card">
+                    <h3>协议状态</h3>
+                    <div class="state-table-scroll"><table><thead><tr><th>协议号</th><th>状态</th><th>命中规则</th></tr></thead><tbody id="protocolTableBody"></tbody></table></div>
+                </div>
+                <div class="table-card state-table-card">
+                    <h3>交易状态</h3>
+                    <div class="state-table-scroll"><table><thead><tr><th>流水号</th><th>状态</th><th>命中规则</th></tr></thead><tbody id="tradeTableBody"></tbody></table></div>
+                </div>
+                <div class="table-card state-table-card">
+                    <h3>批次状态</h3>
+                    <div class="state-table-scroll"><table><thead><tr><th>批次号</th><th>状态</th><th>命中规则</th></tr></thead><tbody id="batchTableBody"></tbody></table></div>
+                </div>
+            </div>
+            <label for="stateDetail">状态 / 规则详情</label>
+            <textarea id="stateDetail" rows="10" readonly spellcheck="false"></textarea>
+        </section>
+
+        <section id="callback" class="panel">
+            <div class="section-title">
+                <div>
+                    <p class="eyebrow">Callback</p>
+                    <h2>回调配置</h2>
+                </div>
+                <p class="muted">配置自动回调和手动回调，用于模拟银行异步通知业务系统。</p>
+            </div>
+            <div class="grid four">
+                <div>
+                    <label for="autoPushEnabled">自动回调</label>
+                    <select id="autoPushEnabled">
+                        <option value="true">开启</option>
+                        <option value="false">关闭</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="delayMs">回调延迟(ms)</label>
+                    <input id="delayMs" type="number" value="800">
+                </div>
+                <div>
+                    <label for="defaultTargetUrl">默认回调地址</label>
+                    <input id="defaultTargetUrl" placeholder="由配置文件提供，可在此临时调整">
+                </div>
+                <div>
+                    <label for="hsmMockKey">HSM 秘钥种子</label>
+                    <input id="hsmMockKey" value="YHT-MOCK-HSM">
+                </div>
+            </div>
+            <div class="grid four">
+                <label class="checkbox"><input id="pushCaps107" type="checkbox" checked> 推送 caps.107</label>
+                <label class="checkbox"><input id="pushCaps205" type="checkbox" checked> 推送 caps.205</label>
+                <label class="checkbox"><input id="pushCaps306" type="checkbox" checked> 推送 caps.306</label>
+                <label class="checkbox"><input id="pushCaps308" type="checkbox" checked> 推送 caps.308</label>
+            </div>
+            <div class="grid four compact-row">
+                <div>
+                    <label for="manualCallbackType">手动回调报文</label>
+                    <select id="manualCallbackType">
+                        <option value="caps.306.001.01">caps.306.001.01</option>
+                        <option value="caps.205.001.01">caps.205.001.01</option>
+                        <option value="caps.107.001.01">caps.107.001.01</option>
+                        <option value="caps.308.001.01">caps.308.001.01</option>
+                        <option value="caps.600.001.01">caps.600.001.01</option>
+                        <option value="caps.916.001.01">caps.916.001.01</option>
+                    </select>
+                </div>
+            </div>
+            <div class="actions left">
+                <button id="saveConfigBtn" class="button primary">保存配置</button>
+                <button id="triggerCallbackBtn" class="button secondary">手动发送回调</button>
+            </div>
+            <pre id="callbackResult" class="result"></pre>
+        </section>
+    </main>
 </div>
 <script src="/yht-mock/app.js"></script>
 </body>

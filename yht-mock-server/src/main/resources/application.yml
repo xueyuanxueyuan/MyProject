@@ -13,3 +13,17 @@ logging:
   level:
     root: info
     cn.capinfo.gjj.yhtmock: info
+
+yht-mock:
+  settlement:
+    # 结算服务接收一户通回调的地址；K8s 可通过 YHT_MOCK_SETTLEMENT_RECEIVE_URL 覆盖。
+    receive-url: ${YHT_MOCK_SETTLEMENT_RECEIVE_URL:http://localhost:8082/api/v1/ywgl/yht/yht/receive}
+  callback:
+    # false：保留页面上保存过的回调配置；true：每次启动都以配置文件/环境变量为准。
+    override-stored-settings: ${YHT_MOCK_CALLBACK_OVERRIDE_STORED_SETTINGS:false}
+    auto-push-enabled: ${YHT_MOCK_CALLBACK_AUTO_PUSH_ENABLED:true}
+    delay-ms: ${YHT_MOCK_CALLBACK_DELAY_MS:800}
+    push-caps107: ${YHT_MOCK_CALLBACK_PUSH_CAPS107:true}
+    push-caps205: ${YHT_MOCK_CALLBACK_PUSH_CAPS205:true}
+    push-caps306: ${YHT_MOCK_CALLBACK_PUSH_CAPS306:true}
+    push-caps308: ${YHT_MOCK_CALLBACK_PUSH_CAPS308:true}
