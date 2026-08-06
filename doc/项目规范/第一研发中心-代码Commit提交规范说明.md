@@ -18,7 +18,7 @@ Commit message采用如下格式：
 <可选：补充说明>
 
 AI辅助: true/false
-AI工具: Trae/智谱/DeepSeek/ChatGPT/Cursor/Qcoder/Other/None
+AI工具: Trae/智谱/DeepSeek/ChatGPT/Claude/CodeX/Cursor/Qcoder/Other/None
 ```
 
 其中，前两部分保持原有代码提交习惯，最后两行是AI辅助开发统计字段。
@@ -57,6 +57,8 @@ TRUE/FALSE
 ```text
 Trae
 智谱
+DeepSeek
+ChatGPT
 Claude
 CodeX
 Cursor
@@ -65,7 +67,9 @@ Other
 None
 ```
 
-当`AI辅助: true`时，`AI工具`应填写实际主要使用工具。
+当`AI辅助: true`时，`AI工具`必须填写当前实际使用的主要工具。当前 Codex（含 Codex Desktop/CLI）统一填写`CodeX`。工具身份明确时，不得填写`Other`代替实际工具名称。
+
+`Other`不是未知工具或枚举判断不清时的默认值，仅在用户或项目规范明确确认该工具应归类为`Other`时使用。若提交执行者无法确认当前工具名称，或实际工具不在现有枚举中，必须在提交前向用户求证，并按确认结果填写及维护枚举；禁止猜测或自行使用`Other`兜底。
 
 当`AI辅助: false`时，`AI工具`应填写：
 
@@ -192,11 +196,14 @@ AI工具: DeepSeek
 
 ```text
 1. 所有commit都应包含“AI辅助”和“AI工具”两个字段。
-2. 当“AI辅助: true”时，“AI工具”必须填写Trae/智谱/Claude/CodeX/Cursor/Qcoder/Other中的一个。
-3. 当“AI辅助: false”时，“AI工具”必须填写None。
-4. 未填写“AI辅助”的commit，统计工具标记为格式异常。
-5. “AI辅助: true”但“AI工具: None”的commit，统计工具标记为格式异常。
-6. “AI辅助: false”但“AI工具”不是None的commit，统计工具标记为待确认。
+2. 当“AI辅助: true”时，“AI工具”必须填写Trae/智谱/DeepSeek/ChatGPT/Claude/CodeX/Cursor/Qcoder/Other中的一个。
+3. 工具身份明确时必须填写实际工具名称；Codex统一填写CodeX，禁止使用Other代替。
+4. 无法确认工具名称或工具不在枚举中时，提交前必须向用户求证，禁止猜测或默认填写Other。
+5. Other仅在用户或项目规范明确确认应归入Other时使用。
+6. 当“AI辅助: false”时，“AI工具”必须填写None。
+7. 未填写“AI辅助”的commit，统计工具标记为格式异常。
+8. “AI辅助: true”但“AI工具: None”的commit，统计工具标记为格式异常。
+9. “AI辅助: false”但“AI工具”不是None的commit，统计工具标记为待确认。
 ```
 
 如果初期执行阻力较大，可分阶段推进：
@@ -224,7 +231,7 @@ AI工具:
 ```text
 1. 从commit message末尾解析“AI辅助”和“AI工具”字段。
 2. “AI辅助”只接受true和false。
-3. “AI工具”只接受Trae、智谱、DeepSeek、ChatGPT、Cursor、Qcoder、Other、None。
+3. “AI工具”只接受Trae、智谱、DeepSeek、ChatGPT、Claude、CodeX、Cursor、Qcoder、Other、None。
 4. 字段缺失、字段值不合法或组合不合法的commit，进入异常清单。
 5. 异常commit不计入AI辅助开发活跃度和采纳率统计，待人工确认后再处理。
 ```
@@ -270,7 +277,7 @@ AI生成代码采纳率（代码库纳入估算口径） = “AI辅助: true”c
 
 二是不要把“AI辅助: true”理解为整次提交全部由AI生成。它只表示AI对本次提交结果产生了实质帮助。
 
-三是不要随意扩展AI工具名称。未在枚举中的工具统一填写`Other`，后续由统计工具或人工复核决定是否新增枚举。
+三是必须如实填写实际使用的AI工具名称。当前 Codex（含 Codex Desktop/CLI）统一填写`CodeX`；工具身份明确时禁止填写`Other`。若无法确认工具名称或实际工具不在枚举中，必须在提交前向用户求证，并按确认结果更新枚举或填写；`Other`仅在用户或项目规范明确确认应归类为`Other`时使用。
 
 四是如果一次commit包含多个研发场景，不需要人工填写场景。后续可由统计工具结合模型对commit内容进行辅助分类。
 

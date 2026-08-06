@@ -13,7 +13,7 @@
 <可选：补充说明>
 
 AI辅助: true/false
-AI工具: Trae/智谱/DeepSeek/ChatGPT/Cursor/Qcoder/Other/None
+AI工具: Trae/智谱/DeepSeek/ChatGPT/Claude/CodeX/Cursor/Qcoder/Other/None
 ```
 
 - `<提交类型>` 建议使用 `feat`、`fix`、`test`、`refactor`、`docs`、`style`、`chore`、`build`、`ci`、`perf`、`other`。
@@ -22,6 +22,8 @@ AI工具: Trae/智谱/DeepSeek/ChatGPT/Cursor/Qcoder/Other/None
 ## 3. 字段要求
 - `AI辅助` 只允许填写小写 `true` 或 `false`，禁止使用 `True/False`、`yes/no`、`是/否` 等其他写法。
 - `AI工具` 必须填写公司规范允许值；当 `AI辅助: false` 时，`AI工具` 必须填写 `None`。
+- 当 `AI辅助: true` 时，必须填写当前实际使用的主要 AI 工具；当前 Codex（含 Codex Desktop/CLI）统一填写 `CodeX`，不得因省事或枚举判断不清而填写 `Other`。
+- `Other` 不是未知工具的默认值。无法确认当前工具名称，或实际工具不在枚举中时，提交前必须向用户求证，按用户确认结果填写并同步维护规范枚举。
 - 当一次提交同时使用多个 AI 工具时，只填写对本次提交帮助最大的主要工具。
 - 不再强制标题追加 `（AI生成提交）`，也不再强制补充说明固定写成“1. 改了什么 / 2. 为了解决什么问题”。
 
@@ -58,4 +60,4 @@ AI工具: None
 - 提交标题与补充说明必须具体，禁止使用“修复问题”“优化代码”“调整一下”等空泛表述。
 - 提交前仍需遵守“先同步远端主线、解决冲突、再本地提交”的既有流程要求。
 - 默认仅提交本次修改涉及的源码文件；非源码文件是否提交，以当前项目规范和用户指令为准。
-- 若公司后续调整 `AI工具` 枚举或解析口径，以公司规范主源和统计工具最新要求为准。
+- 若公司后续调整 `AI工具` 枚举或解析口径，以公司规范主源和统计工具最新要求为准；任何情况下不得在工具身份未确认时自行使用 `Other` 兜底。
