@@ -27,3 +27,7 @@ yht-mock:
     push-caps205: ${YHT_MOCK_CALLBACK_PUSH_CAPS205:true}
     push-caps306: ${YHT_MOCK_CALLBACK_PUSH_CAPS306:true}
     push-caps308: ${YHT_MOCK_CALLBACK_PUSH_CAPS308:true}
+  svs-socket:
+    # 兼容结算服务原 zayk ZaSVSApi 的 Socket 服务；K8s 中结算服务 svs.server-host/server-port 指向挡板该端口。
+    enabled: ${YHT_MOCK_SVS_SOCKET_ENABLED:true}
+    port: ${YHT_MOCK_SVS_SOCKET_PORT:13558}

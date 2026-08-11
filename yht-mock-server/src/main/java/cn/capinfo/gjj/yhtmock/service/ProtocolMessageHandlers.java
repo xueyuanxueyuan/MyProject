@@ -2,7 +2,6 @@ package cn.capinfo.gjj.yhtmock.service;
 
 import cn.capinfo.gjj.yhtmock.model.ProtocolState;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
 
 import java.util.Set;
 
@@ -54,9 +53,58 @@ class ProtocolSignHandler implements CapsMessageHandler {
 
     @Override
     public GatewayDispatchResult handle(GatewayRequestContext ctx) {
-        ProtocolState protocolState = support.buildProtocolState(ctx.document(), ctx.requestHeader(), ctx.scenarioRule());
-        protocolState.signReqId = support.safe(ctx.reqId());
-        protocolState.status = support.resolveStatus(ctx.scenarioRule(), "ACCEPTED");
+        String changeType = ctx.document() == null ? "" : support.text(ctx.document(), "ChngTp");
+        String sendType = ctx.document() == null ? "" : support.text(ctx.document(), "SndTp");
+        String origMsgId = ctx.document() == null ? "" : support.text(ctx.document(), "OrigMsgId");
+        String pyerBgNum = ctx.document() == null ? "" : support.text(ctx.document(), "PyerBgNum");
+
+        if (!origMsgId.isBlank() && changeType.isBlank()) {
+            String responseXml = support.buildCaps900(support.successCorp(ctx.requestHeader()),
+                    support.resolveResFlag(ctx.scenarioRule(), "SUCC"),
+                    support.resolveCode(ctx.scenarioRule(), "00000000"),
+                    support.resolveMsg(ctx.scenarioRule(), "query accepted"));
+            return GatewayDispatchResult.of("caps.900.001.01", responseXml,
+                    support.resolveStatus(ctx.scenarioRule(), "SUCC"),
+                    support.firstNonBlank(ctx.protocolNo(), origMsgId, pyerBgNum), "", "");
+        }
+
+        ProtocolState protocolState;
+        if ("SD01".equalsIgnoreCase(sendType)) {
+            protocolState = storeService.findProtocolByReqId(ctx.reqId());
+            if (protocolState == null) {
+                protocolState = support.buildProtocolState(ctx.document(), ctx.requestHeader(), ctx.scenarioRule());
+            }
+            protocolState.authCode = ctx.document() == null ? protocolState.authCode : support.text(ctx.document(), "AuthCd");
+            protocolState.sendType = "SD01";
+            protocolState.changeType = support.firstNonBlank(protocolState.changeType, "ADDD");
+            protocolState.signReqId = support.firstNonBlank(protocolState.signReqId, ctx.reqId());
+            protocolState.status = support.resolveStatus(ctx.scenarioRule(), "SUCC");
+            protocolState.protocolProcessCode = "CS00";
+        } else if ("DELE".equalsIgnoreCase(changeType)) {
+            ProtocolState existing = storeService.findProtocol(ctx.protocolNo(), ctx.acctNo());
+            protocolState = existing == null
+                    ? support.buildProtocolState(ctx.document(), ctx.requestHeader(), ctx.scenarioRule())
+                    : existing;
+            ProtocolState requestState = support.buildProtocolState(ctx.document(), ctx.requestHeader(), ctx.scenarioRule());
+            protocolState.signReqId = support.firstNonBlank(requestState.signReqId, ctx.reqId(), protocolState.signReqId);
+            protocolState.changeType = "DELE";
+            protocolState.sendType = support.firstNonBlank(requestState.sendType, "SD00");
+            protocolState.feeNoList = support.firstNonBlank(requestState.feeNoList, protocolState.feeNoList);
+            protocolState.acctNo = support.firstNonBlank(requestState.acctNo, protocolState.acctNo);
+            protocolState.acctName = support.firstNonBlank(requestState.acctName, protocolState.acctName);
+            protocolState.bankId = support.firstNonBlank(requestState.bankId, protocolState.bankId);
+            protocolState.status = support.resolveStatus(ctx.scenarioRule(), "CANCELLED");
+            protocolState.protocolProcessCode = "CS20";
+            protocolState.remark = support.resolveMsg(ctx.scenarioRule(), "cancel accepted");
+        } else {
+            protocolState = support.buildProtocolState(ctx.document(), ctx.requestHeader(), ctx.scenarioRule());
+            protocolState.signReqId = support.firstNonBlank(protocolState.signReqId, ctx.reqId());
+            protocolState.changeType = support.firstNonBlank(protocolState.changeType, "ADDD");
+            protocolState.sendType = support.firstNonBlank(protocolState.sendType, "SD00");
+            protocolState.status = support.resolveStatus(ctx.scenarioRule(), "ACCEPTED");
+            protocolState.protocolProcessCode = support.firstNonBlank(protocolState.protocolProcessCode, "CS00");
+        }
+
         protocolState.callbackMesgType = support.defaultString(
                 support.resolveCallbackType(ctx.scenarioRule()), "caps.306.001.01");
         protocolState.callbackEnabled = !support.isAutoCallbackDisabled(ctx.scenarioRule());
@@ -65,7 +113,7 @@ class ProtocolSignHandler implements CapsMessageHandler {
         String responseXml = support.buildCaps900(support.successCorp(ctx.requestHeader()),
                 support.safe(protocolState.resFlag, "SUCC"),
                 support.resolveCode(ctx.scenarioRule(), "00000000"),
-                support.resolveMsg(ctx.scenarioRule(), "受理成功"));
+                support.resolveMsg(ctx.scenarioRule(), "accepted"));
 
         callbackService.scheduleCaps306(ctx.requestHeader(), protocolState);
         return GatewayDispatchResult.of("caps.900.001.01", responseXml,
@@ -125,7 +173,7 @@ class ProtocolCancelHandler implements CapsMessageHandler {
         String responseXml = support.buildCaps900(support.successCorp(ctx.requestHeader()),
                 support.resolveResFlag(ctx.scenarioRule(), "SUCC"),
                 support.resolveCode(ctx.scenarioRule(), "00000000"),
-                support.resolveMsg(ctx.scenarioRule(), "撤销受理成功"));
+                support.resolveMsg(ctx.scenarioRule(), "cancel accepted"));
         if (!support.isAutoCallbackDisabled(ctx.scenarioRule())) {
             String orgnlId = ctx.document() == null ? ctx.protocolNo() : support.text(ctx.document(), "OrgnlId");
             callbackService.scheduleCaps308(ctx.requestHeader(), orgnlId, "CANCEL-" + support.timestamp());

@@ -144,6 +144,61 @@ public class CapsCodecService {
         return builder.toString();
     }
 
+
+    public boolean isDocumentEnvelope(Document document) {
+        if (document == null || document.getDocumentElement() == null) {
+            return false;
+        }
+        Element root = document.getDocumentElement();
+        return matches(root, "Document");
+    }
+
+    public String documentMessageText(Document document) {
+        if (!isDocumentEnvelope(document)) {
+            return "";
+        }
+        Element message = child(document.getDocumentElement(), "Message");
+        return message == null ? "" : message.getTextContent().trim();
+    }
+
+    public String buildXmlWithInnerXml(String mesgType, String innerXml) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        builder.append("<Message xmlns=\"urn:caps:msg:").append(mesgType).append("\">");
+        if (innerXml != null && !innerXml.isBlank()) {
+            builder.append(innerXml);
+        }
+        builder.append("</Message>");
+        return builder.toString();
+    }
+
+    public String buildDocumentWithText(String mesgType, String text) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        builder.append("<Document xmlns=\"urn:cbcc:std:caps:2020:tech:xsd:").append(mesgType).append("\"");
+        builder.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
+        builder.append("<Message>").append(escape(text)).append("</Message>");
+        builder.append("</Document>");
+        return builder.toString();
+    }
+
+    public String extractMessageInnerXml(String xml) {
+        if (xml == null || xml.isBlank()) {
+            return "";
+        }
+        String normalized = xml.trim();
+        int start = normalized.indexOf("<Message");
+        if (start < 0) {
+            return normalized;
+        }
+        int contentStart = normalized.indexOf('>', start);
+        int contentEnd = normalized.lastIndexOf("</Message>");
+        if (contentStart < 0 || contentEnd < 0 || contentEnd <= contentStart) {
+            return normalized;
+        }
+        return normalized.substring(contentStart + 1, contentEnd);
+    }
+
     public String base64(String value) {
         return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8));
     }
@@ -195,10 +250,15 @@ public class CapsCodecService {
 
     private int locateXmlStart(String rawMessage) {
         int xmlIndex = rawMessage.indexOf("<?xml");
-        if (xmlIndex >= 0) {
-            return xmlIndex;
+        int messageIndex = rawMessage.indexOf("<Message");
+        int documentIndex = rawMessage.indexOf("<Document");
+        int result = -1;
+        for (int candidate : new int[]{xmlIndex, messageIndex, documentIndex}) {
+            if (candidate >= 0 && (result < 0 || candidate < result)) {
+                result = candidate;
+            }
         }
-        return rawMessage.indexOf("<Message");
+        return result;
     }
 
     private DocumentBuilderFactory newSecureDocumentBuilderFactory() {

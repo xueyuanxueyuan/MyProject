@@ -137,51 +137,137 @@ function normalizeAmount(value) {
     return '0.00';
 }
 
+function base64Utf8(value) {
+    const text = String(value == null ? '' : value);
+    if (typeof TextEncoder === 'function') {
+        let binary = '';
+        const bytes = new TextEncoder().encode(text);
+        bytes.forEach(byte => {
+            binary += String.fromCharCode(byte);
+        });
+        return base64Utf8(binary);
+    }
+    return base64Utf8(unescape(encodeURIComponent(text)));
+}
+
 function getTemplates() {
     const stamp = nowStamp();
+    const batchFile = base64Utf8([
+        `101|33503C5801|00600|1|100.00|0|0|0|BATCH-${stamp}|${stamp.slice(0, 8)}`,
+        `1|105000||62220000000000009999|MOCK-PAYER|100.00|||SERIAL-${stamp}`
+    ].join('\\n'));
     return {
-        'caps.999.001.01': `${buildHeader('caps.999.001.01')}\r\n<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.999.001.01"><Head><CorpNo>1111</CorpNo><CheckType>LINK</CheckType><SysChckNo>CHK${stamp}</SysChckNo></Head></Message>`,
-        'caps.201.001.01': `${buildHeader('caps.201.001.01')}\r\n<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.201.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><TranCode>201</TranCode><DbtrActId>62220000000000009999</DbtrActId><DbtrBankId>105000</DbtrBankId><TxAmt>100.00</TxAmt></Body></Message>`,
-        'caps.305.001.01': `${buildHeader('caps.305.001.01')}\r\n<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.305.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><DbtrProtocol>0</DbtrProtocol><DbtrActId>62220000000000008888</DbtrActId><DbtrBankId>105000</DbtrBankId><CstmrId>CUST-${stamp}</CstmrId><CstmrNm>测试用户</CstmrNm><FeeNoList>FEE001,FEE002</FeeNoList><Remark>协议签约测试</Remark></Body></Message>`,
-        'caps.101.001.01': `${buildHeader('caps.101.001.01')}\r\n<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.101.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><BatchNo>BATCH-${stamp}</BatchNo><TranCode>101</TranCode><TotalCount>2</TotalCount><TotalAmt>300.00</TotalAmt></Body></Message>`
+        'caps.999.001.01': `${buildHeader('caps.999.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.999.001.01"><Head><CorpNo>1111</CorpNo><CheckType>LINK</CheckType><SysChckNo>CHK${stamp}</SysChckNo></Head></Message>`,
+        'caps.301.001.01': `${buildHeader('caps.301.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.301.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><DbtrProtocol>MOCK-PROT-${stamp}</DbtrProtocol><DbtrActId>62220000000000008888</DbtrActId><DbtrActName>MOCK-PAYER</DbtrActName><DbtrBankId>105000</DbtrBankId><CstmrId>CUST-${stamp}</CstmrId><CstmrNm>MOCK-PAYER</CstmrNm><FeeNoList>FEE001|FEE002</FeeNoList><Remark>protocol upload</Remark></Body></Message>`,
+        'caps.303.001.01': `${buildHeader('caps.303.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.303.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><DbtrProtocol>MOCK-PROT-${stamp}</DbtrProtocol><DbtrActId>62220000000000008888</DbtrActId></Body></Message>`,
+        'caps.305.sign': `${buildHeader('caps.305.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.305.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><ChngTp>ADDD</ChngTp><SndrFlg>CPSD</SndrFlg><SndTp>SD00</SndTp><DbtrProtocol>0</DbtrProtocol><DbtrActId>62220000000000008888</DbtrActId><DbtrActName>MOCK-PAYER</DbtrActName><DbtrBankId>105000</DbtrBankId><CstmrId>CUST-${stamp}</CstmrId><CstmrNm>MOCK-PAYER</CstmrNm><FeeNoList>FEE001|FEE002</FeeNoList><Remark>protocol sign</Remark></Body></Message>`,
+        'caps.305.cancel': `${buildHeader('caps.305.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.305.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><ChngTp>DELE</ChngTp><SndrFlg>CPSD</SndrFlg><SndTp>SD00</SndTp><DbtrProtocol>MOCK-PROT-${stamp}</DbtrProtocol><DbtrActId>62220000000000008888</DbtrActId><DbtrActName>MOCK-PAYER</DbtrActName><DbtrBankId>105000</DbtrBankId><FeeNoList>FEE001|FEE002</FeeNoList><Remark>protocol cancel</Remark></Body></Message>`,
+        'caps.305.sms': `${buildHeader('caps.305.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.305.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><ChngTp>ADDD</ChngTp><SndrFlg>CPSD</SndrFlg><SndTp>SD01</SndTp><AuthCd>123456</AuthCd><DbtrProtocol>MOCK-PROT-${stamp}</DbtrProtocol><DbtrActId>62220000000000008888</DbtrActId></Body></Message>`,
+        'caps.305.query': `${buildHeader('caps.305.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.305.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><OrigMsgId>ORIG-${stamp}</OrigMsgId><QueryTime>${stamp}</QueryTime><PyerBgNum>PYER-${stamp}</PyerBgNum><FeeNoList>FEE001|FEE002</FeeNoList></Body></Message>`,
+        'caps.305.001.01': `${buildHeader('caps.305.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.305.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><ChngTp>ADDD</ChngTp><SndrFlg>CPSD</SndrFlg><SndTp>SD00</SndTp><DbtrProtocol>0</DbtrProtocol><DbtrActId>62220000000000008888</DbtrActId><DbtrActName>MOCK-PAYER</DbtrActName><DbtrBankId>105000</DbtrBankId><CstmrId>CUST-${stamp}</CstmrId><CstmrNm>MOCK-PAYER</CstmrNm><FeeNoList>FEE001|FEE002</FeeNoList><Remark>protocol sign</Remark></Body></Message>`,
+        'caps.101.001.01': `${buildHeader('caps.101.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.101.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><BatchNo>BATCH-${stamp}</BatchNo><TranCode>101</TranCode><FeeNo>00600</FeeNo><TotalCount>1</TotalCount><TotalAmt>100.00</TotalAmt><CheckDate>${stamp.slice(0, 8)}</CheckDate><FileData>${batchFile}</FileData></Body></Message>`,
+        'caps.103.001.01': `${buildHeader('caps.103.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.103.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><BatchNo>BATCH-${stamp}</BatchNo></Body></Message>`,
+        'caps.105.001.01': `${buildHeader('caps.105.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.105.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><BatchNo>BATCH-${stamp}</BatchNo></Body></Message>`,
+        'caps.201.001.01': `${buildHeader('caps.201.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.201.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><TranCode>201</TranCode><SysSeqNo>MOCK-SEQ-${stamp}</SysSeqNo><SerialNum>SERIAL-${stamp}</SerialNum><DbtrProtocol>MOCK-PROT-${stamp}</DbtrProtocol><DbtrActName>MOCK-PAYER</DbtrActName><DbtrActId>62220000000000009999</DbtrActId><DbtrBankId>105000</DbtrBankId><CdtrActName>MOCK-PAYEE</CdtrActName><CdtrActId>3300000000000001</CdtrActId><CdtrBankId>105000</CdtrBankId><PayAmt>CNY100.00</PayAmt><BllNb>BILL-${stamp}</BllNb></Body></Message>`,
+        'caps.203.001.01': `${buildHeader('caps.203.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.203.001.01"><Head><CorpNo>1111</CorpNo><BizDate>${stamp.slice(0, 8)}</BizDate><TranCode>201</TranCode><FeeNo>00600</FeeNo><QueryType>1</QueryType><SerialNum>SERIAL-${stamp}</SerialNum><SysSeqNo>MOCK-SEQ-${stamp}</SysSeqNo></Head></Message>`,
+        'caps.307.001.01': `${buildHeader('caps.307.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.307.001.01"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>REQ-${stamp}</ReqId><OrgnlId>MOCK-PROT-${stamp}</OrgnlId><CancelId>CANCEL-${stamp}</CancelId></Body></Message>`,
+        'caps.601.001.01': `${buildHeader('caps.601.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.601.001.01"><Head><CorpNo>1111</CorpNo><CheckDate>${stamp.slice(0, 8)}</CheckDate><TranCode>201</TranCode></Head></Message>`
     };
+}
+
+function manualMesgType(value) {
+    if (String(value || '').startsWith('caps.305.')) {
+        return 'caps.305.001.01';
+    }
+    return value || 'caps.201.001.01';
 }
 
 function fillTemplate() {
     const templates = getTemplates();
     const type = valueOf('requestTemplateType');
-    setValue('gatewayRequest', templates[type] || templates['caps.999.001.01']);
+    setValue('gatewayRequest', templates[type] || templates[manualMesgType(type)] || templates['caps.999.001.01']);
 }
 
 function buildManualMessage() {
     const stamp = nowStamp();
-    const mesgType = valueOf('manualBusinessType') || 'caps.201.001.01';
+    const scenario = valueOf('manualBusinessType') || 'caps.201.001.01';
+    const mesgType = manualMesgType(scenario);
     const reqId = valueOf('manualReqId') || `REQ-${stamp}`;
     const accountNo = valueOf('manualAccountNo') || '62220000000000009999';
     const bankId = valueOf('manualBankId') || '105000';
     const amount = normalizeAmount(valueOf('manualAmount'));
-    const customerName = valueOf('manualCustomerName') || '测试用户';
+    const customerName = valueOf('manualCustomerName') || 'MOCK-PAYER';
     const customerId = valueOf('manualCustomerId') || `CUST-${stamp}`;
     const protocolNo = valueOf('manualProtocolNo') || `MOCK-PROT-${stamp}`;
     const batchNo = valueOf('manualBatchNo') || `BATCH-${stamp}`;
     const sysSeqNo = valueOf('manualSysSeqNo') || `MOCK-SEQ-${stamp}`;
-    const remark = valueOf('manualRemark') || '人工模拟银行发起';
+    const serialNum = sysSeqNo.startsWith('SERIAL-') ? sysSeqNo : `SERIAL-${stamp}`;
+    const remark = valueOf('manualRemark') || 'manual bank input';
+    const checkDate = stamp.slice(0, 8);
 
     let xml;
-    if (mesgType === 'caps.999.001.01') {
+    if (scenario === 'caps.999.001.01') {
         xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo><CheckType>LINK</CheckType><SysChckNo>${xmlEscape(reqId)}</SysChckNo></Head></Message>`;
-    } else if (mesgType === 'caps.305.001.01') {
-        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><DbtrProtocol>${xmlEscape(protocolNo)}</DbtrProtocol><DbtrActId>${xmlEscape(accountNo)}</DbtrActId><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><CstmrId>${xmlEscape(customerId)}</CstmrId><CstmrNm>${xmlEscape(customerName)}</CstmrNm><FeeNoList>FEE001,FEE002</FeeNoList><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
-    } else if (mesgType === 'caps.101.001.01') {
-        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><BatchNo>${xmlEscape(batchNo)}</BatchNo><TranCode>101</TranCode><TotalCount>1</TotalCount><TotalAmt>${xmlEscape(amount)}</TotalAmt><SysSeqNo>${xmlEscape(sysSeqNo)}</SysSeqNo><DbtrActId>${xmlEscape(accountNo)}</DbtrActId><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
+    } else if (scenario === 'caps.305.cancel') {
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><ChngTp>DELE</ChngTp><SndrFlg>CPSD</SndrFlg><SndTp>SD00</SndTp><DbtrProtocol>${xmlEscape(protocolNo)}</DbtrProtocol><DbtrActId>${xmlEscape(accountNo)}</DbtrActId><DbtrActName>${xmlEscape(customerName)}</DbtrActName><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><FeeNoList>FEE001|FEE002</FeeNoList><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
+    } else if (scenario === 'caps.305.sms') {
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><ChngTp>ADDD</ChngTp><SndrFlg>CPSD</SndrFlg><SndTp>SD01</SndTp><AuthCd>123456</AuthCd><DbtrProtocol>${xmlEscape(protocolNo)}</DbtrProtocol><DbtrActId>${xmlEscape(accountNo)}</DbtrActId><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
+    } else if (scenario === 'caps.305.query') {
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><OrigMsgId>${xmlEscape(sysSeqNo)}</OrigMsgId><QueryTime>${stamp}</QueryTime><PyerBgNum>${xmlEscape(protocolNo)}</PyerBgNum><FeeNoList>FEE001|FEE002</FeeNoList><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
+    } else if (scenario === 'caps.305.sign' || scenario === 'caps.305.001.01') {
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><ChngTp>ADDD</ChngTp><SndrFlg>CPSD</SndrFlg><SndTp>SD00</SndTp><DbtrProtocol>0</DbtrProtocol><DbtrActId>${xmlEscape(accountNo)}</DbtrActId><DbtrActName>${xmlEscape(customerName)}</DbtrActName><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><CstmrId>${xmlEscape(customerId)}</CstmrId><CstmrNm>${xmlEscape(customerName)}</CstmrNm><FeeNoList>FEE001|FEE002</FeeNoList><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
+    } else if (scenario === 'caps.101.001.01') {
+        const fileData = base64Utf8([`101|33503C5801|00600|1|${amount}|0|0|0|${batchNo}|${checkDate}`, `1|${bankId}||${accountNo}|${customerName}|${amount}|||${serialNum}`].join('\\n'));
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><BatchNo>${xmlEscape(batchNo)}</BatchNo><TranCode>101</TranCode><FeeNo>00600</FeeNo><TotalCount>1</TotalCount><TotalAmt>${xmlEscape(amount)}</TotalAmt><CheckDate>${checkDate}</CheckDate><FileData>${xmlEscape(fileData)}</FileData><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
+    } else if (scenario === 'caps.103.001.01' || scenario === 'caps.105.001.01') {
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><BatchNo>${xmlEscape(batchNo)}</BatchNo><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
+    } else if (scenario === 'caps.203.001.01') {
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo><BizDate>${checkDate}</BizDate><TranCode>201</TranCode><FeeNo>00600</FeeNo><QueryType>1</QueryType><SerialNum>${xmlEscape(serialNum)}</SerialNum><SysSeqNo>${xmlEscape(sysSeqNo)}</SysSeqNo></Head></Message>`;
+    } else if (scenario === 'caps.307.001.01') {
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><OrgnlId>${xmlEscape(protocolNo)}</OrgnlId><CancelId>CANCEL-${stamp}</CancelId><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
+    } else if (scenario === 'caps.601.001.01') {
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo><CheckDate>${checkDate}</CheckDate><TranCode>201</TranCode></Head></Message>`;
     } else {
-        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><TranCode>201</TranCode><SysSeqNo>${xmlEscape(sysSeqNo)}</SysSeqNo><DbtrActId>${xmlEscape(accountNo)}</DbtrActId><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><TxAmt>${xmlEscape(amount)}</TxAmt><CstmrNm>${xmlEscape(customerName)}</CstmrNm><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><TranCode>201</TranCode><SysSeqNo>${xmlEscape(sysSeqNo)}</SysSeqNo><SerialNum>${xmlEscape(serialNum)}</SerialNum><DbtrProtocol>${xmlEscape(protocolNo)}</DbtrProtocol><DbtrActName>${xmlEscape(customerName)}</DbtrActName><DbtrActId>${xmlEscape(accountNo)}</DbtrActId><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><CdtrActName>MOCK-PAYEE</CdtrActName><CdtrActId>3300000000000001</CdtrActId><CdtrBankId>105000</CdtrBankId><PayAmt>CNY${xmlEscape(amount)}</PayAmt><BllNb>BILL-${stamp}</BllNb><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
     }
 
+    const traceId = reqId || protocolNo || batchNo || sysSeqNo;
     return {
-        traceId: reqId,
-        message: `${buildHeader(mesgType)}\r\n${xml}`,
-        summary: `已生成 ${mesgType}，链路关键词：${reqId}`
+        traceId,
+        message: `${buildHeader(mesgType)}
+
+${xml}`,
+        summary: `Generated ${mesgType}; trace key: ${traceId}`
     };
 }
 
@@ -224,6 +310,9 @@ function extractTraceIdFromMessage(raw) {
         || extractFirst(raw, 'DbtrProtocol')
         || extractFirst(raw, 'BatchNo')
         || extractFirst(raw, 'SysSeqNo')
+        || extractFirst(raw, 'SerialNum')
+        || extractFirst(raw, 'OrigMsgId')
+        || extractFirst(raw, 'PyerBgNum')
         || extractFirst(raw, 'SysChckNo')
         || '';
 }
@@ -253,7 +342,7 @@ function traceKeyEntries(item) {
         { label: '批次号', value: item.batchNo },
         { label: '流水号', value: item.sysSeqNo }
     ];
-    const tags = ['ReqId', 'OrgnlReqId', 'DbtrProtocol', 'OrgnlDbtrProtocol', 'BatchNo', 'OrgnlBatchNo', 'SysSeqNo', 'OrgnlSysSeqNo', 'MesgId', 'SysChckNo'];
+    const tags = ['ReqId', 'OrgnlReqId', 'DbtrProtocol', 'OrgnlDbtrProtocol', 'OrgnlId', 'OrigMsgId', 'PyerBgNum', 'BatchNo', 'OrgnlBatchNo', 'BtchNb', 'SysSeqNo', 'OrgnlSysSeqNo', 'SerialNum', 'MesgId', 'SysChckNo', 'CancleId', 'CancelId'];
     extractTagValues(item.requestBody, tags).forEach(entry => entries.push(entry));
     extractTagValues(item.responseBody, tags).forEach(entry => entries.push(entry));
     const seen = new Set();
@@ -462,6 +551,8 @@ async function loadSettings() {
     setValue('delayMs', body.delayMs);
     setValue('defaultTargetUrl', body.defaultTargetUrl);
     setValue('hsmMockKey', body.hsmMockKey);
+    setValue('svsMockKey', body.svsMockKey || 'YHT-MOCK-SVS');
+    setValue('svsVerifyLenient', body.svsVerifyLenient === false ? 'false' : 'true');
     byId('pushCaps107').checked = body.pushCaps107;
     byId('pushCaps205').checked = body.pushCaps205;
     byId('pushCaps306').checked = body.pushCaps306;
@@ -474,6 +565,8 @@ async function saveSettings() {
         delayMs: Number(valueOf('delayMs')),
         defaultTargetUrl: valueOf('defaultTargetUrl'),
         hsmMockKey: valueOf('hsmMockKey'),
+        svsMockKey: valueOf('svsMockKey'),
+        svsVerifyLenient: valueOf('svsVerifyLenient') !== 'false',
         pushCaps107: byId('pushCaps107').checked,
         pushCaps205: byId('pushCaps205').checked,
         pushCaps306: byId('pushCaps306').checked,

@@ -36,6 +36,7 @@ public class MockCallbackService {
             return;
         }
         String callbackMesgType = defaultString(protocolState.callbackMesgType, "caps.306.001.01");
+        String processCode = defaultString(protocolState.protocolProcessCode, "CS00");
         String body = codecService.buildXml(callbackMesgType,
                 "<CorpNo>" + codecService.escape(defaultString(protocolState.corpNo, requestHeader.origSender)) + "</CorpNo>"
                         + "<ResFlag>" + codecService.escape(defaultString(protocolState.resFlag, settings.defaultProtocolResult)) + "</ResFlag>"
@@ -44,7 +45,19 @@ public class MockCallbackService {
                 "<CtrctRtrFlg>1</CtrctRtrFlg>"
                         + "<OrgnlReqId>" + codecService.escape(protocolState.signReqId) + "</OrgnlReqId>"
                         + "<OrgnlDbtrProtocol>" + codecService.escape(protocolState.protocolNo) + "</OrgnlDbtrProtocol>"
-                        + "<AuthChl>MOCK</AuthChl><Remark>" + codecService.escape(defaultString(protocolState.remark, "mock callback")) + "</Remark>");
+                        + "<AuthChl>MOCK</AuthChl>"
+                        + "<ProtocolProcessCode>" + codecService.escape(processCode) + "</ProtocolProcessCode>"
+                        + "<ProcessCode>" + codecService.escape(processCode) + "</ProcessCode>"
+                        + "<PrtclPrcsCd>" + codecService.escape(processCode) + "</PrtclPrcsCd>"
+                        + "<ChngTp>" + codecService.escape(defaultString(protocolState.changeType, "ADDD")) + "</ChngTp>"
+                        + "<SndTp>" + codecService.escape(defaultString(protocolState.sendType, "SD00")) + "</SndTp>"
+                        + "<ProtocolStatus>" + codecService.escape(defaultString(protocolState.status, "SUCC")) + "</ProtocolStatus>"
+                        + "<FeeNoList>" + codecService.escape(defaultString(protocolState.feeNoList, "")) + "</FeeNoList>"
+                        + "<DbtrActId>" + codecService.escape(defaultString(protocolState.acctNo, "")) + "</DbtrActId>"
+                        + "<DbtrActName>" + codecService.escape(defaultString(protocolState.acctName, protocolState.customerName)) + "</DbtrActName>"
+                        + "<DbtrBankId>" + codecService.escape(defaultString(protocolState.bankId, "")) + "</DbtrBankId>"
+                        + "<DbtrPhone>" + codecService.escape(defaultString(protocolState.phone, "")) + "</DbtrPhone>"
+                        + "<Remark>" + codecService.escape(defaultString(protocolState.remark, "mock callback")) + "</Remark>");
         pushAsync(buildFullMessage(requestHeader, callbackMesgType, body), callbackMesgType,
                 protocolState.signReqId, protocolState.protocolNo, null, null);
     }
@@ -72,13 +85,24 @@ public class MockCallbackService {
         String callbackMesgType = defaultString(tradeState.callbackMesgType, "caps.205.001.01");
         String body = codecService.buildXml(callbackMesgType,
                 "<CorpNo>" + codecService.escape(defaultString(requestHeader.origSender, "1111")) + "</CorpNo>"
+                        + "<TranCode>" + codecService.escape(defaultString(tradeState.tranCode, "201")) + "</TranCode>"
+                        + "<SysSeqNo>" + codecService.escape(defaultString(tradeState.sysSeqNo, "")) + "</SysSeqNo>"
                         + "<ResFlag>" + codecService.escape(defaultString(tradeState.resFlag, settings.defaultTradeResult)) + "</ResFlag>"
                         + "<ErrorCode></ErrorCode><ErrorMsg></ErrorMsg>",
-                "<TranCode>" + codecService.escape(tradeState.tranCode) + "</TranCode>"
-                        + "<SysSeqNo>" + codecService.escape(tradeState.sysSeqNo) + "</SysSeqNo>"
+                "<SerialNum>" + codecService.escape(defaultString(tradeState.serialNum, tradeState.reqId)) + "</SerialNum>"
+                        + "<PayAmt>" + codecService.escape(defaultString(tradeState.amount, "0")) + "</PayAmt>"
+                        + "<BtchNb>" + codecService.escape(defaultString(tradeState.btchNb, "")) + "</BtchNb>"
+                        + "<CheckDate>" + codecService.escape(defaultString(tradeState.checkDate, "")) + "</CheckDate>"
                         + "<RetCode>" + codecService.escape(defaultString(tradeState.retCode, "000000")) + "</RetCode>"
-                        + "<RetMsg>" + codecService.escape(defaultString(tradeState.retMsg, "交易成功")) + "</RetMsg>"
-                        + "<PayAmt>" + codecService.escape(defaultString(tradeState.amount, "0")) + "</PayAmt>");
+                        + "<RetMsgId>" + codecService.escape(defaultString(tradeState.retCode, "000000")) + "</RetMsgId>"
+                        + "<RetMsg>" + codecService.escape(defaultString(tradeState.retMsg, "trade success")) + "</RetMsg>"
+                        + "<DbtrActName>" + codecService.escape(defaultString(tradeState.acctName, "")) + "</DbtrActName>"
+                        + "<DbtrActId>" + codecService.escape(defaultString(tradeState.acctNo, "")) + "</DbtrActId>"
+                        + "<DbtrBankId>" + codecService.escape(defaultString(tradeState.bankId, "")) + "</DbtrBankId>"
+                        + "<CdtrActName>" + codecService.escape(defaultString(tradeState.creditorAcctName, "")) + "</CdtrActName>"
+                        + "<CdtrActId>" + codecService.escape(defaultString(tradeState.creditorAcctNo, "")) + "</CdtrActId>"
+                        + "<CdtrBankId>" + codecService.escape(defaultString(tradeState.creditorBankId, "")) + "</CdtrBankId>"
+                        + "<BllNb>" + codecService.escape(defaultString(tradeState.billNo, "")) + "</BllNb>");
         pushAsync(buildFullMessage(requestHeader, callbackMesgType, body), callbackMesgType,
                 tradeState.reqId, null, null, tradeState.sysSeqNo);
     }
@@ -118,8 +142,8 @@ public class MockCallbackService {
         String xml;
         switch (callbackMesgType) {
             case "caps.600.001.01" -> xml = codecService.buildXml("caps.600.001.01",
-                    "<CorpNo>33503C5801</CorpNo><ResFlag>SUCC</ResFlag><ErrorCode></ErrorCode><ErrorMsg></ErrorMsg>",
-                    "<CheckDate>20260705</CheckDate><ChannelCode>0103</ChannelCode><FileData>"
+                    "<CorpNo>33503C5801</CorpNo><CheckDate>20260705</CheckDate><ChannelCode>0103</ChannelCode><ResFlag>SUCC</ResFlag><ErrorCode></ErrorCode><ErrorMsg></ErrorMsg>",
+                    "<FileData>"
                             + codecService.escape(codecService.base64("<Recon><Count>1</Count><Amt>100.00</Amt></Recon>"))
                             + "</FileData>");
             case "caps.916.001.01" -> xml = codecService.buildXml("caps.916.001.01",
@@ -139,7 +163,7 @@ public class MockCallbackService {
             default -> xml = codecService.buildXml("caps.306.001.01",
                     "<CorpNo>33503C5801</CorpNo><ResFlag>SUCC</ResFlag><ErrorCode></ErrorCode><ErrorMsg></ErrorMsg>",
                     "<CtrctRtrFlg>1</CtrctRtrFlg><OrgnlReqId>" + codecService.escape(defaultString(reqId, "MOCK-REQ")) + "</OrgnlReqId><OrgnlDbtrProtocol>"
-                            + codecService.escape(defaultString(protocolNo, "MOCK-PROT")) + "</OrgnlDbtrProtocol><AuthChl>MOCK</AuthChl><Remark>manual</Remark>");
+                            + codecService.escape(defaultString(protocolNo, "MOCK-PROT")) + "</OrgnlDbtrProtocol><AuthChl>MOCK</AuthChl><ProtocolProcessCode>CS00</ProtocolProcessCode><ProcessCode>CS00</ProcessCode><ChngTp>ADDD</ChngTp><ProtocolStatus>SUCC</ProtocolStatus><Remark>manual</Remark>");
         }
         return buildFullMessage(header, callbackMesgType, xml);
     }
@@ -182,6 +206,9 @@ public class MockCallbackService {
         record.sysSeqNo = sysSeqNo;
         record.requestBody = fullMessage;
         try {
+            if (targetUrl == null || targetUrl.isBlank()) {
+                throw new IllegalArgumentException("callback target url is blank");
+            }
             HttpRequest request = HttpRequest.newBuilder(URI.create(targetUrl))
                     .timeout(Duration.ofSeconds(60))
                     .header("Content-Type", "application/xml;charset=UTF-8")
@@ -191,7 +218,7 @@ public class MockCallbackService {
             record.status = String.valueOf(response.statusCode());
             record.responseBody = response.body();
             record.remark = "callback pushed";
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
             record.status = "FAIL";
             record.responseBody = e.getMessage();
             record.remark = "callback push failed";

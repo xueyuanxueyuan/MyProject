@@ -15,4 +15,6 @@ public class MockSettings {
     public String protocolNotFoundCode = "E0001";
     public String protocolNotFoundMsg = "未查到协议";
     public String hsmMockKey = "YHT-MOCK-HSM";
+    public String svsMockKey = "YHT-MOCK-SVS";
+    public boolean svsVerifyLenient = true;
 }

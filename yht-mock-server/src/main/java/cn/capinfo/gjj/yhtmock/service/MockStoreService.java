@@ -12,6 +12,7 @@ import cn.capinfo.gjj.yhtmock.model.TradeState;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -38,6 +39,7 @@ public class MockStoreService {
 
     private MockStateSnapshot snapshot = new MockStateSnapshot();
 
+    @Autowired
     public MockStoreService(YhtMockProperties properties) {
         this(Paths.get("data", "mock-state.json"), properties);
     }
@@ -181,6 +183,16 @@ public class MockStoreService {
         }
         return snapshot.protocols.values().stream()
                 .filter(item -> acctNo.equals(item.acctNo))
+                .max(Comparator.comparingLong(item -> item.updatedAt))
+                .orElse(null);
+    }
+
+    public synchronized ProtocolState findProtocolByReqId(String reqId) {
+        if (reqId == null || reqId.isBlank()) {
+            return null;
+        }
+        return snapshot.protocols.values().stream()
+                .filter(item -> reqId.equals(item.signReqId))
                 .max(Comparator.comparingLong(item -> item.updatedAt))
                 .orElse(null);
     }

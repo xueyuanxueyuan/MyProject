@@ -9,6 +9,7 @@ public class YhtMockProperties {
 
     private final Settlement settlement = new Settlement();
     private final Callback callback = new Callback();
+    private final SvsSocket svsSocket = new SvsSocket();
 
     public Settlement getSettlement() {
         return settlement;
@@ -18,6 +19,36 @@ public class YhtMockProperties {
         return callback;
     }
 
+    public SvsSocket getSvsSocket() {
+        return svsSocket;
+    }
+
+    public static class SvsSocket {
+        /**
+         * 是否启动兼容 zayk ZaSVSApi 的 Socket 挡板。
+         */
+        private boolean enabled = true;
+        /**
+         * 结算服务原 zayk/SVS server-port 应指向该端口。
+         */
+        private int port = 13558;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public int getPort() {
+            return port;
+        }
+
+        public void setPort(int port) {
+            this.port = port;
+        }
+    }
     public static class Settlement {
         /**
          * 结算服务接收一户通回调的地址。

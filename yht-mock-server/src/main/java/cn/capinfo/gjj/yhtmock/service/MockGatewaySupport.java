@@ -45,17 +45,31 @@ public class MockGatewaySupport {
 
     public ProtocolState buildProtocolState(Document document, CapsHeader requestHeader, MockScenarioRule scenarioRule) {
         ProtocolState protocolState = new ProtocolState();
-        protocolState.protocolNo = safe(codecService.text(document, "DbtrProtocol"));
+        protocolState.protocolNo = firstNonBlank(codecService.text(document, "DbtrProtocol"),
+                codecService.text(document, "OrgnlDbtrProtocol"),
+                codecService.text(document, "OrgnlId"));
         if (protocolState.protocolNo.isBlank() || "0".equals(protocolState.protocolNo)) {
             protocolState.protocolNo = "MOCK-PROT-" + timestamp();
         }
-        protocolState.acctNo = safe(codecService.text(document, "DbtrActId"));
+        protocolState.acctNo = firstNonBlank(codecService.text(document, "DbtrActId"),
+                codecService.text(document, "AcctNo"));
+        protocolState.acctName = firstNonBlank(codecService.text(document, "DbtrActName"),
+                codecService.text(document, "AcctName"));
         protocolState.corpNo = successCorp(requestHeader);
         protocolState.customerId = safe(codecService.text(document, "CstmrId"));
-        protocolState.customerName = safe(codecService.text(document, "CstmrNm"));
-        protocolState.feeNoList = safe(codecService.text(document, "FeeNoList"));
+        protocolState.customerName = firstNonBlank(codecService.text(document, "CstmrNm"), protocolState.acctName);
+        protocolState.feeNoList = normalizeFeeNoList(codecService.text(document, "FeeNoList"));
         protocolState.bankId = safe(codecService.text(document, "DbtrBankId"));
+        protocolState.phone = firstNonBlank(codecService.text(document, "DbtrPhone"),
+                codecService.text(document, "Phone"), codecService.text(document, "Mobile"));
+        protocolState.signReqId = safe(codecService.text(document, "ReqId"));
         protocolState.authCode = safe(codecService.text(document, "AuthCd"));
+        protocolState.changeType = safe(codecService.text(document, "ChngTp"));
+        protocolState.sendType = safe(codecService.text(document, "SndTp"));
+        protocolState.origMsgId = safe(codecService.text(document, "OrigMsgId"));
+        protocolState.pyerBgNum = safe(codecService.text(document, "PyerBgNum"));
+        protocolState.queryTime = safe(codecService.text(document, "QueryTime"));
+        protocolState.protocolProcessCode = resolveProtocolProcessCode(protocolState, scenarioRule);
         protocolState.remark = resolveMsg(scenarioRule, safe(codecService.text(document, "Remark"), "mock protocol accepted"));
         protocolState.status = resolveStatus(scenarioRule, "SUCC");
         protocolState.resFlag = resolveResFlag(scenarioRule, "SUCC");
@@ -74,18 +88,54 @@ public class MockGatewaySupport {
             tradeState.sysSeqNo = "MOCK-SEQ-" + timestamp();
         }
         tradeState.reqId = safe(codecService.text(document, "ReqId"));
+        tradeState.serialNum = firstNonBlank(codecService.text(document, "SerialNum"),
+                tradeState.reqId, tradeState.sysSeqNo);
         tradeState.tranCode = safe(codecService.text(document, "TranCode"), "201");
-        tradeState.acctNo = safe(codecService.text(document, "DbtrActId"));
+        tradeState.acctNo = firstNonBlank(codecService.text(document, "DbtrActId"),
+                codecService.text(document, "AcctNo"));
+        tradeState.acctName = safe(codecService.text(document, "DbtrActName"));
         tradeState.amount = resolveTradeAmount(document);
         tradeState.bankId = safe(codecService.text(document, "DbtrBankId"));
+        tradeState.creditorAcctNo = safe(codecService.text(document, "CdtrActId"));
+        tradeState.creditorAcctName = safe(codecService.text(document, "CdtrActName"));
+        tradeState.creditorBankId = safe(codecService.text(document, "CdtrBankId"));
+        tradeState.billNo = firstNonBlank(codecService.text(document, "BllNb"),
+                codecService.text(document, "BillNumber"));
+        tradeState.btchNb = safe(codecService.text(document, "BtchNb"));
+        tradeState.checkDate = safe(codecService.text(document, "CheckDate"), currentDate());
         tradeState.status = resolveStatus(scenarioRule, "SUCC");
         tradeState.resFlag = resolveResFlag(scenarioRule, "SUCC");
         tradeState.retCode = resolveCode(scenarioRule, "000000");
-        tradeState.retMsg = resolveMsg(scenarioRule, "交易成功");
+        tradeState.retMsg = resolveMsg(scenarioRule, "trade success");
         tradeState.callbackEnabled = !isAutoCallbackDisabled(scenarioRule);
         tradeState.callbackMesgType = defaultString(resolveCallbackType(scenarioRule), "caps.205.001.01");
         tradeState.scenarioName = scenarioRule == null ? "" : safe(scenarioRule.name, String.valueOf(scenarioRule.id));
         return tradeState;
+    }
+
+    private String normalizeFeeNoList(String feeNoList) {
+        String value = safe(feeNoList).trim();
+        if (value.isBlank()) {
+            return "";
+        }
+        return value.replace('?', ',').replace(',', '|');
+    }
+
+    private String resolveProtocolProcessCode(ProtocolState protocolState, MockScenarioRule scenarioRule) {
+        String forcedCode = scenarioRule == null ? "" : safe(scenarioRule.forceRetCode);
+        if (forcedCode.startsWith("CS")) {
+            return forcedCode;
+        }
+        if ("DELE".equalsIgnoreCase(safe(protocolState.changeType))) {
+            return "CS20";
+        }
+        if ("SD01".equalsIgnoreCase(safe(protocolState.sendType))) {
+            return "CS00";
+        }
+        if (!safe(protocolState.origMsgId).isBlank()) {
+            return "CS00";
+        }
+        return "CS00";
     }
 
     public BatchState buildBatchState(Document document, MockScenarioRule scenarioRule) {
@@ -239,7 +289,13 @@ public class MockGatewaySupport {
         }
         String fileDataXml = "<Protocol><DbtrProtocol>" + codecService.escape(protocolState.protocolNo)
                 + "</DbtrProtocol><AcctNo>" + codecService.escape(protocolState.acctNo)
-                + "</AcctNo><ProcessCode>CS00</ProcessCode><Status>" + codecService.escape(protocolState.status)
+                + "</AcctNo><DbtrActId>" + codecService.escape(protocolState.acctNo)
+                + "</DbtrActId><DbtrActName>" + codecService.escape(safe(protocolState.acctName, protocolState.customerName))
+                + "</DbtrActName><DbtrBankId>" + codecService.escape(safe(protocolState.bankId))
+                + "</DbtrBankId><FeeNoList>" + codecService.escape(safe(protocolState.feeNoList))
+                + "</FeeNoList><ProcessCode>" + codecService.escape(safe(protocolState.protocolProcessCode, "CS00"))
+                + "</ProcessCode><ProtocolProcessCode>" + codecService.escape(safe(protocolState.protocolProcessCode, "CS00"))
+                + "</ProtocolProcessCode><Status>" + codecService.escape(protocolState.status)
                 + "</Status><Scenario>" + codecService.escape(safe(protocolState.scenarioName)) + "</Scenario></Protocol>";
         return codecService.buildXml("caps.304.001.01",
                 "<CorpNo>" + codecService.escape(protocolState.corpNo) + "</CorpNo>"
@@ -302,15 +358,18 @@ public class MockGatewaySupport {
                         + "<ErrorCode></ErrorCode><ErrorMsg></ErrorMsg>",
                 "<ReturnTime>" + timestamp() + "</ReturnTime>"
                         + "<SysSeqNo>" + codecService.escape(tradeState.sysSeqNo) + "</SysSeqNo>"
-                        + "<SerialNum>" + codecService.escape(tradeState.reqId) + "</SerialNum>"
+                        + "<SerialNum>" + codecService.escape(safe(tradeState.serialNum, tradeState.reqId)) + "</SerialNum>"
                         + "<RetCode>" + codecService.escape(safe(tradeState.retCode, "000000")) + "</RetCode><RetMsg>"
-                        + codecService.escape(safe(tradeState.retMsg, "受理成功")) + "</RetMsg>");
+                        + codecService.escape(safe(tradeState.retMsg, "accepted")) + "</RetMsg>"
+                        + "<Remark>" + codecService.escape(safe(tradeState.scenarioName)) + "</Remark>"
+                        + "<Use>MOCK</Use>"
+                        + "<BtchNb>" + codecService.escape(safe(tradeState.btchNb)) + "</BtchNb>");
     }
 
     public String buildCaps204(TradeState tradeState, CapsHeader requestHeader, MockScenarioRule scenarioRule) {
         if (tradeState == null) {
             return buildCaps900(successCorp(requestHeader), resolveResFlag(scenarioRule, "FAIL"),
-                    resolveCode(scenarioRule, "TRADE404"), resolveMsg(scenarioRule, "未找到交易"));
+                    resolveCode(scenarioRule, "TRADE404"), resolveMsg(scenarioRule, "trade not found"));
         }
         return codecService.buildXml("caps.204.001.01",
                 "<CorpNo>" + codecService.escape(successCorp(requestHeader)) + "</CorpNo>"
@@ -318,9 +377,15 @@ public class MockGatewaySupport {
                         + "<ErrorCode></ErrorCode><ErrorMsg></ErrorMsg>",
                 "<ReturnTime>" + timestamp() + "</ReturnTime>"
                         + "<SysSeqNo>" + codecService.escape(tradeState.sysSeqNo) + "</SysSeqNo>"
+                        + "<SerialNum>" + codecService.escape(safe(tradeState.serialNum, tradeState.reqId)) + "</SerialNum>"
                         + "<RetCode>" + codecService.escape(tradeState.retCode) + "</RetCode>"
+                        + "<RetMsgId>" + codecService.escape(tradeState.retCode) + "</RetMsgId>"
+                        + "<CheckDate>" + codecService.escape(safe(tradeState.checkDate, currentDate())) + "</CheckDate>"
                         + "<RetMsg>" + codecService.escape(tradeState.retMsg) + "</RetMsg>"
-                        + "<BizStatus>" + codecService.escape(tradeState.status) + "</BizStatus>");
+                        + "<BizStatus>" + codecService.escape(tradeState.status) + "</BizStatus>"
+                        + "<Remark>" + codecService.escape(safe(tradeState.scenarioName)) + "</Remark>"
+                        + "<Use>MOCK</Use>"
+                        + "<BtchNb>" + codecService.escape(safe(tradeState.btchNb)) + "</BtchNb>");
     }
 
     public String buildCaps602(CapsHeader requestHeader, String checkDate, String tranCode, MockScenarioRule scenarioRule) {
@@ -332,12 +397,12 @@ public class MockGatewaySupport {
                 + codecService.escape(resolveMsg(scenarioRule, "对账文件已生成")) + "</Result></ReconDetail>";
         return codecService.buildXml("caps.602.001.01",
                 "<CorpNo>" + codecService.escape(successCorp(requestHeader)) + "</CorpNo>"
+                        + "<CheckDate>" + codecService.escape(resolvedDate) + "</CheckDate>"
+                        + "<TranCode>" + codecService.escape(resolvedTranCode) + "</TranCode>"
                         + "<ResFlag>" + codecService.escape(resolveResFlag(scenarioRule, "SUCC")) + "</ResFlag>"
                         + "<ErrorCode>" + codecService.escape(resolveErrorCode(scenarioRule, "")) + "</ErrorCode>"
                         + "<ErrorMsg>" + codecService.escape(resolveErrorMsg(scenarioRule, "")) + "</ErrorMsg>",
-                "<CheckDate>" + codecService.escape(resolvedDate) + "</CheckDate>"
-                        + "<TranCode>" + codecService.escape(resolvedTranCode) + "</TranCode>"
-                        + "<FileData>" + codecService.escape(codecService.base64(reconXml)) + "</FileData>");
+                "<FileData>" + codecService.escape(codecService.base64(reconXml)) + "</FileData>");
     }
 
     public String resolveResFlag(MockScenarioRule scenarioRule, String defaultValue) {
@@ -411,7 +476,15 @@ public class MockGatewaySupport {
         return value == null || value.isBlank() ? defaultValue : value;
     }
 
-    public String firstNonBlank(String first, String second) {
-        return first != null && !first.isBlank() ? first : safe(second);
+    public String firstNonBlank(String... values) {
+        if (values == null) {
+            return "";
+        }
+        for (String value : values) {
+            if (value != null && !value.isBlank()) {
+                return value;
+            }
+        }
+        return "";
     }
 }
