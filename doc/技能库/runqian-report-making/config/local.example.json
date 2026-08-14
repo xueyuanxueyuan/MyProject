@@ -1,0 +1,14 @@
+{
+  "javaExecutable": "C:\\Program Files\\Java\\jdk-17\\bin\\java.exe",
+  "javacExecutable": "C:\\Program Files\\Java\\jdk-17\\bin\\javac.exe",
+  "runqianHome": "D:\\soft\\raqsoft\\report",
+  "designerExecutable": "D:\\soft\\raqsoft\\report\\bin\\report.exe",
+  "licenseFile": "D:\\soft\\raqsoft\\report\\web\\webapps\\demo\\WEB-INF\\classes\\defaultlicensetrial_zh.xml",
+  "classpathEntries": [
+    "D:\\soft\\raqsoft\\report\\lib\\*",
+    "D:\\soft\\raqsoft\\report\\web\\webapps\\demo\\WEB-INF\\lib\\*",
+    "D:\\soft\\raqsoft\\report\\web\\webapps\\demo\\WEB-INF\\classes",
+    "D:\\soft\\raqsoft\\report\\web\\tomcat\\lib\\*",
+    "D:\\soft\\raqsoft\\common\\jdbc\\*"
+  ]
+}

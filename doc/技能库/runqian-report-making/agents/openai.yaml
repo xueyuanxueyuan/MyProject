@@ -1,0 +1,4 @@
+interface:
+  display_name: "润乾报表端到端制作"
+  short_description: "从需求原型到RPX绘制、校验和打印接入的完整润乾报表流程"
+  default_prompt: "Use $runqian-report-making to build or update a Runqian RPX report from its authoritative prototype and data contract."
