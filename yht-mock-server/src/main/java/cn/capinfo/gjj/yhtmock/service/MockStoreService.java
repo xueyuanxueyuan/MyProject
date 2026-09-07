@@ -84,6 +84,34 @@ public class MockStoreService {
         save();
     }
 
+    public synchronized ClearHistoryResult clearHistoryFiles() {
+        snapshot = new MockStateSnapshot();
+        normalizeSnapshot(snapshot);
+        applyConfiguredDefaults(true);
+
+        List<String> deleted = new ArrayList<>();
+        List<String> missing = new ArrayList<>();
+        List<String> failed = new ArrayList<>();
+        List<Path> candidates = findHistoryFiles();
+        if (candidates.isEmpty()) {
+            missing.add(stateFile.getFileName().toString());
+            missing.add(backupFile.getFileName().toString());
+        }
+        for (Path candidate : candidates) {
+            String fileName = candidate.getFileName().toString();
+            try {
+                if (Files.deleteIfExists(candidate)) {
+                    deleted.add(fileName);
+                } else {
+                    missing.add(fileName);
+                }
+            } catch (IOException e) {
+                failed.add(fileName);
+            }
+        }
+        return new ClearHistoryResult(deleted, missing, failed);
+    }
+
     public synchronized MockRecord addRecord(MockRecord record) {
         record.id = snapshot.recordSequence++;
         record.createdAt = System.currentTimeMillis();
@@ -391,6 +419,29 @@ public class MockStoreService {
         }
     }
 
+    private List<Path> findHistoryFiles() {
+        Path parent = stateFile.getParent();
+        if (parent == null || !Files.isDirectory(parent)) {
+            return List.of();
+        }
+        String stateFileName = stateFile.getFileName().toString();
+        try (var stream = Files.list(parent)) {
+            return stream
+                    .filter(Files::isRegularFile)
+                    .filter(file -> {
+                        String name = file.getFileName().toString();
+                        return name.equals(stateFileName)
+                                || name.equals(stateFileName + ".bak")
+                                || name.startsWith(stateFileName + ".");
+                    })
+                    .sorted(Comparator.comparing(file -> file.getFileName().toString()))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (IOException e) {
+            return List.of();
+        }
+    }
+
+
     private boolean matches(String expected, String actual) {
         return expected == null || expected.isBlank() || expected.equals(actual);
     }
@@ -398,6 +449,9 @@ public class MockStoreService {
     private boolean matchesSuffix(String expectedSuffix, String actual) {
         return expectedSuffix == null || expectedSuffix.isBlank()
                 || (actual != null && actual.endsWith(expectedSuffix));
+    }
+
+    public record ClearHistoryResult(List<String> deletedFiles, List<String> missingFiles, List<String> failedFiles) {
     }
 
     private int score(MockScenarioRule item) {
@@ -426,3 +480,6 @@ public class MockStoreService {
         return score;
     }
 }
+
+
+

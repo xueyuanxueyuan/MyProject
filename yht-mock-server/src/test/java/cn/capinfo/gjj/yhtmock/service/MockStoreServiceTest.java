@@ -57,6 +57,41 @@ class MockStoreServiceTest {
     }
 
     @Test
+    void clearHistoryFilesDeletesOnlyStateJsonAndBackups(@TempDir Path tempDir) throws Exception {
+        Path stateFile = tempDir.resolve("mock-state.json");
+        MockStoreService storeService = new MockStoreService(stateFile);
+        storeService.init();
+        MockSettings settings = new MockSettings();
+        settings.defaultTargetUrl = "http://example.com/history";
+        storeService.updateSettings(settings);
+
+        Path backupFile = stateFile.resolveSibling(stateFile.getFileName() + ".bak");
+        Path tempFile = stateFile.resolveSibling(stateFile.getFileName() + ".tmp");
+        Path datedBackupFile = stateFile.resolveSibling(stateFile.getFileName() + ".20260817.bak");
+        Path otherJsonFile = tempDir.resolve("other.json");
+        Files.writeString(tempFile, "tmp", StandardCharsets.UTF_8);
+        Files.writeString(datedBackupFile, "dated", StandardCharsets.UTF_8);
+        Files.writeString(otherJsonFile, "{}", StandardCharsets.UTF_8);
+
+        MockStoreService.ClearHistoryResult result = storeService.clearHistoryFiles();
+
+        assertThat(result.failedFiles()).isEmpty();
+        assertThat(result.deletedFiles()).contains(
+                stateFile.getFileName().toString(),
+                backupFile.getFileName().toString(),
+                tempFile.getFileName().toString(),
+                datedBackupFile.getFileName().toString()
+        );
+        assertThat(Files.exists(stateFile)).isFalse();
+        assertThat(Files.exists(backupFile)).isFalse();
+        assertThat(Files.exists(tempFile)).isFalse();
+        assertThat(Files.exists(datedBackupFile)).isFalse();
+        assertThat(Files.exists(otherJsonFile)).isTrue();
+        assertThat(storeService.buildStats().get("recordCount")).isEqualTo(0);
+        assertThat(storeService.getSettings().defaultTargetUrl).isNull();
+    }
+
+    @Test
     void updateSettingsWritesBackupAndLeavesNoTempFile(@TempDir Path tempDir) throws Exception {
         Path stateFile = tempDir.resolve("mock-state.json");
         MockStoreService storeService = new MockStoreService(stateFile);

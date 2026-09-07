@@ -788,6 +788,25 @@ async function refreshLogs() {
     renderLogs();
 }
 
+async function clearHistoryData() {
+    const confirmed = confirm('确认要清除历史数据吗？这会删除 data/mock-state.json 及其历史备份文件，并重置当前状态。');
+    if (!confirmed) {
+        return;
+    }
+    const typed = prompt('请输入“清除历史数据”以继续：');
+    if (typed !== '清除历史数据') {
+        return;
+    }
+    const { body } = await request('/yht-mock/api/store/clear-history', { method: 'POST' });
+    setValue('stateDetail', pretty(body));
+    await Promise.all([
+        loadOverview(),
+        refreshLogs(),
+        refreshStates(),
+        refreshScenarios()
+    ]);
+}
+
 async function clearLogs() {
     await request('/yht-mock/api/logs', { method: 'DELETE' });
     state.records = [];
@@ -826,6 +845,7 @@ addClick('newScenarioBtn', resetScenarioForm);
 addClick('refreshScenarioBtn', refreshScenarios);
 addClick('refreshOverviewBtn', loadOverview);
 addClick('refreshStateBtn', refreshStates);
+addClick('clearHistoryBtn', clearHistoryData);
 addClick('buildManualMessageBtn', buildManualToEditor);
 addClick('sendManualMessageBtn', sendManualMessage);
 addClick('resetManualFormBtn', resetManualForm);

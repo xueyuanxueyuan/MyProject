@@ -33,6 +33,22 @@
         "hsjgbh": "0101"
       },
       "serviceBaseUrl": "http://k8s.gjj.jxgjj:31129"
+    },
+    "linyi": {
+      "name": "临沂",
+      "description": "当前 Apipost 示例中的城市固定参数；其他城市请复制本节点后修改 fixedParams。",
+      "fixedParams": {
+       	"zxbh": "371300000000000",
+        "jbjgbh": "37010002",
+        "jbjgmc": "兰山区分中心",
+        "qdlx": "01",
+        "qdbm": "gt",
+        "wdbh": null,
+        "wdmc": null,
+        "ywjbjgbh": "37010002",
+        "ywqd": "gt"
+      },
+      "serviceBaseUrl": "http://172.20.0.222:31098"
     }
   }
 }

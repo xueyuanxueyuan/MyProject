@@ -5,6 +5,7 @@ import cn.capinfo.gjj.yhtmock.model.MockScenarioRule;
 import cn.capinfo.gjj.yhtmock.service.MockCallbackService;
 import cn.capinfo.gjj.yhtmock.service.MockGatewayService;
 import cn.capinfo.gjj.yhtmock.service.MockStoreService;
+import cn.capinfo.gjj.yhtmock.service.MockStoreService.ClearHistoryResult;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -96,6 +97,18 @@ public class YhtMockApiController {
         return Map.of("success", storeService.deleteScenario(id), "id", id);
     }
 
+    @PostMapping("/store/clear-history")
+    public Map<String, Object> clearHistory() {
+        ClearHistoryResult result = storeService.clearHistoryFiles();
+        return Map.of(
+                "success", true,
+                "deletedFiles", result.deletedFiles(),
+                "missingFiles", result.missingFiles(),
+                "failedFiles", result.failedFiles(),
+                "message", "历史数据已清除"
+        );
+    }
+
     @PostMapping("/trigger-callback")
     public Map<String, Object> triggerCallback(@RequestBody TriggerCallbackRequest request) {
         String body = callbackService.triggerManualCallback(request.callbackMesgType, request.targetUrl,
@@ -123,3 +136,4 @@ public class YhtMockApiController {
         public String sysSeqNo;
     }
 }
+
