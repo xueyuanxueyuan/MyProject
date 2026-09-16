@@ -61,7 +61,7 @@ class ProtocolSignHandler implements CapsMessageHandler {
         if (!origMsgId.isBlank() && changeType.isBlank()) {
             String responseXml = support.buildCaps900(support.successCorp(ctx.requestHeader()),
                     support.resolveResFlag(ctx.scenarioRule(), "SUCC"),
-                    support.resolveCode(ctx.scenarioRule(), "00000000"),
+                    support.resolveCode(ctx.scenarioRule(), "I000"),
                     support.resolveMsg(ctx.scenarioRule(), "query accepted"));
             return GatewayDispatchResult.of("caps.900.001.01", responseXml,
                     support.resolveStatus(ctx.scenarioRule(), "SUCC"),
@@ -112,7 +112,7 @@ class ProtocolSignHandler implements CapsMessageHandler {
 
         String responseXml = support.buildCaps900(support.successCorp(ctx.requestHeader()),
                 support.safe(protocolState.resFlag, "SUCC"),
-                support.resolveCode(ctx.scenarioRule(), "00000000"),
+                support.resolveCode(ctx.scenarioRule(), "I000"),
                 support.resolveMsg(ctx.scenarioRule(), "accepted"));
 
         callbackService.scheduleCaps306(ctx.requestHeader(), protocolState);
@@ -172,7 +172,7 @@ class ProtocolCancelHandler implements CapsMessageHandler {
     public GatewayDispatchResult handle(GatewayRequestContext ctx) {
         String responseXml = support.buildCaps900(support.successCorp(ctx.requestHeader()),
                 support.resolveResFlag(ctx.scenarioRule(), "SUCC"),
-                support.resolveCode(ctx.scenarioRule(), "00000000"),
+                support.resolveCode(ctx.scenarioRule(), "I000"),
                 support.resolveMsg(ctx.scenarioRule(), "cancel accepted"));
         if (!support.isAutoCallbackDisabled(ctx.scenarioRule())) {
             String orgnlId = ctx.document() == null ? ctx.protocolNo() : support.text(ctx.document(), "OrgnlId");

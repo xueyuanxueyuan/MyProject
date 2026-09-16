@@ -209,7 +209,8 @@ class MockGatewayServiceTest {
 
         assertThat(response).contains("caps.900.001.01");
         assertThat(response).contains("FAIL");
-        assertThat(response).contains("报文XML解析失败");
+        assertThat(response).contains("<ProcCode>E401</ProcCode>")
+                .contains("<ProcMsg>报文无法解析</ProcMsg>");
         verify(storeService, never()).saveTrade(any());
         verify(storeService).addRecord(any());
     }
@@ -233,7 +234,8 @@ class MockGatewayServiceTest {
 
         assertThat(response).contains("caps.900.001.01");
         assertThat(response).contains("FAIL");
-        assertThat(response).contains("报文XML解析失败");
+        assertThat(response).contains("<ProcCode>E401</ProcCode>")
+                .contains("<ProcMsg>报文无法解析</ProcMsg>");
         verify(storeService, never()).saveTrade(any());
         verify(storeService).addRecord(any());
     }

@@ -132,8 +132,15 @@ public class CapsCodecService {
 
     public String buildXml(String mesgType, String headXml, String bodyXml) {
         StringBuilder builder = new StringBuilder();
+        boolean standardAck = "caps.900.001.01".equals(mesgType);
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        builder.append("<Message xmlns=\"urn:caps:msg:").append(mesgType).append("\">");
+        if (standardAck) {
+            builder.append("<Document xmlns=\"urn:cbcc:std:caps:2020:tech:xsd:").append(mesgType)
+                    .append("\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
+            builder.append("<Message>");
+        } else {
+            builder.append("<Message xmlns=\"urn:caps:msg:").append(mesgType).append("\">");
+        }
         if (headXml != null && !headXml.isBlank()) {
             builder.append("<Head>").append(headXml).append("</Head>");
         }
@@ -141,6 +148,9 @@ public class CapsCodecService {
             builder.append("<Body>").append(bodyXml).append("</Body>");
         }
         builder.append("</Message>");
+        if (standardAck) {
+            builder.append("</Document>");
+        }
         return builder.toString();
     }
 

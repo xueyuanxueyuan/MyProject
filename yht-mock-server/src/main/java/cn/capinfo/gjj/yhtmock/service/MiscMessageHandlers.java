@@ -82,7 +82,7 @@ class ProbeHandler implements CapsMessageHandler {
     public GatewayDispatchResult handle(GatewayRequestContext ctx) {
         String responseXml = support.buildCaps900(support.successCorp(ctx.requestHeader()),
                 support.resolveResFlag(ctx.scenarioRule(), "SUCC"),
-                support.resolveCode(ctx.scenarioRule(), "00000000"),
+                support.resolveCode(ctx.scenarioRule(), "I000"),
                 support.resolveMsg(ctx.scenarioRule(), "探测成功"));
         return GatewayDispatchResult.of("caps.900.001.01", responseXml,
                 support.resolveStatus(ctx.scenarioRule(), "SUCC"),

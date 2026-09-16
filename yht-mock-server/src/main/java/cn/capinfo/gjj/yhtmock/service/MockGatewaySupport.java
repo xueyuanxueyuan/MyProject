@@ -257,11 +257,20 @@ public class MockGatewaySupport {
     }
 
     public String buildCaps900(String corpNo, String resFlag, String procCode, String procMsg) {
+        return buildCaps900(corpNo, resFlag, procCode, procMsg, procMsg);
+    }
+
+    public String buildCaps900(String corpNo, String resFlag, String procCode,
+                               String procMsg, String remark) {
+        String normalizedCode = "SUCC".equals(resFlag) ? "I000"
+                : Caps900CodeCatalog.normalizeFailureCode(procCode);
+        String normalizedMsg = Caps900CodeCatalog.description(normalizedCode);
         return codecService.buildXml("caps.900.001.01",
                 "<CorpNo>" + codecService.escape(corpNo) + "</CorpNo>"
                         + "<ResFlag>" + codecService.escape(resFlag) + "</ResFlag>"
-                        + "<ProcCode>" + codecService.escape(procCode) + "</ProcCode>"
-                        + "<ProcMsg>" + codecService.escape(procMsg) + "</ProcMsg>",
+                        + "<ProcCode>" + codecService.escape(normalizedCode) + "</ProcCode>"
+                        + "<ProcMsg>" + codecService.escape(normalizedMsg) + "</ProcMsg>"
+                        + "<Remark>" + codecService.escape(remark) + "</Remark>",
                 null);
     }
 

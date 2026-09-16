@@ -132,7 +132,7 @@ public class MockGatewayService {
             if (handler == null) {
                 responseMesgType = "caps.900.001.01";
                 responseXml = buildCaps900(successCorp(requestHeader),
-                        "FAIL", "UNSPRT", "暂不支持该报文");
+                        "FAIL", "E012", "业务类型非法");
                 status = "FAIL";
             } else {
                 GatewayRequestContext ctx = new GatewayRequestContext(
@@ -149,7 +149,7 @@ public class MockGatewayService {
         } catch (Exception e) {
             responseMesgType = "caps.900.001.01";
             responseXml = buildCaps900(successCorp(requestHeader),
-                    "FAIL", "EXCEPT", e.getMessage());
+                    "FAIL", e instanceof IllegalArgumentException ? "E401" : "S999", null);
             status = "FAIL";
         }
 
@@ -159,8 +159,9 @@ public class MockGatewayService {
                 safe(requestHeader.password, "CAPS"),
                 safe(requestHeader.origReceiver, "904290099992"),
                 safe(requestHeader.origSender, "33503C5801"));
-        String responseSignBlock = requestSigned ? buildSignBlock(responseXml) : "";
-        String responseBody = requestEncrypted ? encryptBusinessXml(responseMesgType, responseXml) : responseXml;
+        boolean plainAck = "caps.900.001.01".equals(responseMesgType);
+        String responseSignBlock = requestSigned && !plainAck ? buildSignBlock(responseXml) : "";
+        String responseBody = requestEncrypted && !plainAck ? encryptBusinessXml(responseMesgType, responseXml) : responseXml;
         String responseMessage = responseHeader + responseSignBlock + responseBody;
 
         MockRecord record = new MockRecord();
@@ -214,11 +215,14 @@ public class MockGatewayService {
     }
 
     private String buildCaps900(String corpNo, String resFlag, String procCode, String procMsg) {
+        String normalizedCode = "SUCC".equals(resFlag) ? "I000"
+                : Caps900CodeCatalog.normalizeFailureCode(procCode);
         return codecService.buildXml("caps.900.001.01",
                 "<CorpNo>" + codecService.escape(corpNo) + "</CorpNo>"
                         + "<ResFlag>" + codecService.escape(resFlag) + "</ResFlag>"
-                        + "<ProcCode>" + codecService.escape(procCode) + "</ProcCode>"
-                        + "<ProcMsg>" + codecService.escape(procMsg) + "</ProcMsg>",
+                        + "<ProcCode>" + codecService.escape(normalizedCode) + "</ProcCode>"
+                        + "<ProcMsg>" + codecService.escape(Caps900CodeCatalog.description(normalizedCode)) + "</ProcMsg>"
+                        + "<Remark>" + codecService.escape(procMsg) + "</Remark>",
                 null);
     }
 
