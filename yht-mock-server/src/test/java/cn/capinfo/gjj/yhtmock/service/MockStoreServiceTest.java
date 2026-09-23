@@ -3,156 +3,47 @@ package cn.capinfo.gjj.yhtmock.service;
 import cn.capinfo.gjj.yhtmock.config.YhtMockProperties;
 import cn.capinfo.gjj.yhtmock.model.MockSettings;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MockStoreServiceTest {
 
     @Test
-    void initRestoresStateFromBackupWhenPrimaryFileIsCorrupted(@TempDir Path tempDir) throws Exception {
-        Path stateFile = tempDir.resolve("mock-state.json");
-        MockStoreService originalStore = new MockStoreService(stateFile);
-        originalStore.init();
-        MockSettings settings = new MockSettings();
-        settings.defaultTargetUrl = "http://example.com/callback";
-        settings.protocolNotFoundMsg = "backup-kept";
-        originalStore.updateSettings(settings);
-
-        Files.writeString(stateFile, "{corrupted", StandardCharsets.UTF_8);
-
-        MockStoreService recoveredStore = new MockStoreService(stateFile);
-        recoveredStore.init();
-
-        assertThat(recoveredStore.getSettings().defaultTargetUrl).isEqualTo("http://example.com/callback");
-        assertThat(recoveredStore.getSettings().protocolNotFoundMsg).isEqualTo("backup-kept");
+    void initUsesConfiguredSettlementReceiveUrlWhenDatabaseIsNew() {
+        var source = DatabaseTestSupport.newDatabase();
+        var store = DatabaseTestSupport.create(source, properties("http://configured.invalid/receive"));
+        assertThat(store.getSettings().defaultTargetUrl).isEqualTo("http://configured.invalid/receive");
     }
 
     @Test
-    void initRestoresStateFromBackupWhenPrimaryFileIsMissing(@TempDir Path tempDir) throws Exception {
-        Path stateFile = tempDir.resolve("mock-state.json");
-        MockStoreService originalStore = new MockStoreService(stateFile);
-        originalStore.init();
-        MockSettings settings = new MockSettings();
-        settings.defaultTargetUrl = "http://example.com/missing";
-        settings.protocolNotFoundMsg = "missing-primary";
-        originalStore.updateSettings(settings);
-
-        Path backupFile = stateFile.resolveSibling(stateFile.getFileName() + ".bak");
-        assertThat(Files.exists(backupFile)).isTrue();
-
-        Files.deleteIfExists(stateFile);
-
-        MockStoreService recoveredStore = new MockStoreService(stateFile);
-        recoveredStore.init();
-
-        assertThat(recoveredStore.getSettings().defaultTargetUrl).isEqualTo("http://example.com/missing");
-        assertThat(recoveredStore.getSettings().protocolNotFoundMsg).isEqualTo("missing-primary");
-        assertThat(Files.exists(stateFile)).isTrue();
-        assertThat(Files.exists(backupFile)).isTrue();
+    void restartKeepsStoredSettingsByDefault() {
+        var source = DatabaseTestSupport.newDatabase();
+        var store = DatabaseTestSupport.create(source, properties("http://configured.invalid/receive"));
+        MockSettings settings = store.getSettings();
+        settings.defaultTargetUrl = "http://saved.invalid/receive";
+        settings.autoPushEnabled = false;
+        store.updateSettings(settings);
+        var restarted = DatabaseTestSupport.create(source, properties("http://new.invalid/receive"));
+        restarted.applyStartupSettings();
+        assertThat(restarted.getSettings().defaultTargetUrl).isEqualTo("http://saved.invalid/receive");
+        assertThat(restarted.getSettings().autoPushEnabled).isFalse();
     }
 
     @Test
-    void clearHistoryFilesDeletesOnlyStateJsonAndBackups(@TempDir Path tempDir) throws Exception {
-        Path stateFile = tempDir.resolve("mock-state.json");
-        MockStoreService storeService = new MockStoreService(stateFile);
-        storeService.init();
-        MockSettings settings = new MockSettings();
-        settings.defaultTargetUrl = "http://example.com/history";
-        storeService.updateSettings(settings);
-
-        Path backupFile = stateFile.resolveSibling(stateFile.getFileName() + ".bak");
-        Path tempFile = stateFile.resolveSibling(stateFile.getFileName() + ".tmp");
-        Path datedBackupFile = stateFile.resolveSibling(stateFile.getFileName() + ".20260817.bak");
-        Path otherJsonFile = tempDir.resolve("other.json");
-        Files.writeString(tempFile, "tmp", StandardCharsets.UTF_8);
-        Files.writeString(datedBackupFile, "dated", StandardCharsets.UTF_8);
-        Files.writeString(otherJsonFile, "{}", StandardCharsets.UTF_8);
-
-        MockStoreService.ClearHistoryResult result = storeService.clearHistoryFiles();
-
-        assertThat(result.failedFiles()).isEmpty();
-        assertThat(result.deletedFiles()).contains(
-                stateFile.getFileName().toString(),
-                backupFile.getFileName().toString(),
-                tempFile.getFileName().toString(),
-                datedBackupFile.getFileName().toString()
-        );
-        assertThat(Files.exists(stateFile)).isFalse();
-        assertThat(Files.exists(backupFile)).isFalse();
-        assertThat(Files.exists(tempFile)).isFalse();
-        assertThat(Files.exists(datedBackupFile)).isFalse();
-        assertThat(Files.exists(otherJsonFile)).isTrue();
-        assertThat(storeService.buildStats().get("recordCount")).isEqualTo(0);
-        assertThat(storeService.getSettings().defaultTargetUrl).isNull();
+    void restartCanOverrideStoredCallbackSettings() {
+        var source = DatabaseTestSupport.newDatabase();
+        var store = DatabaseTestSupport.create(source, properties("http://configured.invalid/receive"));
+        store.getSettings();
+        var overridden = properties("http://override.invalid/receive");
+        overridden.getCallback().setOverrideStoredSettings(true);
+        var restarted = DatabaseTestSupport.create(source, overridden);
+        restarted.applyStartupSettings();
+        assertThat(restarted.getSettings().defaultTargetUrl).isEqualTo("http://override.invalid/receive");
     }
 
-    @Test
-    void updateSettingsWritesBackupAndLeavesNoTempFile(@TempDir Path tempDir) throws Exception {
-        Path stateFile = tempDir.resolve("mock-state.json");
-        MockStoreService storeService = new MockStoreService(stateFile);
-        storeService.init();
-        MockSettings settings = new MockSettings();
-        settings.defaultTargetUrl = "http://example.com/tmp";
-        storeService.updateSettings(settings);
-
-        Path backupFile = stateFile.resolveSibling(stateFile.getFileName() + ".bak");
-        Path tempFile = stateFile.resolveSibling(stateFile.getFileName() + ".tmp");
-
-        assertThat(Files.exists(stateFile)).isTrue();
-        assertThat(Files.exists(backupFile)).isTrue();
-        assertThat(Files.exists(tempFile)).isFalse();
-    }
-    @Test
-    void initUsesConfiguredSettlementReceiveUrlWhenStateFileIsNew(@TempDir Path tempDir) {
-        Path stateFile = tempDir.resolve("mock-state.json");
-        YhtMockProperties properties = propertiesWithReceiveUrl("http://settlement.example.com/receive");
-
-        MockStoreService storeService = new MockStoreService(stateFile, properties);
-        storeService.init();
-
-        assertThat(storeService.getSettings().defaultTargetUrl).isEqualTo("http://settlement.example.com/receive");
-    }
-
-    @Test
-    void initKeepsStoredTargetUrlByDefault(@TempDir Path tempDir) {
-        Path stateFile = tempDir.resolve("mock-state.json");
-        MockStoreService originalStore = new MockStoreService(stateFile, propertiesWithReceiveUrl("http://configured.example.com/receive"));
-        originalStore.init();
-        MockSettings settings = new MockSettings();
-        settings.defaultTargetUrl = "http://saved.example.com/receive";
-        originalStore.updateSettings(settings);
-
-        MockStoreService restartedStore = new MockStoreService(stateFile, propertiesWithReceiveUrl("http://new-config.example.com/receive"));
-        restartedStore.init();
-
-        assertThat(restartedStore.getSettings().defaultTargetUrl).isEqualTo("http://saved.example.com/receive");
-    }
-
-    @Test
-    void initCanOverrideStoredTargetUrlWhenConfigured(@TempDir Path tempDir) {
-        Path stateFile = tempDir.resolve("mock-state.json");
-        MockStoreService originalStore = new MockStoreService(stateFile, propertiesWithReceiveUrl("http://configured.example.com/receive"));
-        originalStore.init();
-        MockSettings settings = new MockSettings();
-        settings.defaultTargetUrl = "http://saved.example.com/receive";
-        originalStore.updateSettings(settings);
-
-        YhtMockProperties overrideProperties = propertiesWithReceiveUrl("http://override.example.com/receive");
-        overrideProperties.getCallback().setOverrideStoredSettings(true);
-        MockStoreService restartedStore = new MockStoreService(stateFile, overrideProperties);
-        restartedStore.init();
-
-        assertThat(restartedStore.getSettings().defaultTargetUrl).isEqualTo("http://override.example.com/receive");
-    }
-
-    private YhtMockProperties propertiesWithReceiveUrl(String receiveUrl) {
-        YhtMockProperties properties = new YhtMockProperties();
-        properties.getSettlement().setReceiveUrl(receiveUrl);
+    private YhtMockProperties properties(String url) {
+        var properties = new YhtMockProperties();
+        properties.getSettlement().setReceiveUrl(url);
         return properties;
     }
 }

@@ -26,7 +26,7 @@ class BatchApplyHandler implements CapsMessageHandler {
 
     @Override
     public GatewayDispatchResult handle(GatewayRequestContext ctx) {
-        BatchState batchState = support.buildBatchState(ctx.document(), ctx.scenarioRule());
+        BatchState batchState = support.buildBatchState(ctx.document(), ctx.settings());
         storeService.saveBatch(batchState);
         String responseXml = support.buildCaps102(batchState, ctx.requestHeader());
         callbackService.scheduleCaps107(ctx.requestHeader(), batchState);
@@ -70,10 +70,13 @@ class BatchConfirmHandler implements CapsMessageHandler {
 
     private final MockGatewaySupport support;
     private final MockStoreService storeService;
+    private final MockCallbackService callbackService;
 
-    BatchConfirmHandler(MockGatewaySupport support, MockStoreService storeService) {
+    BatchConfirmHandler(MockGatewaySupport support, MockStoreService storeService,
+                        MockCallbackService callbackService) {
         this.support = support;
         this.storeService = storeService;
+        this.callbackService = callbackService;
     }
 
     @Override
@@ -86,6 +89,7 @@ class BatchConfirmHandler implements CapsMessageHandler {
         String batchNo = ctx.document() == null ? ctx.batchNo() : support.text(ctx.document(), "BatchNo");
         BatchState batchState = storeService.findBatch(batchNo);
         String responseXml = support.buildCaps106(batchState, ctx.requestHeader(), ctx.scenarioRule());
+        callbackService.scheduleBatchMovement(ctx.requestHeader(), batchState);
         String status = batchState == null
                 ? support.resolveStatus(ctx.scenarioRule(), "FAIL")
                 : support.safe(batchState.status, "SUCC");

@@ -7,6 +7,7 @@ import cn.capinfo.gjj.yhtmock.model.MockSettings;
 import cn.capinfo.gjj.yhtmock.model.ProtocolState;
 import cn.capinfo.gjj.yhtmock.model.TradeState;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.net.URI;
@@ -14,9 +15,12 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.Set;
 
 @Service
 public class MockCallbackService {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MockCallbackService.class);
 
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(5))
@@ -24,15 +28,27 @@ public class MockCallbackService {
 
     private final CapsCodecService codecService;
     private final MockStoreService storeService;
+    private final MovementNotificationService movementService;
 
     public MockCallbackService(CapsCodecService codecService, MockStoreService storeService) {
+        this(codecService, storeService, new MovementNotificationService(storeService));
+    }
+
+    @Autowired
+    public MockCallbackService(CapsCodecService codecService, MockStoreService storeService,
+                               MovementNotificationService movementService) {
         this.codecService = codecService;
         this.storeService = storeService;
+        this.movementService = movementService;
     }
 
     public void scheduleCaps306(CapsHeader requestHeader, ProtocolState protocolState) {
         MockSettings settings = storeService.getSettings();
         if (!settings.autoPushEnabled || !settings.pushCaps306 || protocolState == null || !protocolState.callbackEnabled) {
+            log.info("跳过回调推送 caps.306：autoPushEnabled={} pushCaps306={} 协议={} callbackEnabled={}",
+                    settings.autoPushEnabled, settings.pushCaps306,
+                    protocolState == null ? "null" : defaultString(protocolState.protocolNo, "-"),
+                    protocolState != null && protocolState.callbackEnabled);
             return;
         }
         String callbackMesgType = defaultString(protocolState.callbackMesgType, "caps.306.001.01");
@@ -65,6 +81,7 @@ public class MockCallbackService {
     public void scheduleCaps308(CapsHeader requestHeader, String orgnlId, String cancleId) {
         MockSettings settings = storeService.getSettings();
         if (!settings.autoPushEnabled || !settings.pushCaps308) {
+            log.info("跳过回调推送 caps.308：autoPushEnabled={} pushCaps308={}", settings.autoPushEnabled, settings.pushCaps308);
             return;
         }
         String body = codecService.buildXml("caps.308.001.01",
@@ -78,8 +95,13 @@ public class MockCallbackService {
     }
 
     public void scheduleCaps205(CapsHeader requestHeader, TradeState tradeState) {
+        movementService.scheduleTrade(requestHeader, tradeState);
         MockSettings settings = storeService.getSettings();
         if (!settings.autoPushEnabled || !settings.pushCaps205 || tradeState == null || !tradeState.callbackEnabled) {
+            log.info("跳过回调推送 caps.205：autoPushEnabled={} pushCaps205={} sysSeqNo={} callbackEnabled={}",
+                    settings.autoPushEnabled, settings.pushCaps205,
+                    tradeState == null ? "null" : defaultString(tradeState.sysSeqNo, "-"),
+                    tradeState != null && tradeState.callbackEnabled);
             return;
         }
         String callbackMesgType = defaultString(tradeState.callbackMesgType, "caps.205.001.01");
@@ -108,8 +130,14 @@ public class MockCallbackService {
     }
 
     public void scheduleCaps107(CapsHeader requestHeader, BatchState batchState) {
+        finalizeBatchStatus(batchState);
+        scheduleBatchMovement(requestHeader, batchState);
         MockSettings settings = storeService.getSettings();
         if (!settings.autoPushEnabled || !settings.pushCaps107 || batchState == null || !batchState.callbackEnabled) {
+            log.info("跳过回调推送 caps.107：autoPushEnabled={} pushCaps107={} 批次={} callbackEnabled={}",
+                    settings.autoPushEnabled, settings.pushCaps107,
+                    batchState == null ? "null" : defaultString(batchState.batchNo, "-"),
+                    batchState != null && batchState.callbackEnabled);
             return;
         }
         String callbackMesgType = defaultString(batchState.callbackMesgType, "caps.107.001.01");
@@ -126,10 +154,103 @@ public class MockCallbackService {
 
     public String triggerManualCallback(String callbackMesgType, String targetUrl, String reqId,
                                         String protocolNo, String batchNo, String sysSeqNo) {
-        String resolvedUrl = targetUrl == null || targetUrl.isBlank() ? storeService.getSettings().defaultTargetUrl : targetUrl;
-        String message = buildManualCallbackMessage(callbackMesgType, reqId, protocolNo, batchNo, sysSeqNo);
-        push(message, callbackMesgType, resolvedUrl, reqId, protocolNo, batchNo, sysSeqNo);
+        return triggerManualCallback(callbackMesgType, targetUrl, reqId, protocolNo, batchNo, sysSeqNo,
+                null, null, null, null, null, null);
+    }
+
+    public String triggerManualCallback(String callbackMesgType, String targetUrl, String reqId,
+                                        String protocolNo, String batchNo, String sysSeqNo,
+                                        String acctNo, String customerName, String customerId,
+                                        String feeNoList, String bankId, String remark) {
+        String resolvedUrl = targetUrl == null || targetUrl.isBlank()
+                ? storeService.getSettings().defaultTargetUrl : targetUrl;
+        boolean bankInitiated = isBankInitiatedCaps305(callbackMesgType);
+        String resolvedReqId = bankInitiated
+                ? defaultString(reqId, "MOCK-BANK-" + System.currentTimeMillis()) : reqId;
+        String message = bankInitiated
+                ? buildManualBankInitiatedMessage(callbackMesgType, resolvedReqId, protocolNo, acctNo,
+                customerName, customerId, feeNoList, bankId, remark)
+                : buildManualCallbackMessage(callbackMesgType, reqId, protocolNo, batchNo, sysSeqNo);
+        String actualMesgType = bankInitiated ? "caps.305.001.01" : callbackMesgType;
+        String traceProtocolNo = "caps.305.bank-sign".equals(callbackMesgType)
+                ? "BANK-PENDING-" + resolvedReqId : protocolNo;
+        push(message, actualMesgType, resolvedUrl, resolvedReqId, traceProtocolNo, batchNo, sysSeqNo);
         return message;
+    }
+
+    String buildManualBankInitiatedMessage(String callbackMesgType, String reqId, String protocolNo,
+                                           String acctNo, String customerName, String customerId,
+                                           String feeNoList, String bankId, String remark) {
+        boolean sign = "caps.305.bank-sign".equals(callbackMesgType);
+        boolean cancel = "caps.305.bank-cancel".equals(callbackMesgType);
+        if (!sign && !cancel) {
+            throw new IllegalArgumentException("不支持的银行主动业务类型: " + callbackMesgType);
+        }
+        if (cancel && (protocolNo == null || protocolNo.isBlank())) {
+            throw new IllegalArgumentException("银行主动解约必须填写协议号");
+        }
+        String resolvedReqId = defaultString(reqId, "MOCK-BANK-" + System.currentTimeMillis());
+        String resolvedProtocolNo = sign ? "BANK-PENDING-" + resolvedReqId : protocolNo.trim();
+        String resolvedCustomerName = defaultString(customerName, "MOCK CUSTOMER");
+        String resolvedAcctNo = defaultString(acctNo, "62220000000000000000");
+        String resolvedFeeNoList = normalizeFeeNoList(feeNoList);
+        String resolvedBankId = defaultString(bankId, "105000");
+        String resolvedRemark = defaultString(remark, sign ? "manual bank sign" : "manual bank cancel");
+
+        ProtocolState state = new ProtocolState();
+        state.protocolNo = resolvedProtocolNo;
+        state.acctNo = sign ? resolvedAcctNo : defaultString(acctNo, "");
+        state.acctName = resolvedCustomerName;
+        state.corpNo = "33503C5801";
+        state.customerId = defaultString(customerId, "MOCK-CUSTOMER");
+        state.customerName = resolvedCustomerName;
+        state.feeNoList = resolvedFeeNoList;
+        state.bankId = resolvedBankId;
+        state.status = "PENDING";
+        state.signReqId = resolvedReqId;
+        state.changeType = sign ? "ADDD" : "DELE";
+        state.sendType = "SD00";
+        state.remark = resolvedRemark;
+        state.callbackEnabled = false;
+        state.callbackMesgType = "caps.306.001.01";
+        storeService.saveProtocol(state);
+
+        CapsHeader header = new CapsHeader();
+        header.userName = "CAPS";
+        header.password = "CAPS";
+        header.origSender = "904290099992";
+        header.origReceiver = "33503C5801";
+        StringBuilder body = new StringBuilder();
+        body.append("<ReqId>").append(codecService.escape(resolvedReqId)).append("</ReqId>")
+                .append("<ChngTp>").append(sign ? "ADDD" : "DELE").append("</ChngTp>")
+                .append("<SndrFlg>BKSD</SndrFlg>")
+                .append("<CstmrId>").append(codecService.escape(state.customerId)).append("</CstmrId>")
+                .append("<CstmrNm>").append(codecService.escape(resolvedCustomerName)).append("</CstmrNm>")
+                .append("<FeeNoList>").append(codecService.escape(resolvedFeeNoList)).append("</FeeNoList>")
+                .append("<DbtrProtocol>")
+                .append(codecService.escape(sign ? "0" : resolvedProtocolNo))
+                .append("</DbtrProtocol>");
+        if (sign) {
+            body.append("<DbtrActId>").append(codecService.escape(resolvedAcctNo)).append("</DbtrActId>")
+                    .append("<DbtrActName>").append(codecService.escape(resolvedCustomerName)).append("</DbtrActName>")
+                    .append("<DbtrCardType>03</DbtrCardType>");
+        }
+        body.append("<DbtrBankId>").append(codecService.escape(resolvedBankId)).append("</DbtrBankId>")
+                .append("<SndTp>SD00</SndTp>")
+                .append("<Remark>").append(codecService.escape(resolvedRemark)).append("</Remark>");
+        String xml = codecService.buildXml("caps.305.001.01",
+                "<CorpNo>33503C5801</CorpNo>", body.toString());
+        return buildFullMessage(header, "caps.305.001.01", xml);
+    }
+
+    private boolean isBankInitiatedCaps305(String callbackMesgType) {
+        return "caps.305.bank-sign".equals(callbackMesgType)
+                || "caps.305.bank-cancel".equals(callbackMesgType);
+    }
+
+    private String normalizeFeeNoList(String feeNoList) {
+        String value = defaultString(feeNoList, "00600|00601").trim();
+        return value.replace('，', '|').replace(',', '|').replace(';', '|');
     }
 
     private String buildManualCallbackMessage(String callbackMesgType, String reqId,
@@ -218,15 +339,54 @@ public class MockCallbackService {
             record.status = String.valueOf(response.statusCode());
             record.responseBody = response.body();
             record.remark = "callback pushed";
+            log.info("回调推送 {} → {} 批次={} reqId={} HTTP {}", mesgType, targetUrl, batchNo, reqId, response.statusCode());
         } catch (Exception e) {
             record.status = "FAIL";
             record.responseBody = e.getMessage();
             record.remark = "callback push failed";
+            log.warn("回调推送失败 {} → {} 批次={} reqId={} 原因={}", mesgType, targetUrl, batchNo, reqId, e.getMessage());
             if (e instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
             }
         }
         storeService.addRecord(record);
+    }
+
+    public void scheduleBatchMovement(CapsHeader header, BatchState batch) {
+        movementService.scheduleBatch(header, batch);
+    }
+
+    /**
+     * 银行侧推送 107 即代表该批次交易处理完毕：推送前把仍停留在处理中（PROC/PEND/INIT 等）的批次
+     * 按结果文件落终态并保存，保证 107 报文与页面状态都是终态。已有终态不覆盖；
+     * 对手账号的校验与强制状态已统一在批次构建（buildBatchState）时按结果文件逐笔判定，此处不再二次干预。
+     */
+    private void finalizeBatchStatus(BatchState batchState) {
+        if (batchState == null || isFinalBatchStatus(batchState.status)) {
+            return;
+        }
+        var summary = MockGatewaySupport.summarizeBatchResultFile(batchState.fileData);
+        if (summary == null) {
+            log.warn("批次 {} 状态为 {} 但结果文件无法解析，保持原状态不做猜测", batchState.batchNo, batchState.status);
+            return;
+        }
+        String previous = batchState.status;
+        batchState.status = summary.status();
+        if ("FAIL".equals(summary.status())) {
+            if (batchState.errorCode == null || batchState.errorCode.isBlank()) {
+                batchState.errorCode = summary.firstFailedCode();
+            }
+            if (batchState.errorMsg == null || batchState.errorMsg.isBlank()) {
+                batchState.errorMsg = summary.firstFailedMsg();
+            }
+        }
+        storeService.saveBatch(batchState);
+        log.info("107 推送前落定批次终态：批次={} {} → {} 结果明细数={}",
+                batchState.batchNo, defaultString(previous, "空"), batchState.status, summary.detailCount());
+    }
+
+    private boolean isFinalBatchStatus(String status) {
+        return status != null && Set.of("SUCC", "FAIL", "CANC", "CANCEL", "REJ").contains(status.trim().toUpperCase());
     }
 
     private String defaultString(String value, String defaultValue) {

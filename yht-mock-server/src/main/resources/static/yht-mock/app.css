@@ -16,6 +16,39 @@
     --radius-md: 16px;
 }
 
+dialog.mock-dialog {
+    width: min(1180px, 94vw);
+    max-height: 84vh;
+    padding: 22px 24px 26px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--card-solid);
+    color: var(--text);
+    box-shadow: var(--shadow);
+    overflow: auto;
+}
+
+dialog.mock-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.32);
+}
+
+dialog.mock-dialog .dialog-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+dialog.mock-dialog .dialog-head h3 {
+    margin: 0 0 4px;
+}
+
+dialog.mock-dialog .trace-table-scroll {
+    max-height: 56vh;
+    overflow: auto;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -2145,4 +2178,31 @@ td {
         height: 320px;
         max-height: 320px;
     }
+}
+
+[hidden] { display: none !important; }
+.page-shell { display: block; }
+.side-nav { position: sticky; top: 0; z-index: 20; height: auto; padding: 12px 24px; border-right: 0; border-bottom: 1px solid var(--line); }
+.side-nav .brand-card { display: none; }
+.side-nav nav { display: flex; gap: 6px; overflow-x: auto; flex-wrap: nowrap; }
+.side-nav nav a { flex: 0 0 auto; margin: 0; padding: 12px 18px; white-space: nowrap; }
+.page { max-width: 1600px; width: 100%; margin: 0 auto; }
+.page > .hero { padding: 22px 26px; margin-bottom: 18px; }
+.page > .panel { scroll-margin-top: 90px; }
+.side-nav [role="tab"]:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+.flow-table-wrap { overflow-x: auto; min-height: 150px; }
+.flow-table-wrap table { min-width: 1050px; width: 100%; }
+.flow-table-wrap td { vertical-align: top; overflow-wrap: anywhere; }
+.flow-table-wrap small { display: block; color: var(--muted); margin-top: 6px; }
+.flow-confirm { display: flex; align-items: center; gap: 10px; margin: 18px 0; }
+.flow-confirm input { width: auto; }
+.flow-table-wrap .check-col { width: 48px; text-align: center; }
+.flow-table-wrap .check-col input { width: auto; margin: 0; }
+.flow-table-wrap small.push-state { color: var(--muted); }
+#flowPayload, #flowAttempts { max-height: 360px; overflow: auto; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+@media (max-width: 700px) {
+    .side-nav { padding: 8px; }
+    .side-nav nav a { padding: 10px 12px; }
+    .page { padding: 12px; }
 }

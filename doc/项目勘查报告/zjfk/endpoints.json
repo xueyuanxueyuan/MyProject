@@ -1,0 +1,1619 @@
+[
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/pageReportTemplate",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 53
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/uploadReportTemplate",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 65
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/createReportTemplate",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 76
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/updateReportTemplate",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 87
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/deleteReportTemplate/{id}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 98
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/createReportTemplateParameter",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 109
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/document/listReportTemplateParameter/{templateId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 120
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/updateReportTemplateParameter",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 132
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/deleteReportTemplateParameter/{id}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 143
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/createReportTemplateDataItem",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 154
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/document/listReportTemplateDataItem/{templateId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 165
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/updateReportTemplateDataItem",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 178
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/deleteReportTemplateDataItem/{id}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 189
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/generateReport",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 200
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/generateReportData",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 211
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/pageGeneratedReport",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 222
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/deleteGeneratedReport/{id}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 234
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/document/downloadGeneratedReport/{id}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 245
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/document/downloadReportByPath",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 257
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/document/template/{templateCode}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 269
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/document/generated-reports/{templateCode}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/doc/controller/DocumentController.java",
+    "line": 281
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/jobs/mxgl/train/{indicator}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/job/controller/JobTriggerController.java",
+    "line": 43
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/jobs/ycjg/predict/{indicator}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/job/controller/JobTriggerController.java",
+    "line": 65
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/models/register",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 46
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/models/versions",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 61
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/models/{modelName}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 76
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/models/list",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 96
+  },
+  {
+    "language": "Java",
+    "method": "DELETE",
+    "route": "/api/v1/zjfk/kubeflow/models/{modelName}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 111
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/models/deploy",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 127
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/models/deployments/{deploymentId}/status",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 142
+  },
+  {
+    "language": "Java",
+    "method": "DELETE",
+    "route": "/api/v1/zjfk/kubeflow/models/deployments/{deploymentId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 157
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/models/deployments/{deploymentId}/endpoint",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 172
+  },
+  {
+    "language": "Java",
+    "method": "PUT",
+    "route": "/api/v1/zjfk/kubeflow/models/{modelName}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 187
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/models/deployments",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 225
+  },
+  {
+    "language": "Java",
+    "method": "PUT",
+    "route": "/api/v1/zjfk/kubeflow/models/deployments/{deploymentId}/traffic",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 240
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/models/deployments/batch-status",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 256
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/models/import",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowModelController.java",
+    "line": 285
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/pipelines/training",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowPipelineController.java",
+    "line": 40
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/pipelines/inference",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowPipelineController.java",
+    "line": 60
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/pipelines/run",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowPipelineController.java",
+    "line": 78
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/pipelines/runs/{runId}/status",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowPipelineController.java",
+    "line": 93
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/pipelines/runs/{runId}/stop",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowPipelineController.java",
+    "line": 108
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/pipelines/runs",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowPipelineController.java",
+    "line": 123
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/pipelines",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowPipelineController.java",
+    "line": 140
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/pipelines/{pipelineId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowPipelineController.java",
+    "line": 156
+  },
+  {
+    "language": "Java",
+    "method": "DELETE",
+    "route": "/api/v1/zjfk/kubeflow/pipelines/{pipelineId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowPipelineController.java",
+    "line": 171
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/pipelines/quick-train",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowPipelineController.java",
+    "line": 186
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/statistics/dashboard",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowStatisticsController.java",
+    "line": 42
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/statistics/trends",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowStatisticsController.java",
+    "line": 52
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/statistics/refresh",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowStatisticsController.java",
+    "line": 62
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/statistics/calculate",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowStatisticsController.java",
+    "line": 76
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/statistics/calculate/batch",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowStatisticsController.java",
+    "line": 93
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/statistics/clean",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowStatisticsController.java",
+    "line": 111
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/statistics/export",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowStatisticsController.java",
+    "line": 127
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/statistics/models",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowStatisticsController.java",
+    "line": 156
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/statistics/business-types",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowStatisticsController.java",
+    "line": 164
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/statistics/last-update-time",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowStatisticsController.java",
+    "line": 172
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/task/submit",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowTaskController.java",
+    "line": 47
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/task/page",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowTaskController.java",
+    "line": 62
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/task/detail/{taskId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowTaskController.java",
+    "line": 75
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/task/pause/{taskId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowTaskController.java",
+    "line": 90
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/task/resume/{taskId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowTaskController.java",
+    "line": 105
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/task/terminate/{taskId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowTaskController.java",
+    "line": 120
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/task/delete/{taskId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowTaskController.java",
+    "line": 135
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/task/batch",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowTaskController.java",
+    "line": 150
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/task/monitor/{taskId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowTaskController.java",
+    "line": 165
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/kubeflow/task/logs/{taskId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowTaskController.java",
+    "line": 180
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/task/sync/{taskId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowTaskController.java",
+    "line": 195
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/kubeflow/task/clean/{retentionDays}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/kubeflow/controller/KubeflowTaskController.java",
+    "line": 210
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/algorithmType/addAlgorithmType",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/AlgorithmTypeController.java",
+    "line": 49
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/algorithmType/modifyAlgorithmType",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/AlgorithmTypeController.java",
+    "line": 63
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/algorithmType/deleteAlgorithmType",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/AlgorithmTypeController.java",
+    "line": 76
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/algorithmType/pageAlgorithmType",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/AlgorithmTypeController.java",
+    "line": 89
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/algorithmType/getAlgorithmTypeList",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/AlgorithmTypeController.java",
+    "line": 102
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/algorithmType/getAlgorithmTypeById",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/AlgorithmTypeController.java",
+    "line": 115
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/algorithmType/enableAlgorithmType",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/AlgorithmTypeController.java",
+    "line": 129
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/algorithmType/disableAlgorithmType",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/AlgorithmTypeController.java",
+    "line": 143
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxgl/dataset/collection/log/page",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/DatasetCollectionLogController.java",
+    "line": 42
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/mxgl/dataset/collection/log/detail/{id}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/DatasetCollectionLogController.java",
+    "line": 52
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataset/addDataset",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/DatasetController.java",
+    "line": 47
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataset/modifyDataset",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/DatasetController.java",
+    "line": 60
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataset/deleteDataset",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/DatasetController.java",
+    "line": 73
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataset/pageDataset",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/DatasetController.java",
+    "line": 86
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataset/getDatasetList",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/DatasetController.java",
+    "line": 99
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataset/getDatasetById",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/DatasetController.java",
+    "line": 112
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataset/previewDataset",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/DatasetController.java",
+    "line": 125
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataset/refreshDataset",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/DatasetController.java",
+    "line": 138
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/indicatorType/addIndicatorType",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/IndicatorTypeController.java",
+    "line": 49
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/indicatorType/modifyIndicatorType",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/IndicatorTypeController.java",
+    "line": 63
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/indicatorType/deleteIndicatorType",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/IndicatorTypeController.java",
+    "line": 76
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/indicatorType/pageIndicatorType",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/IndicatorTypeController.java",
+    "line": 89
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/indicatorType/getIndicatorTypeList",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/IndicatorTypeController.java",
+    "line": 102
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/indicatorType/getIndicatorTypeById",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/IndicatorTypeController.java",
+    "line": 115
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/model-comparison/execute",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelComparisonController.java",
+    "line": 49
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/model-comparison/{comparisonId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelComparisonController.java",
+    "line": 85
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/model-comparison/pageHistory",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelComparisonController.java",
+    "line": 114
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/model-comparison/history",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelComparisonController.java",
+    "line": 151
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/model-comparison/validate",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelComparisonController.java",
+    "line": 197
+  },
+  {
+    "language": "Java",
+    "method": "DELETE",
+    "route": "/api/v1/zjfk/model-comparison/{comparisonId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelComparisonController.java",
+    "line": 229
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/model-comparison/cleanup",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelComparisonController.java",
+    "line": 245
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/model-comparison/available-models",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelComparisonController.java",
+    "line": 262
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/model-comparison/{comparisonId}/confirm-best",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelComparisonController.java",
+    "line": 595
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/model-comparison/best-model",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelComparisonController.java",
+    "line": 613
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/model/addModel",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelController.java",
+    "line": 45
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/model/modifyModel",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelController.java",
+    "line": 58
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/model/deleteModel",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelController.java",
+    "line": 71
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/model/pageModel",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelController.java",
+    "line": 84
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/model/getModelList",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelController.java",
+    "line": 97
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/model/getModelById",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelController.java",
+    "line": 110
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/getModelTrainingStatus",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 49
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/startTraining",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 61
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/addModelTraining",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 73
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/modifyModelTraining",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 86
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/deleteModelTraining",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 99
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/pageModelTraining",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 112
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/getModelTrainingList",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 126
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/getModelTrainingById",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 139
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/getTrainingStatusByTaskId",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 152
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/stopTrainingTask",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 166
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/checkPythonServiceHealth",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 180
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/cleanExpiredTasks",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 193
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/saveModelPath",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 208
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/getSupportedModelTypes",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 220
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/validateModelType",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 232
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/modelTraining/getModelTypeDefaultParameters",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxgl/controller/ModelTrainingController.java",
+    "line": 246
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/fixedDepositPlan/getLatestDataMonth",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/dqckgh/controller/FixedDepositPlanController.java",
+    "line": 53
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/fixedDepositPlan/checkDataIntegrity",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/dqckgh/controller/FixedDepositPlanController.java",
+    "line": 72
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/fixedDepositPlan/getMaturityDeposits",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/dqckgh/controller/FixedDepositPlanController.java",
+    "line": 96
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/fixedDepositPlan/saveRedemptionAmounts",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/dqckgh/controller/FixedDepositPlanController.java",
+    "line": 121
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/fixedDepositPlan/getOptimalLiquidity",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/dqckgh/controller/FixedDepositPlanController.java",
+    "line": 141
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/fixedDepositPlan/getDepositRates",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/dqckgh/controller/FixedDepositPlanController.java",
+    "line": 160
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/fixedDepositPlan/generatePlan",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/dqckgh/controller/FixedDepositPlanController.java",
+    "line": 179
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/fixedDepositPlan/savePlan",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/dqckgh/controller/FixedDepositPlanController.java",
+    "line": 200
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/fixedDepositPlan/getHistoricalPlan",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/dqckgh/controller/FixedDepositPlanController.java",
+    "line": 220
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/fixedDepositPlan/exportPlan",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/dqckgh/controller/FixedDepositPlanController.java",
+    "line": 239
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/addJhlxpz",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 39
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/modifyJhlxpz",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 52
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/deleteJhlxpz/{id}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 65
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/enableJhlxpz/{id}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 78
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/disableJhlxpz/{id}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 91
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/pageJhlxpz",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 104
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/jhlxpzList",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 117
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/test/normalTransaction",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 130
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/test/runtimeException",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 143
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/test/bizException",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 156
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/test/nestedRequired",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 169
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/test/nestedRequiresNew",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 182
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/test/independentRollback",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 195
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/test/nestedRequiredProxy",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 208
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/test/nestedRequiresNewProxy",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 225
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhlxpz/test/independentRollbackProxy",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhlxpzController.java",
+    "line": 238
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhsp/getNameByUserId",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhspController.java",
+    "line": 41
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhsp/jhspTable",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhspController.java",
+    "line": 53
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/jhsp/completeTask",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/JhspController.java",
+    "line": 66
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ndjhbz/addNdjhbz",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/NdjhbzController.java",
+    "line": 43
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ndjhbz/modifyNdjhbz",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/NdjhbzController.java",
+    "line": 56
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ndjhbz/queryNdjhbzByQueryForm",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/NdjhbzController.java",
+    "line": 69
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ndjhbz/ndjhbzList",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/NdjhbzController.java",
+    "line": 82
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ndjhbz/ndjhDatasetDataResult",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/NdjhbzController.java",
+    "line": 92
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ndjhbz/ndjhPredictionResult",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/NdjhbzController.java",
+    "line": 102
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ndjhbz/ndjhbzAdjustList",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/NdjhbzController.java",
+    "line": 115
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ndjhbz/tjspNdjhbz/{ndjhbzId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/NdjhbzController.java",
+    "line": 129
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ndjhbz/getNdjhbzByProcessInstanceId/{processInstanceId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/NdjhbzController.java",
+    "line": 142
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ydjhbz/addYdjhbz",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/YdjhbzController.java",
+    "line": 42
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ydjhbz/modifyYdjhbz",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/YdjhbzController.java",
+    "line": 55
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ydjhbz/queryYdjhbzByQueryForm",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/YdjhbzController.java",
+    "line": 68
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ydjhbz/ydjhDatasetDataResult",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/YdjhbzController.java",
+    "line": 78
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ydjhbz/ydjhPredictionResult",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/YdjhbzController.java",
+    "line": 88
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ydjhbz/tjspYdjhbz",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/YdjhbzController.java",
+    "line": 102
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ydjhbz/getYdjhbzByProcessInstanceId/{processInstanceId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/YdjhbzController.java",
+    "line": 115
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ydjhtz/addYdjhtz",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/YdjhtzController.java",
+    "line": 40
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ydjhtz/modifyYdjhtz",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/YdjhtzController.java",
+    "line": 53
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ydjhtz/queryYdjhtzByQueryForm",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/YdjhtzController.java",
+    "line": 66
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ydjhtz/tjspYdjhtz",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/YdjhtzController.java",
+    "line": 80
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/jhgl/ydjhtz/getYdjhtzByProcessInstanceId/{processInstanceId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/jhgl/controller/YdjhtzController.java",
+    "line": 93
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/predictionResult/getPredictionResultList",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 60
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/predictionResult/getPredictionResultById",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 74
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/predictionResult/generateBasicPrediction",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 87
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/predictionResult/savePredictionResults",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 100
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/predictionResult/getHistoricalPredictionData",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 115
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/predictionResult/getOptimizableTimePeriods",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 132
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/predictionResult/previewOptimization",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 147
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/predictionResult/applyOptimization",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 160
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/predictionResult/getLatestBalanceData",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 173
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/predictionResult/checkBasicIndicatorPredictions",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 188
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/predictionResult/checkWithdrawalRateBasicIndicators",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 206
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/predictionResult/generateLoanDepositRatioPrediction",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 222
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/predictionResult/generateWithdrawalRatePrediction",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 236
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/predictionResult/checkNetCashFlowBasicIndicators",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 252
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/predictionResult/generateNetCashFlowPrediction",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 268
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/predictionResult/getMultipleIndicatorHistoricalData",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/PredictionResultController.java",
+    "line": 283
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/warningDisposal/page",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/WarningDisposalController.java",
+    "line": 33
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/warningDisposal/updateStatus",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/WarningDisposalController.java",
+    "line": 40
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/warningDisposal/batchUpdateStatus",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/WarningDisposalController.java",
+    "line": 48
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/zjldzjcylcs/optimize",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZjldzjcylcsController.java",
+    "line": 55
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/mxyy/zjldzjcylcs/query/{institutionId}",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZjldzjcylcsController.java",
+    "line": 76
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/zjldzjcylcs/saveHistory",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZjldzjcylcsController.java",
+    "line": 92
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/zjldzjcylcs/pageHistory",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZjldzjcylcsController.java",
+    "line": 101
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/mxyy/zjldzjcylcs/detailHistory",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZjldzjcylcsController.java",
+    "line": 111
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/mxyy/zjldzjcylcs/activeHistory",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZjldzjcylcsController.java",
+    "line": 121
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/zjldzjcylcs/activateHistory",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZjldzjcylcsController.java",
+    "line": 130
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/zjldzjcylcs/compareHistory",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZjldzjcylcsController.java",
+    "line": 140
+  },
+  {
+    "language": "Java",
+    "method": "DELETE",
+    "route": "/api/v1/zjfk/mxyy/zjldzjcylcs/deleteHistory",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZjldzjcylcsController.java",
+    "line": 150
+  },
+  {
+    "language": "Java",
+    "method": "DELETE",
+    "route": "/api/v1/zjfk/mxyy/zjldzjcylcs/batch-deleteHistory",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZjldzjcylcsController.java",
+    "line": 160
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/mxyy/zjldzjcylcs/cleanupHistory",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZjldzjcylcsController.java",
+    "line": 170
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/zzsycs/calculate",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZzsycsController.java",
+    "line": 47
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/zzsycs/save",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZzsycsController.java",
+    "line": 61
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/zzsycs/history",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZzsycsController.java",
+    "line": 75
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/zzsycs/currentMonth",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZzsycsController.java",
+    "line": 88
+  },
+  {
+    "language": "Java",
+    "method": "GET",
+    "route": "/api/v1/zjfk/zzsycs/checkExists",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZzsycsController.java",
+    "line": 103
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/zzsycs/calculateAndSave",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/mxyy/ycjg/controller/ZzsycsController.java",
+    "line": 119
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataSourceConfig/addDataSourceConfig",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/pzgl/controller/DataSourceConfigController.java",
+    "line": 49
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataSourceConfig/modifyDataSourceConfig",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/pzgl/controller/DataSourceConfigController.java",
+    "line": 63
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataSourceConfig/deleteDataSourceConfig",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/pzgl/controller/DataSourceConfigController.java",
+    "line": 76
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataSourceConfig/pageDataSourceConfig",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/pzgl/controller/DataSourceConfigController.java",
+    "line": 89
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataSourceConfig/getDataSourceConfigList",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/pzgl/controller/DataSourceConfigController.java",
+    "line": 102
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataSourceConfig/getDataSourceConfigById",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/pzgl/controller/DataSourceConfigController.java",
+    "line": 115
+  },
+  {
+    "language": "Java",
+    "method": "POST",
+    "route": "/api/v1/zjfk/dataSourceConfig/testDataSourceConnection",
+    "file": "capinfo-gjj-busi-zjfk-busi/src/main/java/cn/capinfo/gjj/busi/zjfk/busi/pzgl/controller/DataSourceConfigController.java",
+    "line": 128
+  },
+  {
+    "language": "Python",
+    "method": "GET",
+    "route": "/health",
+    "file": "capinfo-gjj-busi-zjfk-model/app/api/routes/health.py",
+    "line": 7
+  },
+  {
+    "language": "Python",
+    "method": "POST",
+    "route": "/api/v1/models/train-with-csv",
+    "file": "capinfo-gjj-busi-zjfk-model/app/api/routes/models.py",
+    "line": 21
+  },
+  {
+    "language": "Python",
+    "method": "POST",
+    "route": "/api/v1/predict/basic",
+    "file": "capinfo-gjj-busi-zjfk-model/app/api/routes/models.py",
+    "line": 55
+  },
+  {
+    "language": "Python",
+    "method": "POST",
+    "route": "/api/v1/liquidity/optimize",
+    "file": "capinfo-gjj-busi-zjfk-model/app/api/routes/models.py",
+    "line": 85
+  },
+  {
+    "language": "Python",
+    "method": "GET",
+    "route": "/api/v2/models/supported",
+    "file": "capinfo-gjj-busi-zjfk-model/app/api/routes/models_v2.py",
+    "line": 29
+  },
+  {
+    "language": "Python",
+    "method": "POST",
+    "route": "/api/v2/models/train-v2",
+    "file": "capinfo-gjj-busi-zjfk-model/app/api/routes/models_v2.py",
+    "line": 44
+  },
+  {
+    "language": "Python",
+    "method": "POST",
+    "route": "/api/v2/models/validate-params",
+    "file": "capinfo-gjj-busi-zjfk-model/app/api/routes/models_v2.py",
+    "line": 124
+  },
+  {
+    "language": "Python",
+    "method": "POST",
+    "route": "/api/v2/predict/basic-v2",
+    "file": "capinfo-gjj-busi-zjfk-model/app/api/routes/models_v2.py",
+    "line": 287
+  },
+  {
+    "language": "Python",
+    "method": "POST",
+    "route": "/api/v2/models/train-with-csv",
+    "file": "capinfo-gjj-busi-zjfk-model/app/api/routes/models_v2.py",
+    "line": 445
+  },
+  {
+    "language": "Python",
+    "method": "GET",
+    "route": "/api/v1/tasks/{task_id}/progress",
+    "file": "capinfo-gjj-busi-zjfk-model/app/api/routes/tasks.py",
+    "line": 15
+  },
+  {
+    "language": "Python",
+    "method": "GET",
+    "route": "/api/v1/tasks/{task_id}/result",
+    "file": "capinfo-gjj-busi-zjfk-model/app/api/routes/tasks.py",
+    "line": 47
+  },
+  {
+    "language": "Python",
+    "method": "POST",
+    "route": "/api/v1/tasks/{task_id}/stop",
+    "file": "capinfo-gjj-busi-zjfk-model/app/api/routes/tasks.py",
+    "line": 63
+  },
+  {
+    "language": "Python",
+    "method": "POST",
+    "route": "/api/v1/tasks/cleanup",
+    "file": "capinfo-gjj-busi-zjfk-model/app/api/routes/tasks.py",
+    "line": 79
+  }
+]

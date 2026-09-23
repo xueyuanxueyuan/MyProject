@@ -3,6 +3,7 @@ package cn.capinfo.gjj.yhtmock.service;
 import cn.capinfo.gjj.yhtmock.model.CapsHeader;
 import cn.capinfo.gjj.yhtmock.model.MockRecord;
 import cn.capinfo.gjj.yhtmock.model.MockScenarioRule;
+import cn.capinfo.gjj.yhtmock.model.MockSettings;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import java.util.Map;
 
 @Service
 public class MockGatewayService {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MockGatewayService.class);
 
     private final CapsCodecService codecService;
     private final MockStoreService storeService;
@@ -52,11 +55,12 @@ public class MockGatewayService {
         this.handlers = List.of(
                 new ProtocolUploadHandler(this.support, storeService),
                 new ProtocolSignHandler(this.support, storeService, callbackService),
+                new ProtocolCallbackHandler(this.support, storeService),
                 new ProtocolQueryHandler(this.support, storeService),
                 new ProtocolCancelHandler(this.support, callbackService),
                 new BatchApplyHandler(this.support, storeService, callbackService),
                 new BatchQueryHandler(this.support, storeService),
-                new BatchConfirmHandler(this.support, storeService),
+                new BatchConfirmHandler(this.support, storeService, callbackService),
                 new TradeApplyHandler(this.support, storeService, callbackService),
                 new TradeQueryHandler(this.support, storeService),
                 new ProbeHandler(this.support),
@@ -125,8 +129,9 @@ public class MockGatewayService {
             acctNo = firstNonBlank(codecService.text(document, "DbtrActId"),
                     codecService.text(document, "AcctNo"));
 
-            scenarioRule = storeService.matchScenario(support.buildScenarioContext(
-                    requestMesgType, acctNo, protocolNo, reqId, batchNo, sysSeqNo));
+            // 账号校验规则不再按中心账户匹配（matchScenario 已废弃），对手账号校验在交易/批次构建时逐笔完成；
+            // 此处仅读取全局配置（含 randomFail 随机失败开关）供后续构建使用。
+            MockSettings settings = storeService.getSettings();
 
             CapsMessageHandler handler = handlerRegistry.get(requestMesgType);
             if (handler == null) {
@@ -137,7 +142,7 @@ public class MockGatewayService {
             } else {
                 GatewayRequestContext ctx = new GatewayRequestContext(
                         requestHeader, document, requestMesgType,
-                        reqId, protocolNo, batchNo, sysSeqNo, acctNo, scenarioRule);
+                        reqId, protocolNo, batchNo, sysSeqNo, acctNo, scenarioRule, settings);
                 GatewayDispatchResult result = handler.handle(ctx);
                 responseMesgType = result.responseMesgType();
                 responseXml = result.responseXml();
@@ -151,6 +156,8 @@ public class MockGatewayService {
             responseXml = buildCaps900(successCorp(requestHeader),
                     "FAIL", e instanceof IllegalArgumentException ? "E401" : "S999", null);
             status = "FAIL";
+            log.warn("网关处理失败 mesgType={} reqId={} batchNo={} 企业号={} 原因={}",
+                    requestMesgType, reqId, batchNo, safe(requestHeader.origSender), e.getMessage(), e);
         }
 
         String responseHeader = codecService.buildHeader(responseMesgType, "D",
@@ -177,10 +184,19 @@ public class MockGatewayService {
         record.status = status;
         record.requestBody = rawMessage;
         record.responseBody = responseMessage;
+        if (requestEncrypted) {
+            // 请求/响应均走 CAPS 信封加密：保留解密后的明文业务报文，供链路视图对比。
+            record.decryptedRequestBody = dispatchXmlBody;
+            record.decryptedResponseBody = responseXml;
+        }
         record.remark = scenarioRule == null
                 ? "gateway dispatch"
                 : "gateway dispatch by scenario: " + safe(scenarioRule.name, String.valueOf(scenarioRule.id));
         storeService.addRecord(record);
+        log.info("网关请求 {} reqId={} batchNo={} sysSeqNo={} 企业号={} → 响应 {} status={}{}",
+                requestMesgType, reqId, batchNo, sysSeqNo, safe(requestHeader.origSender),
+                responseMesgType, status,
+                scenarioRule == null ? "" : " 场景=" + safe(scenarioRule.name, String.valueOf(scenarioRule.id)));
         return responseMessage;
     }
 

@@ -123,6 +123,65 @@ class ProtocolSignHandler implements CapsMessageHandler {
 }
 
 @Component
+class ProtocolCallbackHandler implements CapsMessageHandler {
+
+    private final MockGatewaySupport support;
+    private final MockStoreService storeService;
+
+    ProtocolCallbackHandler(MockGatewaySupport support, MockStoreService storeService) {
+        this.support = support;
+        this.storeService = storeService;
+    }
+
+    @Override
+    public Set<String> supportedMesgTypes() {
+        return Set.of("caps.306.001.01");
+    }
+
+    @Override
+    public GatewayDispatchResult handle(GatewayRequestContext ctx) {
+        String originalReqId = support.text(ctx.document(), "OrgnlReqId");
+        String protocolNo = support.text(ctx.document(), "OrgnlDbtrProtocol");
+        ProtocolState protocolState = storeService.findProtocol(protocolNo, "");
+        if (protocolState == null && !originalReqId.isBlank()) {
+            protocolState = storeService.findProtocolByReqId(originalReqId);
+        }
+        if (protocolState == null) {
+            protocolState = new ProtocolState();
+            protocolState.protocolNo = support.firstNonBlank(protocolNo, "MOCK-PROT-" + support.timestamp());
+        }
+
+        String previousProtocolNo = protocolState.protocolNo;
+        protocolState.protocolNo = support.firstNonBlank(protocolNo, protocolState.protocolNo,
+                "MOCK-PROT-" + support.timestamp());
+        protocolState.corpNo = support.successCorp(ctx.requestHeader());
+        protocolState.signReqId = support.firstNonBlank(originalReqId, protocolState.signReqId);
+        protocolState.resFlag = support.firstNonBlank(support.text(ctx.document(), "ResFlag"), "SUCC");
+        protocolState.errorCode = support.text(ctx.document(), "ErrorCode");
+        protocolState.errorMsg = support.text(ctx.document(), "ErrorMsg");
+        protocolState.changeType = support.firstNonBlank(support.text(ctx.document(), "ChngTp"), protocolState.changeType);
+        protocolState.protocolProcessCode = support.firstNonBlank(
+                support.text(ctx.document(), "ProtocolProcessCode"),
+                support.text(ctx.document(), "ProcessCode"),
+                support.text(ctx.document(), "PrtclPrcsCd"),
+                protocolState.protocolProcessCode, "CS00");
+        protocolState.status = support.firstNonBlank(support.text(ctx.document(), "ProtocolStatus"),
+                "SUCC".equalsIgnoreCase(protocolState.resFlag) ? "SUCC" : "FAIL");
+        protocolState.remark = support.firstNonBlank(support.text(ctx.document(), "Remark"),
+                protocolState.errorMsg, "bank callback accepted");
+        protocolState.callbackEnabled = false;
+        storeService.saveProtocol(protocolState, previousProtocolNo);
+
+        String responseXml = support.buildCaps900(support.successCorp(ctx.requestHeader()),
+                protocolState.resFlag,
+                support.firstNonBlank(protocolState.errorCode, "I000"),
+                support.firstNonBlank(protocolState.errorMsg, "accepted"),
+                protocolState.remark);
+        return GatewayDispatchResult.of("caps.900.001.01", responseXml,
+                protocolState.status, protocolState.protocolNo, "", "");
+    }
+}
+@Component
 class ProtocolQueryHandler implements CapsMessageHandler {
 
     private final MockGatewaySupport support;

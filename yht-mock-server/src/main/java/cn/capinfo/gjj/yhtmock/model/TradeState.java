@@ -2,6 +2,8 @@ package cn.capinfo.gjj.yhtmock.model;
 
 public class TradeState {
 
+    public boolean movementEligible = true;
+
     public String sysSeqNo;
     public String reqId;
     public String serialNum;

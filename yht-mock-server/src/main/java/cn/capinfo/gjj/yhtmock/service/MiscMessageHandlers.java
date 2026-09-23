@@ -26,7 +26,7 @@ class TradeApplyHandler implements CapsMessageHandler {
 
     @Override
     public GatewayDispatchResult handle(GatewayRequestContext ctx) {
-        TradeState tradeState = support.buildTradeState(ctx.document(), ctx.scenarioRule());
+        TradeState tradeState = support.buildTradeState(ctx.document(), ctx.settings());
         storeService.saveTrade(tradeState);
         String responseXml = support.buildCaps202(tradeState, ctx.requestHeader());
         callbackService.scheduleCaps205(ctx.requestHeader(), tradeState);

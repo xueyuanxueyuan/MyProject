@@ -1,0 +1,290 @@
+{
+  "114": {
+    "name": "总体情况统计",
+    "code": "ztqktj",
+    "source_id": "10",
+    "result_type": "first_row",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "缺表字段-原文未修复"
+  },
+  "115": {
+    "name": "资金净流量情况表",
+    "code": "ztqktjzjlltb",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd,ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "116": {
+    "name": "总体情况资金净流量列表",
+    "code": "ztqkzjjlllb",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "117": {
+    "name": "分支机构归集情况表",
+    "code": "fzjggjqktb",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "118": {
+    "name": "归集增长率超过4%的机构列表",
+    "code": "gjgczclb",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "119": {
+    "name": "归集增长率低于2%的机构列表",
+    "code": "gjdczclb",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "120": {
+    "name": "提取事项分类表",
+    "code": "tqsxflb",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "122": {
+    "name": "分支机构存贷比排序表",
+    "code": "fzjgcdbpxb",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "123": {
+    "name": "存贷比超过95%机构数",
+    "code": "cdbcg95jgs",
+    "source_id": "10",
+    "result_type": "single",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "124": {
+    "name": "存贷比低于85%机构数",
+    "code": "cdbdy85jgs",
+    "source_id": "10",
+    "result_type": "single",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "125": {
+    "name": "增值收益变动情况表",
+    "code": "zzsybdqkb",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "126": {
+    "name": "业务收支情况统计",
+    "code": "ywszqktj",
+    "source_id": "10",
+    "result_type": "first_row",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "127": {
+    "name": "委托银行情况统计",
+    "code": "wtyhqktj",
+    "source_id": "10",
+    "result_type": "first_row",
+    "key_field": "",
+    "deps": "ssnd,ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "128": {
+    "name": "银行存款增加排名",
+    "code": "yhckzjpm",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd,ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "129": {
+    "name": "银行存款变化情况表",
+    "code": "yhckbhqkb",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd,ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "130": {
+    "name": "银行存款占比大于10%银行",
+    "code": "yhckzblb",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd,ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "132": {
+    "name": "分支机构资金净流入情况表",
+    "code": "fzjgzjjlrqkb",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "133": {
+    "name": "归集趋势图",
+    "code": "gjqst",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd",
+    "status": "缺表字段-原文未修复"
+  },
+  "134": {
+    "name": "提取趋势图",
+    "code": "tqqst",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd",
+    "status": "缺表字段-原文未修复"
+  },
+  "135": {
+    "name": "近一年购建房提取情况",
+    "code": "jyngftqqk",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd",
+    "status": "缺表字段-原文未修复"
+  },
+  "136": {
+    "name": "近一年购建房提取占比情况",
+    "code": "jyngftqzbqk",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd",
+    "status": "缺表字段-原文未修复"
+  },
+  "137": {
+    "name": "近一年还贷提取情况",
+    "code": "jynhdtqqk",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd",
+    "status": "缺表字段-原文未修复"
+  },
+  "138": {
+    "name": "近一年无房租赁提取情况",
+    "code": "jynwfzntqqk",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd",
+    "status": "缺表字段-原文未修复"
+  },
+  "139": {
+    "name": "贷款发放趋势图",
+    "code": "dkqst",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd",
+    "status": "缺表字段-原文未修复"
+  },
+  "142": {
+    "name": "近一年剔除后贷款发放情况",
+    "code": "jyntchdkffqk",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd,ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "144": {
+    "name": "近一年贷款还款情况",
+    "code": "jyndkhkqk",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd",
+    "status": "缺表字段-原文未修复"
+  },
+  "145": {
+    "name": "住房消费趋势图",
+    "code": "zfxfqst",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd",
+    "status": "缺表字段-原文未修复"
+  },
+  "147": {
+    "name": "全市各机构存贷比情况",
+    "code": "qsgjgcdbqk",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "148": {
+    "name": "近一年银行存款余额变动情况",
+    "code": "jynyhckyebdqk",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd,ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "149": {
+    "name": "银行存款变化情况",
+    "code": "yhckbhqk",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd,ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "150": {
+    "name": "银行存款余额占比情况",
+    "code": "yhckyezbqk",
+    "source_id": "10",
+    "result_type": "list",
+    "key_field": "",
+    "deps": "ssnd,ssjd",
+    "status": "候选SQL-未实库验证"
+  },
+  "151": {
+    "name": "季度预测情况",
+    "code": "jdycqk",
+    "source_id": "10",
+    "result_type": "first_row",
+    "key_field": "",
+    "deps": "ssnd, ssjd",
+    "status": "候选SQL-未实库验证"
+  }
+}

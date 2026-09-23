@@ -3,41 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>涓€鎴烽€氱嫭绔嬫尅鏉?/title>
+    <title>一户通独立挡板</title>
     <link rel="stylesheet" href="/yht-mock/app.css">
 </head>
 <body>
 <div class="page-shell">
-    <aside class="side-nav" aria-label="涓€鎴烽€氭尅鏉垮鑸?>
+    <aside class="side-nav" aria-label="一户通挡板导航">
         <div class="brand-card">
-            <div class="brand-mark">涓€</div>
+            <div class="brand-mark">一</div>
             <div>
-                <strong>涓€鎴烽€氭尅鏉?/strong>
+                <strong>一户通挡板</strong>
                 <span>YHT Mock Studio</span>
             </div>
         </div>
-        <nav>
-            <a href="#overview">姒傝</a>
-            <a href="#bank-studio">閾惰涓氬姟褰曞叆</a>
-            <a href="#gateway">CAPS 缃戝叧</a>
-            <a href="#hsm">鍔犲瘑鏈?/a>
-            <a href="#scenario">鍦烘櫙瑙勫垯</a>
-            <a href="#trace">閾捐矾杩借釜</a>
-            <a href="#state">鐘舵€佷粨</a>
-            <a href="#callback">鍥炶皟閰嶇疆</a>
+        <nav role="tablist" aria-label="功能标签">
+            <a href="#overview">概览</a>
+            <a href="#business">业务查询</a>
+            <a href="#bank-studio">银行业务录入</a>
+            <a href="#gateway">CAPS 网关</a>
+            <a href="#hsm">加密机</a>
+            <a href="#scenario">场景规则</a>
+            <a href="#trace">链路追踪</a>
+            <a href="#movements">资金流水</a>
+            <a href="#state">状态仓</a>
+            <a href="#callback">回调配置</a>
         </nav>
     </aside>
 
     <main class="page">
         <header class="hero">
             <div>
-                <p class="eyebrow">Apple-like Mock Console</p>
-                <h1>涓€鎴烽€氱嫭绔嬫尅鏉?/h1>
-                <p>淇濈暀鐜版湁閾惰 / CAPS銆佸姞瀵嗘満銆佸洖璋冦€佸満鏅鍒欏拰鎺ュ彛璁板綍鑳藉姏锛屼互鏇存竻鏅扮殑鍒嗗尯鐣岄潰鏀寔浜哄伐妯℃嫙閾惰鍙戣捣涓氬姟銆?/p>
+                <p class="eyebrow">YHT Mock Console</p>
+                <h1>一户通独立挡板</h1>
+                <p>按标签切换功能。资金流水中可查询模拟收付、补生成通知并手动补推到结算服务。</p>
             </div>
             <div class="hero-actions">
-                <button id="refreshOverviewBtn" class="button secondary">鍒锋柊姒傝</button>
-                <a class="button ghost" href="#trace">鏌ョ湅閾捐矾</a>
+                <button id="refreshOverviewBtn" class="button secondary">刷新概览</button>
+                <a class="button ghost" href="#trace">查看链路</a>
             </div>
         </header>
 
@@ -45,132 +47,207 @@
             <div class="section-title">
                 <div>
                     <p class="eyebrow">Dashboard</p>
-                    <h2>鎸℃澘姒傝</h2>
+                    <h2>挡板概览</h2>
                 </div>
-                <p class="muted">灞曠ず璁板綍銆佸崗璁€佷氦鏄撱€佹壒娆″拰鍦烘櫙瑙勫垯鐨勫綋鍓嶇姸鎬併€?/p>
+                <p class="muted">展示记录、协议、交易、批次和场景规则的当前状态。</p>
             </div>
             <div id="statsCards" class="stats-grid"></div>
+        </section>
+
+        <section id="business" class="panel">
+            <div class="section-title with-actions">
+                <div>
+                    <p class="eyebrow">Business Query</p>
+                    <h2>业务查询</h2>
+                </div>
+                <div class="actions">
+                    <div><label for="businessAutoRefresh">实时状态刷新</label><select id="businessAutoRefresh"><option value="true">开启（每 5 秒）</option><option value="false">关闭</option></select></div>
+                    <button id="refreshBusinessBtn" class="button secondary">刷新列表</button>
+                </div>
+            </div>
+            <p class="muted">按单笔交易、批量交易、签约类交易三个标签分别展示挡板当前保存的数据，支持分页查询与实时状态刷新；每行可跳到链路追踪查看该笔业务的调用链与加密/解密报文，批量可下钻到明细逐笔状态。</p>
+            <p id="businessSummary" class="trace-summary">等待加载业务数据。</p>
+            <div class="actions left" role="tablist" aria-label="业务查询标签">
+                <button id="businessTabTrade" class="button primary" role="tab" aria-selected="true">单笔交易</button>
+                <button id="businessTabBatch" class="button secondary" role="tab" aria-selected="false">批量交易</button>
+                <button id="businessTabProtocol" class="button secondary" role="tab" aria-selected="false">签约类交易</button>
+            </div>
+            <div id="businessPanelTrade" class="table-card state-table-card">
+                <div class="trace-table-scroll">
+                    <table>
+                        <thead><tr><th>流水号 / 请求号</th><th>交易码</th><th>金额</th><th>当前状态</th><th>更新时间</th><th>链路</th></tr></thead>
+                        <tbody id="businessTradeBody"></tbody>
+                    </table>
+                </div>
+                <div class="actions left">
+                    <button id="businessTradePrevBtn" class="button ghost">上一页</button>
+                    <button id="businessTradeNextBtn" class="button ghost">下一页</button>
+                    <span id="businessTradePageInfo" class="trace-summary">第 1 页</span>
+                    <div><label for="businessTradeSize">每页条数</label><select id="businessTradeSize"><option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option></select></div>
+                </div>
+            </div>
+            <div id="businessPanelBatch" class="table-card state-table-card" hidden>
+                <div class="trace-table-scroll">
+                    <table>
+                        <thead><tr><th>批次号</th><th>交易码</th><th>笔数 / 金额</th><th>当前状态</th><th>更新时间</th><th>链路 / 明细</th></tr></thead>
+                        <tbody id="businessBatchBody"></tbody>
+                    </table>
+                </div>
+                <div class="actions left">
+                    <button id="businessBatchPrevBtn" class="button ghost">上一页</button>
+                    <button id="businessBatchNextBtn" class="button ghost">下一页</button>
+                    <span id="businessBatchPageInfo" class="trace-summary">第 1 页</span>
+                    <div><label for="businessBatchSize">每页条数</label><select id="businessBatchSize"><option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option></select></div>
+                </div>
+                <p class="muted">推送 107 即代表该批次交易处理完毕，状态会落终态；若历史批次仍停留在「处理中」（升级前产生的数据），可点下方按钮按各自结果文件一次性落终态。</p>
+                <div class="actions left">
+                    <button id="repairBatchBtn" class="button danger">修复处理中批次</button>
+                    <span id="businessRepairResult" class="trace-summary">尚未执行历史状态修复。</span>
+                </div>
+            </div>
+            <div id="businessPanelProtocol" class="table-card state-table-card" hidden>
+                <div class="trace-table-scroll">
+                    <table>
+                        <thead><tr><th>协议号 / 签约请求</th><th>客户</th><th>银行</th><th>当前状态</th><th>更新时间</th><th>链路</th></tr></thead>
+                        <tbody id="businessProtocolBody"></tbody>
+                    </table>
+                </div>
+                <div class="actions left">
+                    <button id="businessProtocolPrevBtn" class="button ghost">上一页</button>
+                    <button id="businessProtocolNextBtn" class="button ghost">下一页</button>
+                    <span id="businessProtocolPageInfo" class="trace-summary">第 1 页</span>
+                    <div><label for="businessProtocolSize">每页条数</label><select id="businessProtocolSize"><option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option></select></div>
+                </div>
+            </div>
         </section>
 
         <section id="bank-studio" class="panel feature-panel">
             <div class="section-title">
                 <div>
                     <p class="eyebrow">Manual Bank Input</p>
-                    <h2>浜哄伐褰曞叆妯℃嫙閾惰涓氬姟</h2>
+                    <h2>人工录入模拟银行业务</h2>
                 </div>
-                <p class="muted">褰曞叆閾惰鍙戣捣鐨勪笟鍔′俊鎭紝鑷姩鐢熸垚 CAPS 鎶ユ枃锛屽彲棰勮鎴栫洿鎺ュ彂閫佸埌鎸℃澘缃戝叧銆?/p>
+                <p class="muted">录入银行发起的业务信息，自动生成 CAPS 报文，可预览或直接发送到挡板网关。</p>
             </div>
             <div class="grid four">
                 <div>
-                    <label for="manualBusinessType">涓氬姟绫诲瀷</label>
+                    <label for="manualBusinessType">业务类型</label>
                     <select id="manualBusinessType">
-                        <option value="caps.201.001.01">鍗曠瑪鎵ｆ caps.201</option>
-                        <option value="caps.203.001.01">瀹炴椂浜ゆ槗鏌ヨ caps.203</option>
-                        <option value="caps.305.sign">鍗忚绛剧害 caps.305 ADDD/SD00</option>
-                        <option value="caps.305.sms">鐭俊纭 caps.305 SD01</option>
-                        <option value="caps.305.cancel">鍗忚瑙ｇ害 caps.305 DELE</option>
-                        <option value="caps.305.query">鍗忚/鎵ｆ缁撴灉鏌ヨ caps.305</option>
-                        <option value="caps.101.001.01">鎵归噺浠ｆ敹 caps.101</option>
-                        <option value="caps.103.001.01">鎵归噺鏌ヨ caps.103</option>
-                        <option value="caps.105.001.01">鎵归噺纭/缁撴灉 caps.105</option>
-                        <option value="caps.307.001.01">鍗忚鎾ら攢 caps.307</option>
-                        <option value="caps.601.001.01">瀵硅处鎻愬洖 caps.601</option>
-                        <option value="caps.999.001.01">鑱旀満妫€鏌?caps.999</option>
+                        <option value="caps.201.001.01">单笔扣款 caps.201</option>
+                        <option value="caps.203.001.01">实时交易查询 caps.203</option>
+                        <option value="caps.305.sign">协议签约 caps.305 ADDD/SD00</option>
+                        <option value="caps.305.sms">短信确认 caps.305 SD01</option>
+                        <option value="caps.305.cancel">协议解约 caps.305 DELE</option>
+                        <option value="caps.305.bank-sign">银行主动签约 caps.305 BKSD ADDD</option>
+                        <option value="caps.305.bank-cancel">银行主动解约 caps.305 BKSD DELE</option>
+                        <option value="caps.305.query">协议/扣款结果查询 caps.305</option>
+                        <option value="caps.101.001.01">批量代收 caps.101</option>
+                        <option value="caps.103.001.01">批量查询 caps.103</option>
+                        <option value="caps.105.001.01">批量确认/结果 caps.105</option>
+                        <option value="caps.307.001.01">协议撤销 caps.307</option>
+                        <option value="caps.601.001.01">对账提回 caps.601</option>
+                        <option value="caps.999.001.01">联机检查 caps.999</option>
                     </select>
                 </div>
                 <div>
-                    <label for="manualReqId">璇锋眰娴佹按 ReqId</label>
-                    <input id="manualReqId" placeholder="鐣欑┖鑷姩鐢熸垚">
+                    <label for="manualReqId">请求流水 ReqId</label>
+                    <input id="manualReqId" placeholder="留空自动生成">
                 </div>
                 <div>
-                    <label for="manualAccountNo">閾惰璐﹀彿</label>
+                    <label for="manualAccountNo">银行账号</label>
                     <input id="manualAccountNo" value="62220000000000009999">
                 </div>
                 <div>
-                    <label for="manualBankId">閾惰琛屽彿</label>
+                    <label for="manualBankId">银行行号</label>
                     <input id="manualBankId" value="105000">
                 </div>
             </div>
             <div class="grid four">
                 <div>
-                    <label for="manualAmount">閲戦</label>
+                    <label for="manualAmount">金额</label>
                     <input id="manualAmount" type="number" step="0.01" value="100.00">
                 </div>
                 <div>
-                    <label for="manualCustomerName">瀹㈡埛濮撳悕</label>
-                    <input id="manualCustomerName" value="娴嬭瘯鐢ㄦ埛">
+                    <label for="manualCustomerName">客户姓名</label>
+                    <input id="manualCustomerName" value="测试用户">
                 </div>
                 <div>
-                    <label for="manualCustomerId">瀹㈡埛缂栧彿</label>
-                    <input id="manualCustomerId" placeholder="鐣欑┖鑷姩鐢熸垚">
+                    <label for="manualCustomerId">客户编号</label>
+                    <input id="manualCustomerId" placeholder="留空自动生成">
                 </div>
                 <div>
-                    <label for="manualProtocolNo">鍗忚鍙?/label>
-                    <input id="manualProtocolNo" placeholder="绛剧害/鏌ヨ鍦烘櫙鍙～">
+                    <label for="manualProtocolNo">协议号</label>
+                    <input id="manualProtocolNo" placeholder="签约/查询场景可填">
                 </div>
             </div>
             <div class="grid four">
                 <div>
-                    <label for="manualBatchNo">鎵规鍙?/label>
-                    <input id="manualBatchNo" placeholder="鎵归噺浠ｆ敹鍙～">
+                    <label for="manualFeeNoList">费项列表</label>
+                    <input id="manualFeeNoList" value="00600|00601" placeholder="多个费项使用 | 分隔">
                 </div>
                 <div>
-                    <label for="manualSysSeqNo">涓氬姟娴佹按鍙?/label>
-                    <input id="manualSysSeqNo" placeholder="鐣欑┖鑷姩鐢熸垚">
+                    <label for="manualBatchNo">批次号</label>
+                    <input id="manualBatchNo" placeholder="批量代收可填">
                 </div>
-                <div class="wide-two">
-                    <label for="manualRemark">涓氬姟澶囨敞</label>
-                    <input id="manualRemark" value="浜哄伐妯℃嫙閾惰鍙戣捣">
+                <div>
+                    <label for="manualSysSeqNo">业务流水号</label>
+                    <input id="manualSysSeqNo" placeholder="留空自动生成">
+                </div>
+                <div>
+                    <label for="manualRemark">业务备注</label>
+                    <input id="manualRemark" value="人工模拟银行发起">
                 </div>
             </div>
             <div class="actions left">
-                <button id="buildManualMessageBtn" class="button secondary">鐢熸垚鍒版姤鏂囩紪杈戝櫒</button>
-                <button id="sendManualMessageBtn" class="button primary">鐢熸垚骞跺彂閫?/button>
-                <button id="resetManualFormBtn" class="button ghost">閲嶇疆褰曞叆</button>
+                <button id="buildManualMessageBtn" class="button secondary">生成到报文编辑器</button>
+                <button id="sendManualMessageBtn" class="button primary">生成并发送</button>
+                <button id="resetManualFormBtn" class="button ghost">重置录入</button>
             </div>
-            <pre id="manualBuildResult" class="result soft">绛夊緟褰曞叆涓氬姟淇℃伅銆?/pre>
+            <pre id="manualBuildResult" class="result soft">等待录入业务信息。</pre>
         </section>
 
         <section id="gateway" class="panel split-panel">
             <div class="section-title">
                 <div>
                     <p class="eyebrow">CAPS Gateway</p>
-                    <h2>閾惰 / CAPS 缃戝叧</h2>
+                    <h2>银行 / CAPS 网关</h2>
                 </div>
-                <p class="muted">淇濈暀鍘熷鎶ユ枃鍙戦€佽兘鍔涳紝閫傚悎绮樿创鍘傚晢鎶ユ枃鎴栬皟璇曠壒娈婂満鏅€?/p>
+                <p class="muted">保留原始报文发送能力，适合粘贴厂商报文或调试特殊场景。</p>
             </div>
             <div class="grid four compact-row">
                 <div>
-                    <label for="requestTemplateType">绀轰緥鎶ユ枃</label>
+                    <label for="requestTemplateType">示例报文</label>
                     <select id="requestTemplateType">
-                        <option value="caps.999.001.01">鑱旀満妫€鏌?caps.999</option>
-                        <option value="caps.301.001.01">鍗忚涓婁紶 caps.301</option>
-                        <option value="caps.303.001.01">鍗忚鏌ヨ caps.303</option>
-                        <option value="caps.305.sign">鍗忚绛剧害 caps.305 ADDD/SD00</option>
-                        <option value="caps.305.sms">鐭俊纭 caps.305 SD01</option>
-                        <option value="caps.305.cancel">鍗忚瑙ｇ害 caps.305 DELE</option>
-                        <option value="caps.305.query">鍗忚/鎵ｆ缁撴灉鏌ヨ caps.305</option>
-                        <option value="caps.101.001.01">鎵归噺浠ｆ敹 caps.101</option>
-                        <option value="caps.103.001.01">鎵归噺鏌ヨ caps.103</option>
-                        <option value="caps.105.001.01">鎵归噺纭/缁撴灉 caps.105</option>
-                        <option value="caps.201.001.01">鍗曠瑪鎵ｆ caps.201</option>
-                        <option value="caps.203.001.01">瀹炴椂浜ゆ槗鏌ヨ caps.203</option>
-                        <option value="caps.307.001.01">鍗忚鎾ら攢 caps.307</option>
-                        <option value="caps.601.001.01">瀵硅处鎻愬洖 caps.601</option>
+                        <option value="caps.999.001.01">联机检查 caps.999</option>
+                        <option value="caps.301.001.01">协议上传 caps.301</option>
+                        <option value="caps.303.001.01">协议查询 caps.303</option>
+                        <option value="caps.305.sign">协议签约 caps.305 ADDD/SD00</option>
+                        <option value="caps.305.sms">短信确认 caps.305 SD01</option>
+                        <option value="caps.305.cancel">协议解约 caps.305 DELE</option>
+                        <option value="caps.305.bank-sign">银行主动签约 caps.305 BKSD ADDD</option>
+                        <option value="caps.305.bank-cancel">银行主动解约 caps.305 BKSD DELE</option>
+                        <option value="caps.305.query">协议/扣款结果查询 caps.305</option>
+                        <option value="caps.101.001.01">批量代收 caps.101</option>
+                        <option value="caps.103.001.01">批量查询 caps.103</option>
+                        <option value="caps.105.001.01">批量确认/结果 caps.105</option>
+                        <option value="caps.201.001.01">单笔扣款 caps.201</option>
+                        <option value="caps.203.001.01">实时交易查询 caps.203</option>
+                        <option value="caps.307.001.01">协议撤销 caps.307</option>
+                        <option value="caps.601.001.01">对账提回 caps.601</option>
                     </select>
                 </div>
                 <div class="inline-actions">
-                    <button id="fillTemplateBtn" class="button secondary">濉厖绀轰緥</button>
+                    <button id="fillTemplateBtn" class="button secondary">填充示例</button>
                 </div>
             </div>
             <div class="grid two">
                 <div>
-                    <label for="gatewayRequest">璇锋眰鎶ユ枃</label>
+                    <label for="gatewayRequest">请求报文</label>
                     <textarea id="gatewayRequest" rows="17" spellcheck="false"></textarea>
-                    <button id="sendGatewayBtn" class="button primary">鍙戦€佸埌鎸℃澘缃戝叧</button>
+                    <button id="sendGatewayBtn" class="button primary">发送到挡板网关</button>
                 </div>
                 <div>
-                    <label for="gatewayResponse">鍝嶅簲鎶ユ枃</label>
+                    <label for="gatewayResponse">响应报文</label>
                     <textarea id="gatewayResponse" rows="17" readonly spellcheck="false"></textarea>
                 </div>
             </div>
@@ -180,44 +257,44 @@
             <div class="section-title">
                 <div>
                     <p class="eyebrow">Security Simulator</p>
-                    <h2>鍔犲瘑鏈哄巶鍟嗘ā鎷?/h2>
+                    <h2>加密机厂商模拟</h2>
                 </div>
-                <p class="muted">妯℃嫙绛惧悕銆侀獙绛俱€佸姞瀵嗐€佽В瀵嗭紝璋冪敤缁撴灉杩涘叆鎺ュ彛璁板綍锛屽彲鍦ㄩ摼璺拷韪腑鏌ヨ銆?/p>
+                <p class="muted">模拟签名、验签、加密、解密，调用结果进入接口记录，可在链路追踪中查询。</p>
             </div>
             <div class="grid four">
                 <div>
-                    <label for="hsmOperation">鎿嶄綔</label>
+                    <label for="hsmOperation">操作</label>
                     <select id="hsmOperation">
-                        <option value="sign">绛惧悕</option>
-                        <option value="verify">楠岀</option>
-                        <option value="encrypt">鍔犲瘑</option>
-                        <option value="decrypt">瑙ｅ瘑</option>
+                        <option value="sign">签名</option>
+                        <option value="verify">验签</option>
+                        <option value="encrypt">加密</option>
+                        <option value="decrypt">解密</option>
                     </select>
                 </div>
                 <div>
-                    <label for="hsmCertId">璇佷功 ID</label>
+                    <label for="hsmCertId">证书 ID</label>
                     <input id="hsmCertId" value="MOCK_CERT_01">
                 </div>
                 <div>
-                    <label for="hsmKeyIndex">瀵嗛挜绱㈠紩</label>
+                    <label for="hsmKeyIndex">密钥索引</label>
                     <input id="hsmKeyIndex" value="8">
                 </div>
                 <div>
-                    <label for="hsmAlgorithm">绠楁硶</label>
+                    <label for="hsmAlgorithm">算法</label>
                     <input id="hsmAlgorithm" value="SM3withSM2">
                 </div>
             </div>
             <div class="grid two">
                 <div>
-                    <label for="hsmInput">杈撳叆鍐呭</label>
+                    <label for="hsmInput">输入内容</label>
                     <textarea id="hsmInput" rows="8">hello yht</textarea>
                 </div>
                 <div>
-                    <label for="hsmSignature">绛惧悕/瀵嗘枃</label>
+                    <label for="hsmSignature">签名/密文</label>
                     <textarea id="hsmSignature" rows="8"></textarea>
                 </div>
             </div>
-            <button id="runHsmBtn" class="button primary">鎵ц鍔犲瘑鏈烘ā鎷?/button>
+            <button id="runHsmBtn" class="button primary">执行加密机模拟</button>
             <pre id="hsmResult" class="result"></pre>
         </section>
 
@@ -225,89 +302,38 @@
             <div class="section-title with-actions">
                 <div>
                     <p class="eyebrow">Scenario Rules</p>
-                    <h2>鍦烘櫙瑙勫垯</h2>
+                    <h2>场景规则</h2>
                 </div>
                 <div class="actions">
-                    <button id="newScenarioBtn" class="button ghost">鏂板缓瑙勫垯</button>
-                    <button id="refreshScenarioBtn" class="button secondary">鍒锋柊瑙勫垯</button>
+                    <button id="newScenarioBtn" class="button ghost">新建规则</button>
+                    <button id="refreshScenarioBtn" class="button secondary">刷新规则</button>
+                </div>
+            </div>
+            <input id="scenarioId" type="hidden">
+            <div class="grid two">
+                <div>
+                    <label for="scenarioName">规则名称</label>
+                    <input id="scenarioName" placeholder="例如：对手账号 6222 开头全部失败">
+                </div>
+                <div>
+                    <label for="scenarioAccountRule">账号规则（正则表达式）</label>
+                    <input id="scenarioAccountRule" placeholder="例如 6222.* 或 3309.* ；留空=匹配任意对手账号">
                 </div>
             </div>
             <div class="grid four">
-                <input id="scenarioId" type="hidden">
+                <label class="checkbox"><input id="scenarioEnabled" type="checkbox" checked> 启用规则</label>
+                <label class="checkbox"><input id="scenarioValid" type="checkbox" checked> 是否有效（不勾选=命中即交易失败）</label>
+                <label class="checkbox"><input id="scenarioClass1Card" type="checkbox" checked> 是否一类卡（不勾选=二类卡日限额1万）</label>
                 <div>
-                    <label for="scenarioName">瑙勫垯鍚嶇О</label>
-                    <input id="scenarioName" placeholder="渚嬪锛氳处鍙峰熬鍙?9999 杩斿洖澶辫触">
-                </div>
-                <div>
-                    <label for="scenarioMesgType">璇锋眰鎶ユ枃</label>
-                    <input id="scenarioMesgType" placeholder="caps.201.001.01">
-                </div>
-                <div>
-                    <label for="scenarioAcctNo">璐﹀彿绮剧‘鍖归厤</label>
-                    <input id="scenarioAcctNo" placeholder="6222...">
-                </div>
-                <div>
-                    <label for="scenarioAcctSuffix">璐﹀彿灏惧彿鍖归厤</label>
-                    <input id="scenarioAcctSuffix" placeholder="9999">
+                    <label for="scenarioRemark">备注</label>
+                    <input id="scenarioRemark" placeholder="规则说明">
                 </div>
             </div>
-            <div class="grid four">
-                <div>
-                    <label for="scenarioProtocolNo">鍗忚鍙峰尮閰?/label>
-                    <input id="scenarioProtocolNo" placeholder="MOCK-PROT-...">
-                </div>
-                <div>
-                    <label for="scenarioReqId">ReqId 鍖归厤</label>
-                    <input id="scenarioReqId" placeholder="REQ-...">
-                </div>
-                <div>
-                    <label for="scenarioBatchNo">鎵规鍙峰尮閰?/label>
-                    <input id="scenarioBatchNo" placeholder="MOCK-BATCH-...">
-                </div>
-                <div>
-                    <label for="scenarioSysSeqNo">娴佹按鍙峰尮閰?/label>
-                    <input id="scenarioSysSeqNo" placeholder="MOCK-SEQ-...">
-                </div>
-            </div>
-            <div class="grid four">
-                <div>
-                    <label for="scenarioResFlag">ResFlag</label>
-                    <select id="scenarioResFlag">
-                        <option value="">榛樿</option>
-                        <option value="SUCC">SUCC</option>
-                        <option value="FAIL">FAIL</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="scenarioStatus">涓氬姟鐘舵€?/label>
-                    <input id="scenarioStatus" placeholder="SUCCESS / FAIL / PROCESSING">
-                </div>
-                <div>
-                    <label for="scenarioRetCode">杩斿洖鐮?/label>
-                    <input id="scenarioRetCode" placeholder="000000">
-                </div>
-                <div>
-                    <label for="scenarioRetMsg">杩斿洖淇℃伅</label>
-                    <input id="scenarioRetMsg" placeholder="浜ゆ槗鎴愬姛 / 浣欓涓嶈冻">
-                </div>
-            </div>
-            <div class="grid four">
-                <label class="checkbox"><input id="scenarioEnabled" type="checkbox" checked> 鍚敤瑙勫垯</label>
-                <label class="checkbox"><input id="scenarioDisableCallback" type="checkbox"> 绂佹鑷姩鍥炶皟</label>
-                <div>
-                    <label for="scenarioCallbackType">鎸囧畾鍥炶皟鎶ユ枃</label>
-                    <input id="scenarioCallbackType" placeholder="caps.306.001.01">
-                </div>
-                <div>
-                    <label for="scenarioRemark">澶囨敞</label>
-                    <input id="scenarioRemark" placeholder="瑙勫垯璇存槑">
-                </div>
-            </div>
-            <button id="saveScenarioBtn" class="button primary">淇濆瓨鍦烘櫙瑙勫垯</button>
+            <button id="saveScenarioBtn" class="button primary">保存场景规则</button>
             <div class="table-card">
                 <table>
                     <thead>
-                    <tr><th>ID</th><th>瑙勫垯</th><th>璇锋眰鎶ユ枃</th><th>鍖归厤鏉′欢</th><th>鍝嶅簲鎺у埗</th><th>鎿嶄綔</th></tr>
+                    <tr><th>ID</th><th>规则</th><th>账号规则</th><th>有效性 / 卡类型</th><th>操作</th></tr>
                     </thead>
                     <tbody id="scenarioTableBody"></tbody>
                 </table>
@@ -318,31 +344,32 @@
             <div class="section-title with-actions">
                 <div>
                     <p class="eyebrow">Trace Explorer</p>
-                    <h2>鎺ュ彛璋冪敤閾捐矾杩借釜</h2>
+                    <h2>接口调用链路追踪</h2>
                 </div>
                 <div class="actions">
-                    <button id="refreshLogsBtn" class="button secondary">鍒锋柊璁板綍</button>
-                    <button id="clearLogsBtn" class="button danger">娓呯┖璁板綍</button>
+                    <button id="refreshLogsBtn" class="button secondary">刷新记录</button>
+                    <button id="clearLogsBtn" class="button danger">清空记录</button>
                 </div>
             </div>
             <div class="grid four">
                 <div class="wide-two">
-                    <label for="traceKeyword">閾捐矾鍏抽敭璇?/label>
-                    <input id="traceKeyword" placeholder="鍙緭鍏?ReqId銆佸崗璁彿銆佹壒娆″彿銆佹祦姘村彿銆佹姤鏂囩被鍨嬨€佽褰?ID">
+                    <label for="traceKeyword">链路关键词</label>
+                    <input id="traceKeyword" placeholder="可输入 ReqId、协议号、批次号、流水号、报文类型、记录 ID">
                 </div>
                 <div>
-                    <label for="traceTypeFilter">鎺ュ彛绫诲瀷</label>
+                    <label for="traceTypeFilter">接口类型</label>
                     <select id="traceTypeFilter">
-                        <option value="">鍏ㄩ儴鎺ュ彛</option>
-                        <option value="GATEWAY">閾惰 / CAPS</option>
-                        <option value="CALLBACK">鍥炶皟</option>
-                        <option value="HSM">鍔犲瘑鏈?/option>
+                        <option value="">全部接口</option>
+                        <option value="MOVEMENT">动账通知</option>
+                        <option value="GATEWAY">银行 / CAPS</option>
+                        <option value="CALLBACK">回调</option>
+                        <option value="HSM">加密机</option>
                     </select>
                 </div>
                 <div>
-                    <label for="traceStatusFilter">鐘舵€?/label>
+                    <label for="traceStatusFilter">状态</label>
                     <select id="traceStatusFilter">
-                        <option value="">鍏ㄩ儴鐘舵€?/option>
+                        <option value="">全部状态</option>
                         <option value="SUCCESS">SUCCESS</option>
                         <option value="FAIL">FAIL</option>
                         <option value="ERROR">ERROR</option>
@@ -351,22 +378,22 @@
                 </div>
             </div>
             <div class="actions left">
-                <button id="applyTraceBtn" class="button primary">鏌ヨ閾捐矾</button>
-                <button id="resetTraceBtn" class="button ghost">閲嶇疆绛涢€?/button>
-                <span id="traceSummary" class="trace-summary">绛夊緟鍔犺浇鎺ュ彛璁板綍銆?/span>
+                <button id="applyTraceBtn" class="button primary">查询链路</button>
+                <button id="resetTraceBtn" class="button ghost">重置筛选</button>
+                <span id="traceSummary" class="trace-summary">等待加载接口记录。</span>
             </div>
             <div class="grid two trace-grid">
                 <div class="trace-work-card trace-list-card">
                     <div class="trace-card-head">
                         <div>
-                            <h3>鎺ュ彛璁板綍</h3>
-                            <p class="muted">鐐瑰嚮浠绘剰璁板綍锛屽彸渚т細鑷姩涓茶仈鍚屼竴涓氬姟閾捐矾銆?/p>
+                            <h3>接口记录</h3>
+                            <p class="muted">点击任意记录，右侧会自动串联同一业务链路。</p>
                         </div>
                     </div>
                     <div class="trace-table-scroll">
                         <table>
                             <thead>
-                            <tr><th>ID</th><th>鎺ュ彛</th><th>鎶ユ枃</th><th>鐘舵€?/th><th>閾捐矾鏍囪瘑</th><th>鏃堕棿</th></tr>
+                            <tr><th>ID</th><th>接口</th><th>报文</th><th>状态</th><th>链路标识</th><th>时间</th></tr>
                             </thead>
                             <tbody id="recordTableBody"></tbody>
                         </table>
@@ -375,13 +402,18 @@
                 <div class="trace-work-card trace-chain-card">
                     <div class="trace-card-head chain-header">
                         <div>
-                            <h3>璋冪敤閾炬椂闂寸嚎</h3>
-                            <p id="traceChainSummary" class="muted">杈撳叆閾捐矾鍏抽敭璇嶆垨鐐瑰嚮璁板綍鍚庯紝鎸夊墠鍚庤皟鐢ㄥ叧绯讳覆鑱斿睍绀恒€?/p>
+                            <h3>调用链时间线</h3>
+                            <p id="traceChainSummary" class="muted">输入链路关键词或点击记录后，按前后调用关系串联展示。</p>
                         </div>
                     </div>
-                    <div id="traceChainTimeline" class="trace-chain-timeline empty-chain">鏆傛棤閾捐矾锛岃鍏堟煡璇㈡垨閫夋嫨涓€鏉℃帴鍙ｈ褰曘€?/div>
-                    <label for="recordDetail">璋冪敤璇︽儏</label>
-                    <textarea id="recordDetail" rows="10" readonly spellcheck="false"></textarea>
+                    <div id="traceChainTimeline" class="trace-chain-timeline empty-chain">暂无链路，请先查询或选择一条接口记录。</div>
+                    <div class="grid two">
+                        <div><label for="recordRequestRaw">原始请求报文（加密报文原文）</label><textarea id="recordRequestRaw" rows="7" readonly spellcheck="false"></textarea></div>
+                        <div><label for="recordRequestPlain">解密后请求报文</label><textarea id="recordRequestPlain" rows="7" readonly spellcheck="false"></textarea></div>
+                        <div><label for="recordResponseRaw">原始响应报文（加密报文原文）</label><textarea id="recordResponseRaw" rows="7" readonly spellcheck="false"></textarea></div>
+                        <div><label for="recordResponsePlain">解密后响应报文</label><textarea id="recordResponsePlain" rows="7" readonly spellcheck="false"></textarea></div>
+                    </div>
+                    <p id="recordDetailHint" class="muted">未加密的节点两侧报文一致；解密后报文为空表示该节点报文本身即明文。</p>
                 </div>
             </div>
         </section>
@@ -390,7 +422,7 @@
             <div class="section-title with-actions">
                 <div>
                     <p class="eyebrow">State Store</p>
-                    <h2>涓氬姟鐘舵€佷粨</h2>
+                    <h2>业务状态仓</h2>
                 </div>
                 <div class="actions">
                     <button id="refreshStateBtn" class="button secondary">刷新状态</button>
@@ -399,60 +431,114 @@
             </div>
             <div class="grid three state-grid">
                 <div class="table-card state-table-card">
-                    <h3>鍗忚鐘舵€?/h3>
-                    <div class="state-table-scroll"><table><thead><tr><th>鍗忚鍙?/th><th>鐘舵€?/th><th>鍛戒腑瑙勫垯</th></tr></thead><tbody id="protocolTableBody"></tbody></table></div>
+                    <h3>协议状态</h3>
+                    <div class="state-table-scroll"><table><thead><tr><th>协议号</th><th>状态</th><th>命中规则</th></tr></thead><tbody id="protocolTableBody"></tbody></table></div>
                 </div>
                 <div class="table-card state-table-card">
-                    <h3>浜ゆ槗鐘舵€?/h3>
-                    <div class="state-table-scroll"><table><thead><tr><th>娴佹按鍙?/th><th>鐘舵€?/th><th>鍛戒腑瑙勫垯</th></tr></thead><tbody id="tradeTableBody"></tbody></table></div>
+                    <h3>交易状态</h3>
+                    <div class="state-table-scroll"><table><thead><tr><th>流水号</th><th>状态</th><th>命中规则</th></tr></thead><tbody id="tradeTableBody"></tbody></table></div>
                 </div>
                 <div class="table-card state-table-card">
-                    <h3>鎵规鐘舵€?/h3>
-                    <div class="state-table-scroll"><table><thead><tr><th>鎵规鍙?/th><th>鐘舵€?/th><th>鍛戒腑瑙勫垯</th></tr></thead><tbody id="batchTableBody"></tbody></table></div>
+                    <h3>批次状态</h3>
+                    <div class="state-table-scroll"><table><thead><tr><th>批次号</th><th>状态</th><th>命中规则</th></tr></thead><tbody id="batchTableBody"></tbody></table></div>
                 </div>
             </div>
-            <label for="stateDetail">鐘舵€?/ 瑙勫垯璇︽儏</label>
+            <label for="stateDetail">状态 / 规则详情</label>
             <textarea id="stateDetail" rows="10" readonly spellcheck="false"></textarea>
+        </section>
+
+        <section id="movements" class="panel">
+            <div class="section-title">
+                <div><p class="eyebrow">Movement Ledger</p><h2>资金流水</h2></div>
+                <p class="muted">仅展示挡板成功交易的模拟流水，不是银行真实流水。补通知不发送，补推才调用结算服务；只有未推送（未生成 / 待推送）与推送失败的流水可以推送，已受理、发送中、历史保护、结果不明禁止重复推送。</p>
+            </div>
+            <div class="grid four">
+                <div><label for="flowFrom">业务日期从</label><input id="flowFrom" type="date"></div>
+                <div><label for="flowTo">业务日期至</label><input id="flowTo" type="date"></div>
+                <div><label for="flowBank">中心银行标识</label><input id="flowBank" maxlength="40" placeholder="精确匹配"></div>
+                <div><label for="flowAccount">中心账号</label><input id="flowAccount" maxlength="40" placeholder="精确匹配"></div>
+                <div><label for="flowKeyword">流水 / 批次 / 请求标识</label><input id="flowKeyword" maxlength="120" placeholder="支持部分内容查询"></div>
+                <div><label for="flowDirection">收付方向</label><select id="flowDirection"><option value="">全部</option><option value="IN">收款</option><option value="OUT">付款</option></select></div>
+                <div><label for="flowStatus">通知状态</label><select id="flowStatus"><option value="">全部</option><option value="MISSING,PENDING,FAIL">可推送（未推送 / 失败）</option><option value="MISSING,PENDING">未推送（未生成 / 待推送）</option><option value="MISSING">未生成</option><option value="PENDING">待推送</option><option value="FAIL">推送失败</option><option value="SENDING">发送中</option><option value="SUCC">已受理</option><option value="UNKNOWN">结果不明</option><option value="LEGACY">历史保护</option></select></div>
+                <div><label for="flowSize">每页条数</label><select id="flowSize"><option value="20">20</option><option value="50">50</option><option value="100">100</option></select></div>
+            </div>
+            <div class="actions left">
+                <button id="queryFlowsBtn" class="button primary">查询流水</button>
+                <button id="resetFlowsBtn" class="button secondary">重置条件</button>
+                <button id="syncFlowsBtn" class="button secondary">同步已有成功交易</button>
+                <button id="normalizeSerialsBtn" class="button secondary">修复超长流水号</button>
+            </div>
+            <p class="muted">同步只补充流水、不发送通知。旧交易缺少原始请求时会跳过；已有历史发送占位但缺少通知快照时禁止重推。银行流水号统一不超过 32 位：新生成的流水按上限生成，历史超长数据可点「修复超长流水号」一键收敛（幂等，可重复执行，已生成报文同步改写）。</p>
+            <p id="flowResult" role="status" aria-live="polite"></p>
+            <div class="grid two">
+                <div><label for="batchPushReason">批量推送原因（必填）</label><input id="batchPushReason" maxlength="200" placeholder="例如：已核对结算端未收到，批量补推未推送与失败的流水"></div>
+                <div><label for="batchPushTargetPreview">本次推送地址（取回调配置）</label><input id="batchPushTargetPreview" readonly></div>
+            </div>
+            <label class="flow-confirm"><input id="batchPushConfirmed" type="checkbox">所选中含「推送失败」的流水时，我已核对结算端未收到，知悉重复推送可能重复动账</label>
+            <div class="actions left">
+                <button id="batchPushFlowsBtn" class="button primary">批量补生成并推送</button>
+                <button id="clearFlowSelectionBtn" class="button secondary">清除选择</button>
+                <span id="flowSelectionCount" class="trace-summary">未勾选流水。</span>
+            </div>
+            <p class="muted">批量推送只处理「未生成 / 待推送 / 失败」：未生成的先补生成通知再推送，推送失败属补推需勾选核对确认；已受理、发送中、历史保护、结果不明一律拒绝，不会重复动账（结果不明请在「详情 / 补操作」弹窗中核对结算后单笔补推）。建议先把「通知状态」筛成「可推送（未推送 / 失败）」再全选批量处理。</p>
+            <pre id="batchPushResult" class="result" hidden></pre>
+            <div class="flow-table-wrap">
+                <table><thead><tr><th class="check-col"><input id="flowSelectAll" type="checkbox" aria-label="全选本页流水"></th><th>业务日期</th><th>中心银行 / 账号</th><th>银行流水 / 批次</th><th>方向</th><th>金额</th><th>通知状态</th><th>发送次数</th><th>操作</th></tr></thead><tbody id="flowTableBody"></tbody></table>
+            </div>
+            <div class="actions left">
+                <button id="flowPreviousBtn" class="button secondary">上一页</button>
+                <span id="flowPageInfo">第 1 页</span>
+                <button id="flowNextBtn" class="button secondary">下一页</button>
+            </div>
         </section>
 
         <section id="callback" class="panel">
             <div class="section-title">
                 <div>
                     <p class="eyebrow">Callback</p>
-                    <h2>鍥炶皟閰嶇疆</h2>
+                    <h2>回调配置</h2>
                 </div>
-                <p class="muted">閰嶇疆鑷姩鍥炶皟鍜屾墜鍔ㄥ洖璋冿紝鐢ㄤ簬妯℃嫙閾惰寮傛閫氱煡涓氬姟绯荤粺銆?/p>
+                <p class="muted">配置自动回调和手动回调，用于模拟银行异步通知业务系统。</p>
             </div>
             <div class="grid four">
                 <div>
-                    <label for="autoPushEnabled">鑷姩鍥炶皟</label>
+                    <label for="autoPushEnabled">自动回调</label>
                     <select id="autoPushEnabled">
-                        <option value="true">寮€鍚?/option>
-                        <option value="false">鍏抽棴</option>
+                        <option value="true">开启</option>
+                        <option value="false">关闭</option>
                     </select>
                 </div>
                 <div>
-                    <label for="delayMs">鍥炶皟寤惰繜(ms)</label>
+                    <label for="delayMs">回调延迟(ms)</label>
                     <input id="delayMs" type="number" value="800">
                 </div>
                 <div>
-                    <label for="defaultTargetUrl">榛樿鍥炶皟鍦板潃</label>
-                    <input id="defaultTargetUrl" placeholder="鐢遍厤缃枃浠舵彁渚涳紝鍙湪姝や复鏃惰皟鏁?>
+                    <label for="defaultTargetUrl">默认回调地址</label>
+                    <input id="defaultTargetUrl" placeholder="由配置文件提供，可在此临时调整">
                 </div>
                 <div>
-                    <label for="hsmMockKey">HSM 绉橀挜绉嶅瓙</label>
+                    <label for="hsmMockKey">HSM 秘钥种子</label>
                     <input id="hsmMockKey" value="YHT-MOCK-HSM">
                 </div>
             </div>
             <div class="grid four">
-                <label class="checkbox"><input id="pushCaps107" type="checkbox" checked> 鎺ㄩ€?caps.107</label>
-                <label class="checkbox"><input id="pushCaps205" type="checkbox" checked> 鎺ㄩ€?caps.205</label>
-                <label class="checkbox"><input id="pushCaps306" type="checkbox" checked> 鎺ㄩ€?caps.306</label>
-                <label class="checkbox"><input id="pushCaps308" type="checkbox" checked> 鎺ㄩ€?caps.308</label>
+                <label class="checkbox"><input id="pushCaps107" type="checkbox" checked> 推送 caps.107</label>
+                <label class="checkbox"><input id="pushCaps205" type="checkbox" checked> 推送 caps.205</label>
+                <label class="checkbox"><input id="pushCaps306" type="checkbox" checked> 推送 caps.306</label>
+                <label class="checkbox"><input id="pushCaps308" type="checkbox" checked> 推送 caps.308</label>
+            </div>
+            <h3>随机模拟交易失败</h3>
+            <p class="muted">开启后，对任意判定为成功的交易按设定概率随机返回失败（用于压测与异常模拟）。与下方账号校验规则叠加生效：账号规则判定失败时优先返回规则失败，规则判定成功后再按本开关随机失败。</p>
+            <div class="grid four">
+                <label class="checkbox"><input id="randomFail" type="checkbox"> 开启随机模拟失败</label>
+                <div>
+                    <label for="randomFailRatio">随机失败概率（0~1）</label>
+                    <input id="randomFailRatio" type="number" min="0" max="1" step="0.05" value="0.5">
+                </div>
             </div>
             <div class="grid four compact-row">
                 <div>
-                    <label for="manualCallbackType">鎵嬪姩鍥炶皟鎶ユ枃</label>
+                    <label for="manualCallbackType">手动回调报文</label>
                     <select id="manualCallbackType">
                         <option value="caps.306.001.01">caps.306.001.01</option>
                         <option value="caps.205.001.01">caps.205.001.01</option>
@@ -464,13 +550,92 @@
                 </div>
             </div>
             <div class="actions left">
-                <button id="saveConfigBtn" class="button primary">淇濆瓨閰嶇疆</button>
-                <button id="triggerCallbackBtn" class="button secondary">鎵嬪姩鍙戦€佸洖璋?/button>
+                <button id="saveConfigBtn" class="button primary">保存配置</button>
+                <button id="triggerCallbackBtn" class="button secondary">手动发送回调</button>
             </div>
+            <h3>交易成功自动动账通知</h3>
+            <p class="muted">默认关闭。启用后调用结算系统模拟动账接口并触发后续处理。与 CAPS 回调开关独立，保存配置后生效。对手账户兜底开启时，所有动账通知统一使用下方默认兜底账户，不再按中心账户所属银行判断是否配置了对手账户。</p>
+            <div class="grid four">
+                <div><label for="movementEnabled">自动生成并提交</label><select id="movementEnabled"><option value="false">关闭</option><option value="true">开启</option></select></div>
+                <div><label for="movementFallbackEnabled">对手账户兜底</label><select id="movementFallbackEnabled"><option value="false">关闭（按中心银行匹配）</option><option value="true">开启（全部用兜底账户）</option></select></div>
+                <div><label for="movementTargetUrl">模拟动账接口完整地址</label><input id="movementTargetUrl" placeholder="默认取结算服务地址，可手动覆盖"></div>
+                <div><label for="movementReceiveCode">收款动账代码</label><input id="movementReceiveCode" maxlength="10" placeholder="默认 SBDC100，可覆盖"></div>
+                <div><label for="movementPayCode">付款动账代码</label><input id="movementPayCode" maxlength="10" placeholder="默认 SBDC100，可覆盖"></div>
+                <div><label for="movementBalance">模拟余额（非真实余额）</label><input id="movementBalance" type="number" step="0.01" value="0.00"></div>
+                <div><label for="movementAuthorizationEnv">鉴权环境变量名称（可选）</label><input id="movementAuthorizationEnv" placeholder="只填变量名，不填 Token"></div>
+            </div>
+            <p class="muted">收款为正金额、付款为负金额。结果在接口记录中查看 MOVEMENT / saveZhbdzt；结果不明不自动重试，避免重复动账。清除历史数据保留动账去重记录。</p>
+            <div class="actions left"><button id="saveMovementConfigBtn" class="button primary">保存配置</button></div>
             <pre id="callbackResult" class="result"></pre>
+            <h3>银行对手账户配置</h3>
+            <p class="muted">按中心账户所属银行标识精确匹配（不是个人账户银行）。单笔付款取 DbtrBankId，单笔收款取 CdtrBankId，批量取请求文件汇总行第六列。未配置或停用时仅记录失败，不发送动账通知。</p>
+            <div class="grid four">
+                <div><label for="counterpartyBankId">中心账户所属银行标识</label><input id="counterpartyBankId" maxlength="40" placeholder="与请求中的银行标识完全一致"></div>
+                <div><label for="counterpartyBankName">中心银行名称</label><input id="counterpartyBankName" maxlength="80"></div>
+                <div><label for="counterpartyAccountNo">对手账号</label><input id="counterpartyAccountNo" maxlength="40"></div>
+                <div><label for="counterpartyAccountName">对手户名</label><input id="counterpartyAccountName" maxlength="80"></div>
+                <div><label for="counterpartyAccountBankId">对手账户行号</label><input id="counterpartyAccountBankId" maxlength="40"></div>
+                <div><label for="counterpartyEnabled">状态</label><select id="counterpartyEnabled"><option value="true">启用</option><option value="false">停用</option></select></div>
+            </div>
+            <div class="actions left">
+                <button id="saveBankCounterpartyBtn" class="button primary">保存银行账户</button>
+                <button id="newBankCounterpartyBtn" class="button secondary">新增 / 清空表单</button>
+                <button id="refreshBankCounterpartyBtn" class="button secondary">刷新列表</button>
+            </div>
+            <p class="muted">每个中心银行配置一组对手账户，保存立即生效；请将同一组对手账号、户名、行号配置到结算系统。清除历史数据不删除本配置。</p>
+            <div class="table-wrap">
+                <table><thead><tr><th>中心银行标识</th><th>中心银行名称</th><th>对手账号</th><th>对手户名</th><th>对手行号</th><th>状态</th><th>操作</th></tr></thead><tbody id="bankCounterpartyTableBody"></tbody></table>
+            </div>
+            <pre id="bankCounterpartyResult" class="result" aria-live="polite"></pre>
         </section>
     </main>
 </div>
+<dialog id="batchDetailDialog" class="mock-dialog">
+    <div class="dialog-head">
+        <div>
+            <h3>批量明细</h3>
+            <p id="batchDetailSummary" class="muted">正在加载…</p>
+        </div>
+        <div class="actions"><button id="closeBatchDetailBtn" class="button ghost">关闭</button></div>
+    </div>
+    <p class="muted">动账通知按包生成：整个批次一条流水，金额取成功明细合计；下表逐笔展示明细自身状态与失败原因。</p>
+    <div class="trace-table-scroll">
+        <table>
+            <thead><tr><th>序号</th><th>银行标识</th><th>账号</th><th>户名</th><th>金额</th><th>明细状态</th><th>失败原因</th><th>是否纳入包流水</th></tr></thead>
+            <tbody id="batchDetailBody"></tbody>
+        </table>
+    </div>
+</dialog>
+<dialog id="flowDetailDialog" class="mock-dialog">
+    <div class="dialog-head">
+        <div>
+            <h3>流水详情与补操作</h3>
+            <p id="flowSelection" class="muted"></p>
+        </div>
+        <div class="actions"><button id="closeFlowDetailBtn" class="button ghost">关闭</button></div>
+    </div>
+    <p id="flowActionHint" class="muted"></p>
+    <div class="grid two">
+        <div><label for="flowReason">操作原因（必填）</label><input id="flowReason" maxlength="200" placeholder="例如：已核对结算端未收到，现手动补推"></div>
+        <div><label for="flowTargetPreview">本次推送地址（取回调配置）</label><input id="flowTargetPreview" readonly></div>
+    </div>
+    <label class="flow-confirm"><input id="flowConfirmed" type="checkbox">我已核对结算端，确认未收到本通知，知悉重复推送可能重复动账（补推失败 / 结果不明流水时必填）</label>
+    <div class="actions left">
+        <button id="generateFlowBtn" class="button secondary">补动账通知（仅生成）</button>
+        <button id="pushFlowBtn" class="button primary">推送到结算</button>
+        <button id="refreshFlowDetailBtn" class="button secondary">刷新详情</button>
+    </div>
+    <div id="flowRecoveryPanel" hidden>
+        <label class="flow-confirm"><input id="flowSenderStopped" type="checkbox">已停止原发送节点并重启，且已核对结算接收结果（不能仅因等待较久而勾选）</label>
+        <button id="recoverFlowBtn" class="button secondary">恢复中断发送为结果不明（不发送）</button>
+    </div>
+    <p id="flowOperationResult" role="status" aria-live="polite"></p>
+    <p class="muted">已受理不代表结算后续记账完成，但禁止重推。失败、结果不明必须先核对；发送中禁止重复发送。关闭自动开关不影响人工补操作。</p>
+    <h3>已保存的通知报文</h3><pre id="flowPayload" class="result"></pre>
+    <h3>生成 / 推送记录</h3><pre id="flowAttempts" class="result"></pre>
+</dialog>
+<script src="/yht-mock/movements.js"></script>
+<script src="/yht-mock/business.js"></script>
 <script src="/yht-mock/app.js"></script>
 </body>
 </html>

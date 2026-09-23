@@ -62,7 +62,7 @@ CENTER_ACCOUNTS: dict[str, dict[str, str]] = {
         "code": "105000",
         "name": "中国建设银行",
         "account": "33001638048050004672",
-        "account_name": "嘉兴市住房公积金管理中心市本级",
+        "account_name": "公司九七",
         "line_no": "105335000023",
     },
     "工行": {
@@ -82,8 +82,8 @@ CENTER_ACCOUNTS: dict[str, dict[str, str]] = {
     "中行": {
         "code": "104000",
         "name": "中国银行",
-        "account": "362358713007",
-        "account_name": "嘉兴市住房公积金管理中心市本级",
+        "account": "203708873020",
+        "account_name": "南昌市住房公积金管理中心",
         "line_no": "104335050331",
     },
     "交行": {

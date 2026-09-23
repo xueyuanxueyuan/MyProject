@@ -23,7 +23,7 @@ class Caps900EnvelopeTest {
 
     @Test
     void signedEncryptedRequestStillReceivesUnsignedPlaintext900() {
-        MockStoreService store = new MockStoreService(tempDir.resolve("state.json"));
+        MockStoreService store = DatabaseTestSupport.create(tempDir.resolve("state.json"));
         MockGatewaySupport support = new MockGatewaySupport(codec, store);
         SvsMockService svs = mock(SvsMockService.class);
         when(svs.decryptBytes(anyString(), any())).thenReturn(

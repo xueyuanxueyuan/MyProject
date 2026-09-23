@@ -2,6 +2,8 @@ package cn.capinfo.gjj.yhtmock.model;
 
 public class MockSettings {
 
+    public MovementSettings movement = new MovementSettings();
+
     public boolean autoPushEnabled = true;
     public String defaultTargetUrl;
     public long delayMs = 800L;
@@ -17,4 +19,9 @@ public class MockSettings {
     public String hsmMockKey = "YHT-MOCK-HSM";
     public String svsMockKey = "YHT-MOCK-SVS";
     public boolean svsVerifyLenient = true;
+
+    /** 随机模拟交易状态开关：开启后交易状态随机失败（覆盖账号校验规则判定）。 */
+    public boolean randomFail = false;
+    /** 随机失败概率（0~1），仅当 randomFail=true 时生效。 */
+    public double randomFailRatio = 0.5;
 }

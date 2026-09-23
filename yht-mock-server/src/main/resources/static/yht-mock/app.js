@@ -1,7 +1,8 @@
 const state = {
     records: [],
     selectedRecordId: null,
-    chainRecords: []
+    chainRecords: [],
+    settings: {}
 };
 
 async function request(url, options = {}) {
@@ -145,9 +146,9 @@ function base64Utf8(value) {
         bytes.forEach(byte => {
             binary += String.fromCharCode(byte);
         });
-        return base64Utf8(binary);
+        return btoa(binary);
     }
-    return base64Utf8(unescape(encodeURIComponent(text)));
+    return btoa(unescape(encodeURIComponent(text)));
 }
 
 function getTemplates() {
@@ -157,6 +158,12 @@ function getTemplates() {
         `1|105000||62220000000000009999|MOCK-PAYER|100.00|||SERIAL-${stamp}`
     ].join('\\n'));
     return {
+        'caps.305.bank-sign': `${buildHeader('caps.305.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.305.001.01"><Head><CorpNo>33503C5801</CorpNo></Head><Body><ReqId>REQ-BANK-${stamp}</ReqId><ChngTp>ADDD</ChngTp><SndrFlg>BKSD</SndrFlg><CstmrId>CUST-${stamp}</CstmrId><CstmrNm>MOCK-PAYER</CstmrNm><FeeNoList>00600|00601</FeeNoList><DbtrProtocol>0</DbtrProtocol><DbtrActId>62220000000000009999</DbtrActId><DbtrActName>MOCK-PAYER</DbtrActName><DbtrCardType>03</DbtrCardType><DbtrBankId>105000</DbtrBankId><SndTp>SD00</SndTp><Remark>manual bank sign</Remark></Body></Message>`,
+        'caps.305.bank-cancel': `${buildHeader('caps.305.001.01')}
+
+<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.305.001.01"><Head><CorpNo>33503C5801</CorpNo></Head><Body><ReqId>REQ-BANK-${stamp}</ReqId><ChngTp>DELE</ChngTp><SndrFlg>BKSD</SndrFlg><CstmrId>CUST-${stamp}</CstmrId><CstmrNm>MOCK-PAYER</CstmrNm><FeeNoList>00600|00601</FeeNoList><DbtrProtocol>MOCK-PROT-${stamp}</DbtrProtocol><DbtrBankId>105000</DbtrBankId><SndTp>SD00</SndTp><Remark>manual bank cancel</Remark></Body></Message>`,
         'caps.999.001.01': `${buildHeader('caps.999.001.01')}
 
 <?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:caps.999.001.01"><Head><CorpNo>1111</CorpNo><CheckType>LINK</CheckType><SysChckNo>CHK${stamp}</SysChckNo></Head></Message>`,
@@ -225,10 +232,13 @@ function buildManualMessage() {
     const reqId = valueOf('manualReqId') || `REQ-${stamp}`;
     const accountNo = valueOf('manualAccountNo') || '62220000000000009999';
     const bankId = valueOf('manualBankId') || '105000';
+    const feeNoList = valueOf('manualFeeNoList') || '00600|00601';
     const amount = normalizeAmount(valueOf('manualAmount'));
     const customerName = valueOf('manualCustomerName') || 'MOCK-PAYER';
     const customerId = valueOf('manualCustomerId') || `CUST-${stamp}`;
-    const protocolNo = valueOf('manualProtocolNo') || `MOCK-PROT-${stamp}`;
+    const enteredProtocolNo = valueOf('manualProtocolNo');
+    const protocolNo = scenario === 'caps.305.bank-sign' || scenario === 'caps.305.bank-cancel'
+        ? enteredProtocolNo : enteredProtocolNo || `MOCK-PROT-${stamp}`;
     const batchNo = valueOf('manualBatchNo') || `BATCH-${stamp}`;
     const sysSeqNo = valueOf('manualSysSeqNo') || `MOCK-SEQ-${stamp}`;
     const serialNum = sysSeqNo.startsWith('SERIAL-') ? sysSeqNo : `SERIAL-${stamp}`;
@@ -238,14 +248,18 @@ function buildManualMessage() {
     let xml;
     if (scenario === 'caps.999.001.01') {
         xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo><CheckType>LINK</CheckType><SysChckNo>${xmlEscape(reqId)}</SysChckNo></Head></Message>`;
+    } else if (scenario === 'caps.305.bank-sign') {
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>33503C5801</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><ChngTp>ADDD</ChngTp><SndrFlg>BKSD</SndrFlg><CstmrId>${xmlEscape(customerId)}</CstmrId><CstmrNm>${xmlEscape(customerName)}</CstmrNm><FeeNoList>${xmlEscape(feeNoList)}</FeeNoList><DbtrProtocol>0</DbtrProtocol><DbtrActId>${xmlEscape(accountNo)}</DbtrActId><DbtrActName>${xmlEscape(customerName)}</DbtrActName><DbtrCardType>03</DbtrCardType><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><SndTp>SD00</SndTp><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
+    } else if (scenario === 'caps.305.bank-cancel') {
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>33503C5801</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><ChngTp>DELE</ChngTp><SndrFlg>BKSD</SndrFlg><CstmrId>${xmlEscape(customerId)}</CstmrId><CstmrNm>${xmlEscape(customerName)}</CstmrNm><FeeNoList>${xmlEscape(feeNoList)}</FeeNoList><DbtrProtocol>${xmlEscape(protocolNo)}</DbtrProtocol><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><SndTp>SD00</SndTp><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
     } else if (scenario === 'caps.305.cancel') {
-        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><ChngTp>DELE</ChngTp><SndrFlg>CPSD</SndrFlg><SndTp>SD00</SndTp><DbtrProtocol>${xmlEscape(protocolNo)}</DbtrProtocol><DbtrActId>${xmlEscape(accountNo)}</DbtrActId><DbtrActName>${xmlEscape(customerName)}</DbtrActName><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><FeeNoList>FEE001|FEE002</FeeNoList><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><ChngTp>DELE</ChngTp><SndrFlg>CPSD</SndrFlg><SndTp>SD00</SndTp><DbtrProtocol>${xmlEscape(protocolNo)}</DbtrProtocol><DbtrActId>${xmlEscape(accountNo)}</DbtrActId><DbtrActName>${xmlEscape(customerName)}</DbtrActName><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><FeeNoList>${xmlEscape(feeNoList)}</FeeNoList><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
     } else if (scenario === 'caps.305.sms') {
         xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><ChngTp>ADDD</ChngTp><SndrFlg>CPSD</SndrFlg><SndTp>SD01</SndTp><AuthCd>123456</AuthCd><DbtrProtocol>${xmlEscape(protocolNo)}</DbtrProtocol><DbtrActId>${xmlEscape(accountNo)}</DbtrActId><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
     } else if (scenario === 'caps.305.query') {
-        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><OrigMsgId>${xmlEscape(sysSeqNo)}</OrigMsgId><QueryTime>${stamp}</QueryTime><PyerBgNum>${xmlEscape(protocolNo)}</PyerBgNum><FeeNoList>FEE001|FEE002</FeeNoList><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><OrigMsgId>${xmlEscape(sysSeqNo)}</OrigMsgId><QueryTime>${stamp}</QueryTime><PyerBgNum>${xmlEscape(protocolNo)}</PyerBgNum><FeeNoList>${xmlEscape(feeNoList)}</FeeNoList><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
     } else if (scenario === 'caps.305.sign' || scenario === 'caps.305.001.01') {
-        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><ChngTp>ADDD</ChngTp><SndrFlg>CPSD</SndrFlg><SndTp>SD00</SndTp><DbtrProtocol>0</DbtrProtocol><DbtrActId>${xmlEscape(accountNo)}</DbtrActId><DbtrActName>${xmlEscape(customerName)}</DbtrActName><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><CstmrId>${xmlEscape(customerId)}</CstmrId><CstmrNm>${xmlEscape(customerName)}</CstmrNm><FeeNoList>FEE001|FEE002</FeeNoList><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
+        xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><ChngTp>ADDD</ChngTp><SndrFlg>CPSD</SndrFlg><SndTp>SD00</SndTp><DbtrProtocol>0</DbtrProtocol><DbtrActId>${xmlEscape(accountNo)}</DbtrActId><DbtrActName>${xmlEscape(customerName)}</DbtrActName><DbtrBankId>${xmlEscape(bankId)}</DbtrBankId><CstmrId>${xmlEscape(customerId)}</CstmrId><CstmrNm>${xmlEscape(customerName)}</CstmrNm><FeeNoList>${xmlEscape(feeNoList)}</FeeNoList><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
     } else if (scenario === 'caps.101.001.01') {
         const fileData = base64Utf8([`101|33503C5801|00600|1|${amount}|0|0|0|${batchNo}|${checkDate}`, `1|${bankId}||${accountNo}|${customerName}|${amount}|||${serialNum}`].join('\\n'));
         xml = `<?xml version="1.0" encoding="UTF-8"?><Message xmlns="urn:caps:msg:${mesgType}"><Head><CorpNo>1111</CorpNo></Head><Body><ReqId>${xmlEscape(reqId)}</ReqId><BatchNo>${xmlEscape(batchNo)}</BatchNo><TranCode>101</TranCode><FeeNo>00600</FeeNo><TotalCount>1</TotalCount><TotalAmt>${xmlEscape(amount)}</TotalAmt><CheckDate>${checkDate}</CheckDate><FileData>${xmlEscape(fileData)}</FileData><Remark>${xmlEscape(remark)}</Remark></Body></Message>`;
@@ -267,11 +281,18 @@ function buildManualMessage() {
         message: `${buildHeader(mesgType)}
 
 ${xml}`,
-        summary: `Generated ${mesgType}; trace key: ${traceId}`
+        summary: `Generated ${mesgType}; trace key: ${traceId}`,
+        fields: { scenario, reqId, protocolNo, accountNo, customerName, customerId, feeNoList, bankId, remark }
     };
 }
 
 function buildManualToEditor() {
+    const scenario = valueOf('manualBusinessType');
+    if (scenario === 'caps.305.bank-cancel' && !valueOf('manualProtocolNo')) {
+        byId('manualBuildResult').textContent = '银行主动解约必须填写原签约协议号。';
+        byId('manualProtocolNo').focus();
+        return null;
+    }
     const result = buildManualMessage();
     setValue('gatewayRequest', result.message);
     byId('manualBuildResult').textContent = `${result.summary}\n\n报文已放入 CAPS 网关编辑器，可继续人工调整后发送。`;
@@ -280,8 +301,40 @@ function buildManualToEditor() {
 }
 
 async function sendManualMessage() {
-    const result = buildManualToEditor();
-    await sendGateway(result.traceId);
+    const generated = buildManualToEditor();
+    if (!generated) {
+        return;
+    }
+    const scenario = valueOf('manualBusinessType');
+    const bankInitiated = scenario === 'caps.305.bank-sign' || scenario === 'caps.305.bank-cancel';
+    if (!bankInitiated) {
+        await sendGateway(generated.traceId);
+        return;
+    }
+    const payload = {
+        callbackMesgType: scenario,
+        targetUrl: valueOf('defaultTargetUrl'),
+        reqId: generated.fields.reqId,
+        protocolNo: generated.fields.protocolNo,
+        acctNo: generated.fields.accountNo,
+        customerName: generated.fields.customerName,
+        customerId: generated.fields.customerId,
+        feeNoList: generated.fields.feeNoList,
+        bankId: generated.fields.bankId,
+        remark: generated.fields.remark
+    };
+    const result = await request('/yht-mock/api/trigger-callback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    byId('gatewayResponse').value = pretty(result.body);
+    byId('manualBuildResult').textContent = result.ok
+        ? `银行主动业务已发送到结算服务。\nReqId: ${payload.reqId}\n请在链路追踪中查看同步 caps.900 和后续 caps.306。`
+        : `发送失败（HTTP ${result.status}）：${pretty(result.body)}`;
+    byId('traceKeyword').value = payload.reqId;
+    await refreshAll();
+    renderLogs();
 }
 
 function resetManualForm() {
@@ -290,6 +343,7 @@ function resetManualForm() {
     setValue('manualReqId', `REQ-${stamp}`);
     setValue('manualAccountNo', '62220000000000009999');
     setValue('manualBankId', '105000');
+    setValue('manualFeeNoList', '00600|00601');
     setValue('manualAmount', '100.00');
     setValue('manualCustomerName', '测试用户');
     setValue('manualCustomerId', `CUST-${stamp}`);
@@ -515,7 +569,15 @@ function renderLogs() {
 
 function selectRecord(item) {
     state.selectedRecordId = item.id;
-    byId('recordDetail').value = pretty(item);
+    const plainAvailable = Boolean(item.decryptedRequestBody || item.decryptedResponseBody);
+    setValue('recordRequestRaw', item.requestBody || '');
+    setValue('recordRequestPlain', item.decryptedRequestBody || (plainAvailable ? '（该节点请求报文本身即明文，未发生解密）' : ''));
+    setValue('recordResponseRaw', item.responseBody || '');
+    setValue('recordResponsePlain', item.decryptedResponseBody || (plainAvailable ? '（该节点响应报文本身即明文，未发生解密）' : ''));
+    if (!plainAvailable) {
+        setValue('recordRequestPlain', '（未加密：原始请求报文即明文）');
+        setValue('recordResponsePlain', '（未加密：原始响应报文即明文）');
+    }
     const trace = primaryTrace(item);
     if (trace) {
         byId('traceKeyword').value = trace;
@@ -547,12 +609,23 @@ async function loadOverview() {
 
 async function loadSettings() {
     const { body } = await request('/yht-mock/api/callback-config');
+    state.settings = body;
+    const movement = body.movement || {};
+    setValue('movementEnabled', String(movement.enabled === true));
+    setValue('movementFallbackEnabled', String(movement.fallbackEnabled === true));
+    setValue('movementTargetUrl', movement.targetUrl);
+    setValue('movementReceiveCode', movement.receiveCode?.trim() ? movement.receiveCode : 'SBDC100');
+    setValue('movementPayCode', movement.payCode?.trim() ? movement.payCode : 'SBDC100');
+    setValue('movementBalance', movement.balance == null ? '0.00' : movement.balance);
+    setValue('movementAuthorizationEnv', movement.authorizationEnv);
     setValue('autoPushEnabled', String(body.autoPushEnabled));
     setValue('delayMs', body.delayMs);
     setValue('defaultTargetUrl', body.defaultTargetUrl);
     setValue('hsmMockKey', body.hsmMockKey);
     setValue('svsMockKey', body.svsMockKey || 'YHT-MOCK-SVS');
     setValue('svsVerifyLenient', body.svsVerifyLenient === false ? 'false' : 'true');
+    byId('randomFail').checked = body.randomFail === true;
+    setValue('randomFailRatio', body.randomFailRatio == null ? '0.5' : String(body.randomFailRatio));
     byId('pushCaps107').checked = body.pushCaps107;
     byId('pushCaps205').checked = body.pushCaps205;
     byId('pushCaps306').checked = body.pushCaps306;
@@ -561,12 +634,25 @@ async function loadSettings() {
 
 async function saveSettings() {
     const payload = {
+        ...state.settings,
+        movement: {
+            ...state.settings.movement,
+            enabled: valueOf('movementEnabled') === 'true',
+            fallbackEnabled: valueOf('movementFallbackEnabled') === 'true',
+            targetUrl: valueOf('movementTargetUrl'),
+            receiveCode: valueOf('movementReceiveCode'),
+            payCode: valueOf('movementPayCode'),
+            balance: valueOf('movementBalance'),
+            authorizationEnv: valueOf('movementAuthorizationEnv')
+        },
         autoPushEnabled: valueOf('autoPushEnabled') === 'true',
         delayMs: Number(valueOf('delayMs')),
         defaultTargetUrl: valueOf('defaultTargetUrl'),
         hsmMockKey: valueOf('hsmMockKey'),
         svsMockKey: valueOf('svsMockKey'),
         svsVerifyLenient: valueOf('svsVerifyLenient') !== 'false',
+        randomFail: byId('randomFail').checked,
+        randomFailRatio: Number(valueOf('randomFailRatio')),
         pushCaps107: byId('pushCaps107').checked,
         pushCaps205: byId('pushCaps205').checked,
         pushCaps306: byId('pushCaps306').checked,
@@ -577,7 +663,19 @@ async function saveSettings() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     });
+    if (!result.ok) {
+        const detail = typeof result.body === 'string' ? result.body : pretty(result.body);
+        byId('callbackResult').textContent =
+            `保存失败（HTTP ${result.status}）：${detail}\n` +
+            '常见原因：开启「交易成功自动动账通知」时未填写「模拟动账接口完整地址」，或该地址不是合法的 HTTP/HTTPS 地址。请补全地址后重新保存。';
+        await loadOverview();
+        return;
+    }
     byId('callbackResult').textContent = pretty(result.body);
+    if (result.ok) {
+        state.settings = result.body;
+        setValue('movementTargetUrl', result.body.movement?.targetUrl);
+    }
     await loadOverview();
 }
 
@@ -594,7 +692,6 @@ async function sendGateway(traceHint) {
         byId('traceKeyword').value = trace;
     }
     await refreshAll();
-initSectionNavigation();
     renderLogs();
 }
 
@@ -644,19 +741,9 @@ function scenarioPayload() {
         id: Number(valueOf('scenarioId')) || 0,
         name: valueOf('scenarioName'),
         enabled: byId('scenarioEnabled').checked,
-        requestMesgType: valueOf('scenarioMesgType'),
-        matchAcctNo: valueOf('scenarioAcctNo'),
-        matchAcctSuffix: valueOf('scenarioAcctSuffix'),
-        matchProtocolNo: valueOf('scenarioProtocolNo'),
-        matchReqId: valueOf('scenarioReqId'),
-        matchBatchNo: valueOf('scenarioBatchNo'),
-        matchSysSeqNo: valueOf('scenarioSysSeqNo'),
-        forceResFlag: valueOf('scenarioResFlag'),
-        forceStatus: valueOf('scenarioStatus'),
-        forceRetCode: valueOf('scenarioRetCode'),
-        forceRetMsg: valueOf('scenarioRetMsg'),
-        disableAutoCallback: byId('scenarioDisableCallback').checked,
-        callbackMesgType: valueOf('scenarioCallbackType'),
+        accountRule: valueOf('scenarioAccountRule'),
+        valid: byId('scenarioValid').checked,
+        class1Card: byId('scenarioClass1Card').checked,
         remark: valueOf('scenarioRemark')
     };
 }
@@ -680,31 +767,20 @@ async function deleteScenario(id) {
 
 function resetScenarioForm() {
     [
-        'scenarioId', 'scenarioName', 'scenarioMesgType', 'scenarioAcctNo', 'scenarioAcctSuffix',
-        'scenarioProtocolNo', 'scenarioReqId', 'scenarioBatchNo', 'scenarioSysSeqNo', 'scenarioResFlag',
-        'scenarioStatus', 'scenarioRetCode', 'scenarioRetMsg', 'scenarioCallbackType', 'scenarioRemark'
+        'scenarioId', 'scenarioName', 'scenarioAccountRule', 'scenarioRemark'
     ].forEach(id => setValue(id, ''));
     byId('scenarioEnabled').checked = true;
-    byId('scenarioDisableCallback').checked = false;
+    byId('scenarioValid').checked = true;
+    byId('scenarioClass1Card').checked = true;
 }
 
 function loadScenarioToForm(item) {
     setValue('scenarioId', item.id);
     setValue('scenarioName', item.name);
-    setValue('scenarioMesgType', item.requestMesgType);
-    setValue('scenarioAcctNo', item.matchAcctNo);
-    setValue('scenarioAcctSuffix', item.matchAcctSuffix);
-    setValue('scenarioProtocolNo', item.matchProtocolNo);
-    setValue('scenarioReqId', item.matchReqId);
-    setValue('scenarioBatchNo', item.matchBatchNo);
-    setValue('scenarioSysSeqNo', item.matchSysSeqNo);
-    setValue('scenarioResFlag', item.forceResFlag);
-    setValue('scenarioStatus', item.forceStatus);
-    setValue('scenarioRetCode', item.forceRetCode);
-    setValue('scenarioRetMsg', item.forceRetMsg);
+    setValue('scenarioAccountRule', item.accountRule);
     byId('scenarioEnabled').checked = item.enabled !== false;
-    byId('scenarioDisableCallback').checked = item.disableAutoCallback === true;
-    setValue('scenarioCallbackType', item.callbackMesgType);
+    byId('scenarioValid').checked = item.valid !== false;
+    byId('scenarioClass1Card').checked = item.class1Card !== false;
     setValue('scenarioRemark', item.remark);
     byId('stateDetail').value = pretty(item);
     location.hash = '#scenario';
@@ -715,21 +791,15 @@ async function refreshScenarios() {
     const tbody = byId('scenarioTableBody');
     tbody.innerHTML = '';
     body.forEach(item => {
-        const matches = [
-            item.matchAcctNo ? `账号=${item.matchAcctNo}` : '',
-            item.matchAcctSuffix ? `尾号=${item.matchAcctSuffix}` : '',
-            item.matchProtocolNo ? `协议=${item.matchProtocolNo}` : '',
-            item.matchReqId ? `ReqId=${item.matchReqId}` : '',
-            item.matchBatchNo ? `批次=${item.matchBatchNo}` : '',
-            item.matchSysSeqNo ? `流水=${item.matchSysSeqNo}` : ''
-        ].filter(Boolean).join(' / ');
+        const accountRuleText = item.accountRule ? item.accountRule : '匹配任意对手账号';
+        const validText = item.valid === false ? '无效（命中即失败）' : '有效';
+        const classText = item.class1Card === false ? '二类卡（日限额1万）' : '一类卡（全成功）';
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${item.id}</td>
             <td>${item.name || ''}<br><small>${item.enabled ? '启用' : '停用'}</small></td>
-            <td>${item.requestMesgType || ''}</td>
-            <td>${matches}</td>
-            <td>${item.forceResFlag || ''} ${item.forceStatus || ''} ${item.forceRetCode || ''} ${item.forceRetMsg || ''}</td>
+            <td><code>${escapeHtml(accountRuleText)}</code></td>
+            <td>${validText} / ${classText}</td>
             <td>
                 <div class="row-actions">
                     <button data-action="edit" class="button secondary">编辑</button>
@@ -789,7 +859,7 @@ async function refreshLogs() {
 }
 
 async function clearHistoryData() {
-    const confirmed = confirm('确认要清除历史数据吗？这会删除 data/mock-state.json 及其历史备份文件，并重置当前状态。');
+    const confirmed = confirm('确认要清除历史数据吗？这会清空数据库中的接口记录、协议、交易及批次；保留配置、资金流水、补推操作记录、场景规则、动账去重和迁移记录，不删除原 JSON 及备份。');
     if (!confirmed) {
         return;
     }
@@ -803,7 +873,8 @@ async function clearHistoryData() {
         loadOverview(),
         refreshLogs(),
         refreshStates(),
-        refreshScenarios()
+        refreshScenarios(),
+        typeof refreshBusiness === 'function' ? refreshBusiness() : Promise.resolve()
     ]);
 }
 
@@ -811,7 +882,8 @@ async function clearLogs() {
     await request('/yht-mock/api/logs', { method: 'DELETE' });
     state.records = [];
     state.selectedRecordId = null;
-    setValue('recordDetail', '');
+    ['recordRequestRaw', 'recordRequestPlain', 'recordResponseRaw', 'recordResponsePlain']
+        .forEach(id => setValue(id, ''));
     renderLogs();
     await loadOverview();
 }
@@ -824,17 +896,110 @@ function resetTraceFilters() {
     renderLogs();
 }
 
+function editBankCounterparty(account = {}) {
+    setValue('counterpartyBankId', account.bankId);
+    byId('counterpartyBankId').disabled = Boolean(account.bankId);
+    setValue('counterpartyBankName', account.bankName);
+    setValue('counterpartyAccountNo', account.accountNo);
+    setValue('counterpartyAccountName', account.accountName);
+    setValue('counterpartyAccountBankId', account.accountBankId);
+    setValue('counterpartyEnabled', String(account.enabled !== false));
+}
+
+async function refreshBankCounterparties() {
+    try {
+        const result = await request('/yht-mock/api/bank-counterparties');
+        if (!result.ok || !Array.isArray(result.body)) {
+            throw new Error('读取银行账户失败：' + pretty(result.body));
+        }
+        const tbody = byId('bankCounterpartyTableBody');
+        tbody.innerHTML = '';
+        result.body.forEach(account => {
+            const row = document.createElement('tr');
+            row.innerHTML = [account.bankId, account.bankName, account.accountNo, account.accountName,
+                account.accountBankId, account.enabled ? '启用' : '停用']
+                .map(value => '<td>' + escapeHtml(value) + '</td>').join('');
+            const actions = document.createElement('td');
+            const edit = document.createElement('button');
+            edit.className = 'button secondary';
+            edit.textContent = '编辑';
+            edit.addEventListener('click', () => editBankCounterparty(account));
+            const remove = document.createElement('button');
+            remove.className = 'button secondary';
+            remove.textContent = '删除';
+            remove.addEventListener('click', () => deleteBankCounterparty(account.bankId));
+            actions.append(edit, remove);
+            row.appendChild(actions);
+            tbody.appendChild(row);
+        });
+        if (result.body.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7">尚未配置银行对手账户，自动动账通知不会发送。</td></tr>';
+        }
+    } catch (error) {
+        byId('bankCounterpartyResult').textContent = error.message;
+    }
+}
+
+async function saveBankCounterparty() {
+    const payload = {
+        bankId: valueOf('counterpartyBankId'),
+        bankName: valueOf('counterpartyBankName'),
+        accountNo: valueOf('counterpartyAccountNo'),
+        accountName: valueOf('counterpartyAccountName'),
+        accountBankId: valueOf('counterpartyAccountBankId'),
+        enabled: valueOf('counterpartyEnabled') === 'true'
+    };
+    const output = byId('bankCounterpartyResult');
+    const button = byId('saveBankCounterpartyBtn');
+    button.disabled = true;
+    try {
+        if (!payload.bankId || !payload.bankName || !payload.accountNo || !payload.accountName || !payload.accountBankId) {
+            throw new Error('请填写中心银行标识、银行名称和完整的对手账户信息。');
+        }
+        const result = await request('/yht-mock/api/bank-counterparties', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        });
+        if (!result.ok) throw new Error('保存失败：' + pretty(result.body));
+        output.textContent = '银行账户已保存：' + payload.bankId;
+        editBankCounterparty(result.body);
+        await refreshBankCounterparties();
+    } catch (error) {
+        output.textContent = error.message;
+    } finally {
+        button.disabled = false;
+    }
+}
+
+async function deleteBankCounterparty(bankId) {
+    if (!confirm('删除中心银行 ' + bankId + ' 的对手账户配置？删除后该银行不再发送动账通知。')) return;
+    try {
+        const result = await request('/yht-mock/api/bank-counterparties/' + encodeURIComponent(bankId), { method: 'DELETE' });
+        if (!result.ok || !result.body.success) throw new Error('删除失败，请刷新列表后重试。');
+        if (valueOf('counterpartyBankId') === bankId) editBankCounterparty();
+        byId('bankCounterpartyResult').textContent = '银行账户已删除：' + bankId;
+        await refreshBankCounterparties();
+    } catch (error) {
+        byId('bankCounterpartyResult').textContent = error.message;
+    }
+}
+
 async function refreshAll() {
     await Promise.all([
+        refreshBankCounterparties(),
         loadOverview(),
         refreshLogs(),
         refreshStates(),
-        refreshScenarios()
+        refreshScenarios(),
+        typeof refreshBusiness === 'function' ? refreshBusiness() : Promise.resolve()
     ]);
 }
 
 addClick('fillTemplateBtn', fillTemplate);
 addClick('saveConfigBtn', saveSettings);
+addClick('saveMovementConfigBtn', saveSettings);
+addClick('saveBankCounterpartyBtn', saveBankCounterparty);
+addClick('newBankCounterpartyBtn', () => editBankCounterparty());
+addClick('refreshBankCounterpartyBtn', refreshBankCounterparties);
 addClick('sendGatewayBtn', () => sendGateway());
 addClick('runHsmBtn', runHsm);
 addClick('refreshLogsBtn', refreshLogs);
@@ -867,49 +1032,55 @@ addClick('resetTraceBtn', resetTraceFilters);
 
 
 function initSectionNavigation() {
-    const links = Array.from(document.querySelectorAll('.side-nav a[href^="#"]'));
-    const sections = links
-        .map(link => document.querySelector(link.getAttribute('href')))
-        .filter(Boolean);
-
-    const activate = id => {
-        links.forEach(link => {
-            link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+    const links = Array.from(document.querySelectorAll('.side-nav nav a[href^="#"]'));
+    const sections = links.map(link => document.getElementById(link.hash.slice(1)));
+    let activeSection = '';
+    const activate = () => {
+        const requested = location.hash.slice(1);
+        const selected = sections.some(section => section.id === requested) ? requested : 'overview';
+        links.forEach((link, index) => {
+            const active = sections[index].id === selected;
+            link.classList.toggle('active', active);
+            link.setAttribute('aria-selected', String(active));
+            link.tabIndex = active ? 0 : -1;
+            sections[index].hidden = !active;
         });
+        if (activeSection !== selected && typeof window.scrollTo === 'function') window.scrollTo({ top: 0, behavior: 'instant' });
+        activeSection = selected;
+        if (selected === 'movements' && typeof loadFlows === 'function') loadFlows();
+        if (selected === 'business' && typeof refreshBusiness === 'function') refreshBusiness();
     };
-
-    links.forEach(link => {
-        link.addEventListener('click', () => {
-            const id = link.getAttribute('href').slice(1);
-            activate(id);
+    links.forEach((link, index) => {
+        link.id = 'tab-' + sections[index].id;
+        link.setAttribute('role', 'tab');
+        link.setAttribute('aria-controls', sections[index].id);
+        sections[index].setAttribute('role', 'tabpanel');
+        sections[index].setAttribute('aria-labelledby', link.id);
+        sections[index].tabIndex = 0;
+        link.addEventListener('click', event => {
+            event.preventDefault();
+            if (location.hash !== link.hash) history.pushState(null, '', link.hash);
+            activate();
+        });
+        link.addEventListener('keydown', event => {
+            let target;
+            if (event.key === 'ArrowRight') target = (index + 1) % links.length;
+            if (event.key === 'ArrowLeft') target = (index + links.length - 1) % links.length;
+            if (event.key === 'Home') target = 0;
+            if (event.key === 'End') target = links.length - 1;
+            if (target !== undefined) {
+                event.preventDefault();
+                links[target].focus();
+                links[target].click();
+            }
         });
     });
-
-    if (location.hash) {
-        activate(location.hash.slice(1));
-    } else if (sections.length > 0) {
-        activate(sections[0].id);
-    }
-
-    if (!('IntersectionObserver' in window)) {
-        return;
-    }
-
-    const observer = new IntersectionObserver(entries => {
-        const visible = entries
-            .filter(entry => entry.isIntersecting)
-            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible && visible.target.id) {
-            activate(visible.target.id);
-        }
-    }, {
-        rootMargin: '-24% 0px -62% 0px',
-        threshold: [0.12, 0.28, 0.5]
-    });
-
-    sections.forEach(section => observer.observe(section));
+    window.addEventListener('hashchange', activate);
+    window.addEventListener('popstate', activate);
+    activate();
 }
 
+initSectionNavigation();
 fillTemplate();
 resetManualForm();
 resetScenarioForm();

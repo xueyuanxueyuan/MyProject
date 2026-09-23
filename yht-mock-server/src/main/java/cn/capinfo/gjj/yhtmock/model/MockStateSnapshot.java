@@ -12,6 +12,7 @@ public class MockStateSnapshot {
     public Map<String, ProtocolState> protocols = new LinkedHashMap<>();
     public Map<String, TradeState> trades = new LinkedHashMap<>();
     public Map<String, BatchState> batches = new LinkedHashMap<>();
+    public Map<String, String> movementAttempts = new LinkedHashMap<>();
     public List<MockScenarioRule> scenarios = new ArrayList<>();
     public long recordSequence = 1L;
     public long scenarioSequence = 1L;

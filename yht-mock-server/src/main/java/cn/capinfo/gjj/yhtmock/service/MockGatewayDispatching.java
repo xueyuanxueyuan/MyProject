@@ -2,6 +2,7 @@ package cn.capinfo.gjj.yhtmock.service;
 
 import cn.capinfo.gjj.yhtmock.model.CapsHeader;
 import cn.capinfo.gjj.yhtmock.model.MockScenarioRule;
+import cn.capinfo.gjj.yhtmock.model.MockSettings;
 import org.w3c.dom.Document;
 
 import java.util.Set;
@@ -22,7 +23,8 @@ record GatewayRequestContext(
         String batchNo,
         String sysSeqNo,
         String acctNo,
-        MockScenarioRule scenarioRule
+        MockScenarioRule scenarioRule,
+        MockSettings settings
 ) {
 }
 

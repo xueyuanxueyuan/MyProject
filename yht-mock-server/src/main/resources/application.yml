@@ -1,7 +1,30 @@
 server:
   port: 9999
+  error:
+    # 保存配置被校验拒绝时（如动账开关开启但未填通知地址），错误响应必须带上具体 message，便于页面直接展示失败原因。
+    include-message: always
 
 spring:
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          # 挡板前端迭代频繁：HTML/JS/CSS 必须每次回源校验（304），防止发新版后浏览器继续跑旧 JS。
+          no-cache: true
+  datasource:
+    url: ${YHT_MOCK_DB_URL}
+    username: ${YHT_MOCK_DB_USERNAME}
+    password: ${YHT_MOCK_DB_PASSWORD}
+    driver-class-name: dm.jdbc.driver.DmDriver
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 10000
+      validation-timeout: 3000
+      connection-test-query: SELECT 1 FROM DUAL
+      initialization-fail-timeout: 10000
+  sql:
+    init:
+      mode: never
   application:
     name: yht-mock-server
   jackson:
@@ -10,6 +33,10 @@ spring:
       write-dates-as-timestamps: false
 
 logging:
+  # 容器内可能缺少 LANG/locale，显式固定 UTF-8，避免中文业务日志变成问号。
+  charset:
+    console: UTF-8
+    file: UTF-8
   level:
     root: info
     cn.capinfo.gjj.yhtmock: info

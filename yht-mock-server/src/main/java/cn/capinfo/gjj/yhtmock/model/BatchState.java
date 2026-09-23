@@ -2,6 +2,11 @@ package cn.capinfo.gjj.yhtmock.model;
 
 public class BatchState {
 
+    public String corpAcctNo;
+    public String centerBankId;
+    public String requestFileName;
+    public boolean movementEligible = true;
+
     public String batchNo;
     public String reqId;
     public String tranCode;
