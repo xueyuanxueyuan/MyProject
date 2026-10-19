@@ -154,6 +154,11 @@ details = json.loads(zlib.decompress(binascii.unhexlify(h)).decode("utf-8"))
 - ❌ 为让新户当首户而直接改 canonical 行序 → canonical 只做「备份 + 追加」，重排一律落临时副本。
 - ❌ 新数据只照抄「账号+户名」→ 对私缺 `zjh` 会报「证件号码必须非空」；须模拟**校验位合法**的证件号并在备注/交付中标注来源。
 - ⚠️ 逐笔单指令节奏：用户倾向明确「银行 + 业务类型 + 金额」的单独指令，日志要干净、不随意触碰其他银行。
+- ❌ **驱动 `ensure_private_id` 把「身份证」中文原样写进 `zjlx`** → 违反「身份证→01」铁律。收款报文（addSkywDbsk）OpenAPI 示例**无 `zjlx` 字段**，引擎 `field_replacement` 不会自动填，只能靠该函数补；它原先 `acct.get("证件类型") or "01"` 直接取中文。付款报文（addFkywDbfk）示例**有** `zjlx`、被引擎经 `ID_TYPE_MAP` 正确映射，所以**同一份数据付款正常、收款异常**，极易看漏。已修为经 `ID_TYPE_MAP` 归一；dry-run 必须断言 `zjlx in ("01","1")`。
+- ❌ **收/付共用同一 outdir 时按 `reqs[0]` 核证** → `01_对私_单笔付款_request.json` < `01_对私_单笔收款_request.json`（付 U+4ED8 < 收 U+6536），拿付款报文验证收款，**核证张冠李戴还全显示 OK**。必须按业务名精确定位文件。
+- ❌ **临时副本重排首户改了副本没写回**：`body = rows[1:]` 后 `body.pop/insert` 改的是 `body`，却仍写 `rows[1:]` → 重排静默不生效，驱动照旧取 canonical 首户（缺证件号户）。必须 `rows = [header] + body` 显式写回。
+- ❌ **GB11643 模拟证件号 base 给不够 17 位**（6 地址 + 8 生日 + 3 顺序）→ `IndexError`。
+- ❌ **批量 28 笔同一秒级失败就断定「我方报文有问题」** → 先看冲突字段是谁生成的：10/14 案例 28 笔全 `code=-10`、`OBE-00001 unique constraint 'ZJJS_YW_JG_OBPK_<常量>' violated`，冲突的是**后端自生成 id 主键**且 14 家银行同 key，客户端 jslsh/ywlsh/ywslbh 28/28 唯一 → 服务端 ID 生成器卡死，**约 6 分钟自愈**。判据：客户端流水号唯一性 + 冲突 key 是否跨银行同值 + 原样重放探针。
 
 ## 输出规范
 

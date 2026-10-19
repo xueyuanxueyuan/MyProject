@@ -21,6 +21,9 @@ zjb-openapi-auto-test/report.html
 *.bak
 config/deploy_secrets.local.json
 config/*.local.json
+config/*.local.md
+config/*.local.sql
+config/*.dpapi
 # Added by code-review-graph
 .code-review-graph/
 .serena-home/

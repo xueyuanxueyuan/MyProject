@@ -1,0 +1,109 @@
+{
+  "CAP_GJJ_ETL.DWS_BUS_FT_PER_MFM": [
+    "ID:BIGINT",
+    "ZXBH:NVARCHAR",
+    "JGBH:NVARCHAR",
+    "JGMC:NVARCHAR",
+    "TJZQ:CHAR",
+    "DYTQJE:DECIMAL",
+    "tqyy:nvarchar",
+    "GJHTQYWLX:nvarchar"
+  ],
+  "CAP_GJJ_ETL.DWS_BUS_LEND_MFM": [
+    "ID:BIGINT",
+    "ZXBH:NVARCHAR",
+    "JGBH:NVARCHAR",
+    "JGMC:NVARCHAR",
+    "TJZQ:CHAR",
+    "DYFDJE:DECIMAL",
+    "DYFDBS:integer",
+    "dklx:nvarchar",
+    "gflx:nvarchar",
+    "fwxz:nvarchar"
+  ],
+  "CAP_GJJ_ETL.DWS_BUS_LN_NED": [
+    "ID:BIGINT",
+    "ZXBH:NVARCHAR",
+    "JGBH:NVARCHAR",
+    "JGMC:NVARCHAR",
+    "TJZQ:CHAR",
+    "BYFFE:DECIMAL",
+    "BYHSE:DECIMAL",
+    "QMDKYE:DECIMAL"
+  ],
+  "CAP_GJJ_ETL.DWS_BUS_LN_REC_MFM": [
+    "ID:BIGINT",
+    "ZXBH:NVARCHAR",
+    "JGBH:NVARCHAR",
+    "JGMC:NVARCHAR",
+    "TJZQ:CHAR",
+    "DYHSBJ:DECIMAL",
+    "DYHSLX:DECIMAL",
+    "DYHSFX:DECIMAL",
+    "HKYWLX:nvarchar"
+  ],
+  "CAP_GJJ_ETL.DWS_BUS_PER_PAID_MFM": [
+    "ID:BIGINT",
+    "ZXBH:NVARCHAR",
+    "JGBH:NVARCHAR",
+    "JGMC:NVARCHAR",
+    "YHBH:NVARCHAR",
+    "YHMC:NVARCHAR",
+    "TJZQ:CHAR",
+    "DYSJZE:DECIMAL"
+  ],
+  "CAP_GJJ_ETL.DWS_CSR_PER_NED": [
+    "ID:BIGINT",
+    "ZXBH:NVARCHAR",
+    "JGBH:NVARCHAR",
+    "JGMC:NVARCHAR",
+    "TJZQ:CHAR",
+    "BYGJJE:DECIMAL",
+    "BYTQJE:DECIMAL",
+    "QMZGZHYE:DECIMAL"
+  ],
+  "CAP_GJJ_ETL.dws_fin_bal_em": [
+    "ID:BIGINT",
+    "ZXBH:NVARCHAR",
+    "TJZQ:CHAR",
+    "KMBH:NVARCHAR",
+    "JFFSE:DECIMAL",
+    "DFFSE:DECIMAL",
+    "QMZJZE:DECIMAL",
+    "KMYEFX:NVARCHAR"
+  ],
+  "CAP_GJJ_ETL.dws_fin_bal_mem": [
+    "ID:BIGINT",
+    "ZXBH:NVARCHAR",
+    "JGBH:NVARCHAR",
+    "JGMC:NVARCHAR",
+    "TJZQ:CHAR",
+    "dyzzsr:DECIMAL"
+  ],
+  "CAP_GJJ_ETL.dws_fin_per_stl_int_yfm": [
+    "ID:BIGINT",
+    "ZXBH:NVARCHAR",
+    "JGBH:NVARCHAR",
+    "JGMC:NVARCHAR",
+    "TJZQ:CHAR",
+    "DRJXJE:DECIMAL"
+  ],
+  "CAP_GJJ_ZJFK.ZJFK_PREDICTION_RESULT": [
+    "ID:INT",
+    "INDICATOR_TYPE_ID:INT",
+    "INDICATOR_TYPE_CODE:NVARCHAR",
+    "INSTITUTION_ID:NVARCHAR",
+    "PREDICTION_YEAR:NVARCHAR",
+    "PREDICTION_MONTH:INT",
+    "PREDICTION_DATE:INT",
+    "PREDICTED_VALUE:DECIMAL",
+    "QDBM:NVARCHAR",
+    "ZXBH:NVARCHAR",
+    "REVISION:INT",
+    "CREATOR:NVARCHAR",
+    "CREATED_TIME:TIMESTAMP",
+    "UPDATOR:NVARCHAR",
+    "UPDATED_TIME:TIMESTAMP",
+    "DEL_FLAG:NVARCHAR"
+  ]
+}

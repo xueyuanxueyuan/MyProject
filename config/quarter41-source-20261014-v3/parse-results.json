@@ -1,0 +1,221 @@
+[
+  {
+    "id": 114,
+    "parse": "FAILED",
+    "error": "[CODE:-2106]第439 行附近出现错误:\n无效的表或视图名[dws_bus_per_paid_qfq]"
+  },
+  {
+    "id": 115,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 2 行, 第 76 列[(]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 116,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 1 行, 第 469 列[in]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 117,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 1 行, 第 235 列[in]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 118,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 1 行, 第 584 列[in]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 119,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 1 行, 第 584 列[in]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 120,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 1 行, 第 336 列[in]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 121,
+    "parse": "OK",
+    "columns": [
+      "jyts",
+      "jytstbzzl",
+      "ysfts",
+      "ysftstbzzl",
+      "esfts",
+      "esftstbzzl"
+    ]
+  },
+  {
+    "id": 122,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 1 行, 第 231 列[IN]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 123,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 1 行, 第 254 列[IN]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 124,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 1 行, 第 254 列[IN]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 125,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 1 行, 第 504 列[IN]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 126,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 1 行, 第 1201 列[IN]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 127,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 5 行, 第 84 列[(]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 128,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 11 行, 第 22 列[(]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 129,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 18 行, 第 105 列[(]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 130,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 7 行, 第 81 列[(]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 131,
+    "parse": "OK",
+    "columns": [
+      "bgrq"
+    ]
+  },
+  {
+    "id": 132,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 1 行, 第 469 列[in]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 133,
+    "parse": "FAILED",
+    "error": "[CODE:-2106]第1 行附近出现错误:\n无效的表或视图名[dws_bus_per_paid_qfq]"
+  },
+  {
+    "id": 134,
+    "parse": "FAILED",
+    "error": "[CODE:-2106]第1 行附近出现错误:\n无效的表或视图名[dws_bus_ft_per_qfq]"
+  },
+  {
+    "id": 135,
+    "parse": "FAILED",
+    "error": "[CODE:-2106]第1 行附近出现错误:\n无效的表或视图名[dws_bus_ft_per_qfq]"
+  },
+  {
+    "id": 136,
+    "parse": "FAILED",
+    "error": "[CODE:-2106]第1 行附近出现错误:\n无效的表或视图名[dws_bus_ft_per_qfq]"
+  },
+  {
+    "id": 137,
+    "parse": "FAILED",
+    "error": "[CODE:-2106]第1 行附近出现错误:\n无效的表或视图名[dws_bus_ft_per_qfq]"
+  },
+  {
+    "id": 138,
+    "parse": "FAILED",
+    "error": "[CODE:-2106]第1 行附近出现错误:\n无效的表或视图名[dws_bus_ft_per_qfq]"
+  },
+  {
+    "id": 139,
+    "parse": "FAILED",
+    "error": "[CODE:-2106]第1 行附近出现错误:\n无效的表或视图名[dws_bus_lend_qfq]"
+  },
+  {
+    "id": 140,
+    "parse": "OK",
+    "columns": [
+      "month",
+      "bnjyts",
+      "snjyts"
+    ]
+  },
+  {
+    "id": 141,
+    "parse": "OK",
+    "columns": [
+      "month",
+      "bnjyts",
+      "snjyts"
+    ]
+  },
+  {
+    "id": 142,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 2 行, 第 55 列[(]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 143,
+    "parse": "OK",
+    "columns": [
+      "month",
+      "bnhsje",
+      "snhsje"
+    ]
+  },
+  {
+    "id": 144,
+    "parse": "OK",
+    "columns": [
+      "month",
+      "month_num",
+      "tqhk",
+      "zchk"
+    ]
+  },
+  {
+    "id": 145,
+    "parse": "FAILED",
+    "error": "[CODE:-2111]第1 行附近出现错误:\n无效的列名[tqlx]"
+  },
+  {
+    "id": 146,
+    "parse": "OK",
+    "columns": [
+      "month",
+      "cdb"
+    ]
+  },
+  {
+    "id": 147,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 1 行, 第 231 列[IN]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 148,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 2 行, 第 94 列[(]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 149,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 6 行, 第 105 列[(]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 150,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 34 行, 第 56 列[(]附近出现错误: \n语法分析出错"
+  },
+  {
+    "id": 151,
+    "parse": "FAILED",
+    "error": "[CODE:-2007]第 24 行, 第 46 列[in]附近出现错误: \n语法分析出错"
+  }
+]

@@ -1,0 +1,2570 @@
+[
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_RUN_LOG",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_RUN_LOG",
+    "column_name": "ETL_TABLE_NAME",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_RUN_LOG",
+    "column_name": "ETL_TABLE_CNNAME",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_RUN_LOG",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_RUN_LOG",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_RUN_LOG",
+    "column_name": "START_TIME",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_RUN_LOG",
+    "column_name": "END_TIME",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_RUN_LOG",
+    "column_name": "STATUS",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_RUN_LOG",
+    "column_name": "RESULT_ROW_COUNT",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_RUN_LOG",
+    "column_name": "ERROR_MSG",
+    "data_type": "CLOB"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_RUN_LOG",
+    "column_name": "CREATE_TIME",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_RUN_LOG",
+    "column_name": "UPDATE_TIME",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_WATERMARK",
+    "column_name": "ETL_TABLE_NAME",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_WATERMARK",
+    "column_name": "ETL_TABLE_CNNAME",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_WATERMARK",
+    "column_name": "LAST_CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_WATERMARK",
+    "column_name": "LAST_SUCCESS_BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_WATERMARK",
+    "column_name": "LAST_SUCCESS_TIME",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_WATERMARK",
+    "column_name": "LAST_ROW_COUNT",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_WATERMARK",
+    "column_name": "LAST_STATUS",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "CHECK_TASK_WATERMARK",
+    "column_name": "UPDATE_TIME",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_FT_PER_MFM",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_FT_PER_MFM",
+    "column_name": "ZXBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_FT_PER_MFM",
+    "column_name": "JGBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_FT_PER_MFM",
+    "column_name": "JGMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_FT_PER_MFM",
+    "column_name": "TJZQ",
+    "data_type": "CHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_FT_PER_MFM",
+    "column_name": "DYTQJE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_FT_PER_MFM",
+    "column_name": "tqyy",
+    "data_type": "nvarchar"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_FT_PER_MFM",
+    "column_name": "GJHTQYWLX",
+    "data_type": "nvarchar"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LEND_MFM",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LEND_MFM",
+    "column_name": "ZXBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LEND_MFM",
+    "column_name": "JGBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LEND_MFM",
+    "column_name": "JGMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LEND_MFM",
+    "column_name": "TJZQ",
+    "data_type": "CHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LEND_MFM",
+    "column_name": "DYFDJE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LEND_MFM",
+    "column_name": "DYFDBS",
+    "data_type": "integer"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LEND_MFM",
+    "column_name": "dklx",
+    "data_type": "nvarchar"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LEND_MFM",
+    "column_name": "gflx",
+    "data_type": "nvarchar"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LEND_MFM",
+    "column_name": "fwxz",
+    "data_type": "nvarchar"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_NED",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_NED",
+    "column_name": "ZXBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_NED",
+    "column_name": "JGBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_NED",
+    "column_name": "JGMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_NED",
+    "column_name": "TJZQ",
+    "data_type": "CHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_NED",
+    "column_name": "BYFFE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_NED",
+    "column_name": "BYHSE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_NED",
+    "column_name": "QMDKYE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_REC_MFM",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_REC_MFM",
+    "column_name": "ZXBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_REC_MFM",
+    "column_name": "JGBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_REC_MFM",
+    "column_name": "JGMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_REC_MFM",
+    "column_name": "TJZQ",
+    "data_type": "CHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_REC_MFM",
+    "column_name": "DYHSBJ",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_REC_MFM",
+    "column_name": "DYHSLX",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_REC_MFM",
+    "column_name": "DYHSFX",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_LN_REC_MFM",
+    "column_name": "HKYWLX",
+    "data_type": "nvarchar"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_OVD_LN_NED",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_OVD_LN_NED",
+    "column_name": "ZXBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_OVD_LN_NED",
+    "column_name": "JGBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_OVD_LN_NED",
+    "column_name": "JGMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_OVD_LN_NED",
+    "column_name": "TJZQ",
+    "data_type": "CHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_OVD_LN_NED",
+    "column_name": "LXYQQS",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_OVD_LN_NED",
+    "column_name": "QMDKYQBJ",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_OVD_LN_NED",
+    "column_name": "QMDKYQLX",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_OVD_LN_NED",
+    "column_name": "QMDKYQYE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_PER_PAID_MFM",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_PER_PAID_MFM",
+    "column_name": "ZXBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_PER_PAID_MFM",
+    "column_name": "JGBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_PER_PAID_MFM",
+    "column_name": "JGMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_PER_PAID_MFM",
+    "column_name": "YHBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_PER_PAID_MFM",
+    "column_name": "YHMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_PER_PAID_MFM",
+    "column_name": "TJZQ",
+    "data_type": "CHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_BUS_PER_PAID_MFM",
+    "column_name": "DYSJZE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_CSR_PER_NED",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_CSR_PER_NED",
+    "column_name": "ZXBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_CSR_PER_NED",
+    "column_name": "JGBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_CSR_PER_NED",
+    "column_name": "JGMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_CSR_PER_NED",
+    "column_name": "TJZQ",
+    "data_type": "CHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_CSR_PER_NED",
+    "column_name": "BYGJJE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_CSR_PER_NED",
+    "column_name": "BYTQJE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_CSR_PER_NED",
+    "column_name": "QMZGZHYE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_em",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_em",
+    "column_name": "ZXBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_em",
+    "column_name": "TJZQ",
+    "data_type": "CHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_em",
+    "column_name": "KMBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_em",
+    "column_name": "JFFSE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_em",
+    "column_name": "DFFSE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_em",
+    "column_name": "QMZJZE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_em",
+    "column_name": "KMYEFX",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_mem",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_mem",
+    "column_name": "ZXBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_mem",
+    "column_name": "JGBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_mem",
+    "column_name": "JGMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_mem",
+    "column_name": "TJZQ",
+    "data_type": "CHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_bal_mem",
+    "column_name": "dyzzsr",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BANK_ACC_DATA_NED",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BANK_ACC_DATA_NED",
+    "column_name": "ZXBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BANK_ACC_DATA_NED",
+    "column_name": "JGBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BANK_ACC_DATA_NED",
+    "column_name": "JGMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BANK_ACC_DATA_NED",
+    "column_name": "YHBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BANK_ACC_DATA_NED",
+    "column_name": "YHMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BANK_ACC_DATA_NED",
+    "column_name": "TJZQ",
+    "data_type": "CHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BANK_ACC_DATA_NED",
+    "column_name": "QMZJZHYE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BNFT_MFM",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BNFT_MFM",
+    "column_name": "ZXBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BNFT_MFM",
+    "column_name": "JGBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BNFT_MFM",
+    "column_name": "JGMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BNFT_MFM",
+    "column_name": "YHBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BNFT_MFM",
+    "column_name": "YHMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BNFT_MFM",
+    "column_name": "TJZQ",
+    "data_type": "CHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_BNFT_MFM",
+    "column_name": "JFFSE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_FIXED_DEP_NED",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_FIXED_DEP_NED",
+    "column_name": "ZXBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_FIXED_DEP_NED",
+    "column_name": "JGBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_FIXED_DEP_NED",
+    "column_name": "JGMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_FIXED_DEP_NED",
+    "column_name": "YHBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_FIXED_DEP_NED",
+    "column_name": "YHMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_FIXED_DEP_NED",
+    "column_name": "TJZQ",
+    "data_type": "CHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "DWS_FIN_FIXED_DEP_NED",
+    "column_name": "QMDQCKYE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_per_stl_int_yfm",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_per_stl_int_yfm",
+    "column_name": "ZXBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_per_stl_int_yfm",
+    "column_name": "JGBH",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_per_stl_int_yfm",
+    "column_name": "JGMC",
+    "data_type": "NVARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_per_stl_int_yfm",
+    "column_name": "TJZQ",
+    "data_type": "CHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "dws_fin_per_stl_int_yfm",
+    "column_name": "DRJXJE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_CONFIG",
+    "column_name": "YWNAMECODE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_CONFIG",
+    "column_name": "YWLX",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_CONFIG",
+    "column_name": "YWMS",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_EXECUTION_LOCK",
+    "column_name": "LOCK_KEY",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "yesterday",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "today",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "tomorrow",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "thisyear",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "lastyear",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "nextyear",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "workdate",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "thismonth",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "lastmonth",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "nextmonth",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "ztbh",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "lastyear_thismonth",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "lastyear_nextmonth",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "lastyear_today",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "beforelastmonth",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "etl_info",
+    "column_name": "yue",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_INFO_DAY",
+    "column_name": "TODAY",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "SYSTEM_CODE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "RUN_ID",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "PARENT_RUN_ID",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "STATUS",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "TOTAL_TASKS",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "COMPLETED_TASKS",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "SUCCESS_TASKS",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "FAILED_TASKS",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "CURRENT_TASK",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "START_TIME",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "END_TIME",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "HEARTBEAT",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "HOST_NAME",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_RUN",
+    "column_name": "ERROR_MSG",
+    "data_type": "CLOB"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_SYNC_WATERMARK",
+    "column_name": "SOURCE_SYSTEM",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_SYNC_WATERMARK",
+    "column_name": "TABLE_NAME",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_SYNC_WATERMARK",
+    "column_name": "CYCLE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_SYNC_WATERMARK",
+    "column_name": "LAST_SUCCESS_TIME",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_SYNC_WATERMARK",
+    "column_name": "LAST_SUCCESS_BATCH_ID",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_SYNC_WATERMARK",
+    "column_name": "LAST_ROW_COUNT",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_SYNC_WATERMARK",
+    "column_name": "SYNC_STATUS",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_SYNC_WATERMARK",
+    "column_name": "UPDATE_TIME",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO",
+    "column_name": "SEQ_NO",
+    "data_type": "SMALLINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO",
+    "column_name": "DATABASE_NAME",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO",
+    "column_name": "SRC_TABLE_NAME",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO",
+    "column_name": "ETL_TABLE_NAME",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO",
+    "column_name": "ETL_SQL",
+    "data_type": "clob"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO",
+    "column_name": "SRC_WATERMARK_COLUMN",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO",
+    "column_name": "ENABLED",
+    "data_type": "TINYINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO",
+    "column_name": "DEL_FLAG",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO",
+    "column_name": "ETL_TABLE_CNNAME",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO_BAK_JB010_20260824_P243",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO_BAK_JB010_20260824_P243",
+    "column_name": "SEQ_NO",
+    "data_type": "SMALLINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO_BAK_JB010_20260824_P243",
+    "column_name": "DATABASE_NAME",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO_BAK_JB010_20260824_P243",
+    "column_name": "SRC_TABLE_NAME",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO_BAK_JB010_20260824_P243",
+    "column_name": "ETL_TABLE_NAME",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO_BAK_JB010_20260824_P243",
+    "column_name": "ETL_SQL",
+    "data_type": "clob"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO_BAK_JB010_20260824_P243",
+    "column_name": "SRC_WATERMARK_COLUMN",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO_BAK_JB010_20260824_P243",
+    "column_name": "ENABLED",
+    "data_type": "TINYINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO_BAK_JB010_20260824_P243",
+    "column_name": "DEL_FLAG",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TABLE_INFO_BAK_JB010_20260824_P243",
+    "column_name": "ETL_TABLE_CNNAME",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "SYSTEM_CODE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "TASK_CODE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "TASK_NAME",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "SOURCE_CONNECTION",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "TARGET_CONNECTION",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "TARGET_SCHEMA",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "TARGET_TABLE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "SELECT_SQL",
+    "data_type": "CLOB"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "LOAD_MODE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "BATCH_SIZE",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "SORT_NO",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "ENABLED",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "CONFIG_VERSION",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_CONFIG",
+    "column_name": "UPDATED_TIME",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_FIELD",
+    "column_name": "SYSTEM_CODE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_FIELD",
+    "column_name": "TASK_CODE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_FIELD",
+    "column_name": "FIELD_ORDER",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_FIELD",
+    "column_name": "SOURCE_FIELD",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_FIELD",
+    "column_name": "TARGET_FIELD",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "SYSTEM_CODE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "RUN_ID",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "TASK_CODE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "TASK_ORDER",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "TASK_NAME",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "TARGET_SCHEMA",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "TARGET_TABLE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "STATUS",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "WRITTEN_ROWS",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "SOURCE_ROWS",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "TARGET_ROWS",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "CONFIG_VERSION",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "CONFIG_HASH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "SQL_SNAPSHOT",
+    "data_type": "CLOB"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "FIELD_SNAPSHOT",
+    "data_type": "CLOB"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "LOG_PATH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "START_TIME",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "END_TIME",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "HEARTBEAT",
+    "data_type": "TIMESTAMP"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETL_TASK_RUN",
+    "column_name": "ERROR_MSG",
+    "data_type": "CLOB"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "YESTERDAY",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "TODAY",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "TOMORROW",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "THISYEAR",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "LASTYEAR",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "NEXTYEAR",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "WORKDATE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "THISMONTH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "LASTMONTH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "NEXTMONTH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "ZTBH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "LASTYEAR_THISMONTH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "LASTYEAR_NEXTMONTH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "LASTYEAR_TODAY",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "BEFORELASTMONTH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO",
+    "column_name": "YUE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "YESTERDAY",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "TODAY",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "TOMORROW",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "THISYEAR",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "LASTYEAR",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "NEXTYEAR",
+    "data_type": "INTEGER"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "WORKDATE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "THISMONTH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "LASTMONTH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "NEXTMONTH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "ZTBH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "LASTYEAR_THISMONTH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "LASTYEAR_NEXTMONTH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "LASTYEAR_TODAY",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "BEFORELASTMONTH",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "ETLINFO_NATURAL_DAY",
+    "column_name": "YUE",
+    "data_type": "VARCHAR"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_001",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_001",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_001",
+    "column_name": "YWLSH",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_001",
+    "column_name": "JYRQ",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_001",
+    "column_name": "JE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_001",
+    "column_name": "LYZT",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_001",
+    "column_name": "TKZT",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_001",
+    "column_name": "FPJBJGBH",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_001",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_001",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_001",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_001",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_004",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_004",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_004",
+    "column_name": "YHDM",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_004",
+    "column_name": "YHMC",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_004",
+    "column_name": "YHZHHM",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_004",
+    "column_name": "YHZHMC",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_004",
+    "column_name": "ZHXZMC",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_004",
+    "column_name": "TSMC",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_004",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_004",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_004",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_004",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_005",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_005",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_005",
+    "column_name": "ZHHM",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_005",
+    "column_name": "ZHMC",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_005",
+    "column_name": "BJJE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_005",
+    "column_name": "CKQX",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_005",
+    "column_name": "CRRQ",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_005",
+    "column_name": "LILV",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_005",
+    "column_name": "QKRQ",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_005",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_005",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_005",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_005",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "YHDM",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "YHZHHM",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "YHZHMC",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "ZHLX",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "ZHXZ",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "KHRQ",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "SPZT",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "ZHZT",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_006",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_007",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_007",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_007",
+    "column_name": "YHDM",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_007",
+    "column_name": "YHMC",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_007",
+    "column_name": "YHZHHM",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_007",
+    "column_name": "YHZHMC",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_007",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_007",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_007",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_007",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_008",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_008",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_008",
+    "column_name": "TJND",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_008",
+    "column_name": "FL",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_008",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_008",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_008",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_008",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_009",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_009",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_009",
+    "column_name": "TJND",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_009",
+    "column_name": "JE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_009",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_009",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_009",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_009",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_010",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_010",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_010",
+    "column_name": "JE119",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_010",
+    "column_name": "JE201",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_010",
+    "column_name": "BL",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_010",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_010",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_010",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_010",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_011",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_011",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_011",
+    "column_name": "YSJE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_011",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_011",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_011",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_011",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_012",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_012",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_012",
+    "column_name": "JE219",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_012",
+    "column_name": "JE201",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_012",
+    "column_name": "BL",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_012",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_012",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_012",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_012",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_013",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_013",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_013",
+    "column_name": "JE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_013",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_013",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_013",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_013",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_015",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_015",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_015",
+    "column_name": "KMBH",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_015",
+    "column_name": "KMQC",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_015",
+    "column_name": "QMYE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_015",
+    "column_name": "MXQMYE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_015",
+    "column_name": "CE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_015",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_015",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_015",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_015",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_016",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_016",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_016",
+    "column_name": "SL",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_016",
+    "column_name": "JE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_016",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_016",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_016",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_016",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_017",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_017",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_017",
+    "column_name": "JE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_017",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_017",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_017",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_017",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_018",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_018",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_018",
+    "column_name": "BS",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_018",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_018",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_018",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_018",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_019",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_019",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_019",
+    "column_name": "KMBH",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_019",
+    "column_name": "QMYE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_019",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_019",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_019",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_019",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_020",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_020",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_020",
+    "column_name": "KMBH",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_020",
+    "column_name": "QCYE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_020",
+    "column_name": "JZPZH",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_020",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_020",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_020",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_020",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_021",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_021",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_021",
+    "column_name": "CE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_021",
+    "column_name": "CREATED_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_021",
+    "column_name": "CHECK_DATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_021",
+    "column_name": "BATCH_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_021",
+    "column_name": "ID",
+    "data_type": "BIGINT"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_022",
+    "column_name": "YWID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_022",
+    "column_name": "YWJBJG",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_022",
+    "column_name": "SXFCE",
+    "data_type": "DECIMAL"
+  },
+  {
+    "owner": "CAP_GJJ_ETL",
+    "table_name": "JH_CHECK_CW_022",
+    "column_name": "SXFL",
+    "data_type": "DECIMAL"
+  },
+  {

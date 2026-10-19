@@ -1,0 +1,350 @@
+[
+  {
+    "id": 131,
+    "year": 2025,
+    "quarter": 3,
+    "row_count": 1,
+    "columns": [
+      "bgrq"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "date_shape"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 131,
+    "year": 2025,
+    "quarter": 1,
+    "row_count": 1,
+    "columns": [
+      "bgrq"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "date_shape"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 131,
+    "year": 2025,
+    "quarter": 4,
+    "row_count": 1,
+    "columns": [
+      "bgrq"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "date_shape"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 131,
+    "year": 2026,
+    "quarter": 1,
+    "row_count": 1,
+    "columns": [
+      "bgrq"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "date_shape"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 142,
+    "year": 2025,
+    "quarter": 3,
+    "row_count": 12,
+    "columns": [
+      "month",
+      "dkffbs",
+      "dkffje"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "12_months_including_cross_year",
+      "source_aggregate_agreement"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 142,
+    "year": 2025,
+    "quarter": 1,
+    "row_count": 12,
+    "columns": [
+      "month",
+      "dkffbs",
+      "dkffje"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "12_months_including_cross_year",
+      "source_aggregate_agreement"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 142,
+    "year": 2025,
+    "quarter": 4,
+    "row_count": 12,
+    "columns": [
+      "month",
+      "dkffbs",
+      "dkffje"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "12_months_including_cross_year",
+      "source_aggregate_agreement"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 142,
+    "year": 2026,
+    "quarter": 1,
+    "row_count": 12,
+    "columns": [
+      "month",
+      "dkffbs",
+      "dkffje"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "12_months_including_cross_year",
+      "source_aggregate_agreement"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 143,
+    "year": 2025,
+    "quarter": 3,
+    "row_count": 12,
+    "columns": [
+      "month",
+      "bnhsje",
+      "snhsje"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "same_values_as_original",
+      "numeric_month_order"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 143,
+    "year": 2025,
+    "quarter": 1,
+    "row_count": 12,
+    "columns": [
+      "month",
+      "bnhsje",
+      "snhsje"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "same_values_as_original",
+      "numeric_month_order"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 143,
+    "year": 2025,
+    "quarter": 4,
+    "row_count": 12,
+    "columns": [
+      "month",
+      "bnhsje",
+      "snhsje"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "same_values_as_original",
+      "numeric_month_order"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 143,
+    "year": 2026,
+    "quarter": 1,
+    "row_count": 9,
+    "columns": [
+      "month",
+      "bnhsje",
+      "snhsje"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "same_values_as_original",
+      "numeric_month_order"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 144,
+    "year": 2025,
+    "quarter": 3,
+    "row_count": 12,
+    "columns": [
+      "month",
+      "month_num",
+      "tqhk",
+      "zchk"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "same_values_as_original",
+      "numeric_month_order"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 144,
+    "year": 2025,
+    "quarter": 1,
+    "row_count": 12,
+    "columns": [
+      "month",
+      "month_num",
+      "tqhk",
+      "zchk"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "same_values_as_original",
+      "numeric_month_order"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 144,
+    "year": 2025,
+    "quarter": 4,
+    "row_count": 12,
+    "columns": [
+      "month",
+      "month_num",
+      "tqhk",
+      "zchk"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "same_values_as_original",
+      "numeric_month_order"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 144,
+    "year": 2026,
+    "quarter": 1,
+    "row_count": 9,
+    "columns": [
+      "month",
+      "month_num",
+      "tqhk",
+      "zchk"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "same_values_as_original",
+      "numeric_month_order"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 146,
+    "year": 2025,
+    "quarter": 3,
+    "row_count": 12,
+    "columns": [
+      "month",
+      "cdb"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "same_values_as_original",
+      "numeric_month_order"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 146,
+    "year": 2025,
+    "quarter": 1,
+    "row_count": 12,
+    "columns": [
+      "month",
+      "cdb"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "same_values_as_original",
+      "numeric_month_order"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 146,
+    "year": 2025,
+    "quarter": 4,
+    "row_count": 12,
+    "columns": [
+      "month",
+      "cdb"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "same_values_as_original",
+      "numeric_month_order"
+    ],
+    "status": "PASS"
+  },
+  {
+    "id": 146,
+    "year": 2026,
+    "quarter": 1,
+    "row_count": 8,
+    "columns": [
+      "month",
+      "cdb"
+    ],
+    "checks": [
+      "bound_parameters",
+      "database_execution",
+      "same_values_as_original",
+      "numeric_month_order"
+    ],
+    "status": "PASS"
+  }
+]
