@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>年度报告</title>
+  <style>
+    :root {
+      --page-bg: #edf1f5;
+      --panel-bg: #ffffff;
+      --line: #e9edf3;
+      --line-dark: #d8dee8;
+      --text: #596678;
+      --text-light: #8f9bab;
+      --head-bg: #f5f5f5;
+      --blue: #2f86ff;
+      --blue-dark: #2376ea;
+      --blue-light: #eaf3ff;
+      --red: #f26a6a;
+      --red-dark: #ea5a5a;
+      --gray: #f7f8fa;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--page-bg);
+      color: var(--text);
+      font: 12px/1.5 "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+    }
+
+    .page {
+      width: min(100%, 1920px);
+      min-height: 1440px;
+      margin: 4px auto;
+      background: var(--panel-bg);
+      border: 1px solid var(--line);
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      background: #fafafa;
+    }
+
+    .field {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #8f98a7;
+      white-space: nowrap;
+    }
+
+    .field input {
+      width: 190px;
+      height: 24px;
+      padding: 0 8px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+
+    .field input::placeholder {
+      color: #c2cad5;
+    }
+
+    .btn {
+      height: 24px;
+      padding: 0 12px;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      font-size: 12px;
+      line-height: 22px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-dark);
+      border-color: var(--blue-dark);
+    }
+
+    .btn-plain {
+      background: #fff;
+      border-color: var(--line-dark);
+      color: #7d8898;
+    }
+
+    .btn-plain:hover {
+      background: #f8fbff;
+      border-color: #c6d7ef;
+      color: #5a718d;
+    }
+
+    .btn-danger {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    .btn-danger:hover {
+      background: var(--red-dark);
+      border-color: var(--red-dark);
+    }
+
+    .btn-download {
+      background: #6faaf0;
+      border-color: #6faaf0;
+      color: #fff;
+    }
+
+    .btn-download:hover {
+      background: #5a9aea;
+      border-color: #5a9aea;
+    }
+
+    .btn-ai {
+      background: #8b72f2;
+      border-color: #8b72f2;
+      color: #fff;
+    }
+
+    .btn-ai:hover {
+      background: #765ce8;
+      border-color: #765ce8;
+    }
+
+    .btn-add::before {
+      content: "+";
+      margin-right: 4px;
+      font-weight: 700;
+    }
+
+    .content {
+      padding: 0 6px 8px;
+    }
+
+    .table-wrap {
+      min-height: 200px;
+      border: 1px solid var(--line);
+      border-top: 0;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    thead th {
+      height: 31px;
+      padding: 0 8px;
+      border-bottom: 1px solid var(--line);
+      background: var(--head-bg);
+      color: #9ca6b5;
+      font-weight: 400;
+      text-align: left;
+    }
+
+    tbody td {
+      height: 32px;
+      padding: 0 8px;
+      border-bottom: 1px solid #f2f4f8;
+      color: #6c7787;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    thead th + th,
+    tbody td + td {
+      border-left: 1px solid #f2f4f8;
+    }
+
+    .col-index,
+    .cell-index {
+      text-align: center;
+    }
+
+    .cell-actions {
+      white-space: nowrap;
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
+    .cell-actions .btn {
+      height: 20px;
+      padding: 0 8px;
+      line-height: 18px;
+      font-size: 11px;
+      vertical-align: middle;
+    }
+
+    .cell-actions .btn + .btn {
+      margin-left: 4px;
+    }
+
+    .empty-row td {
+      height: 360px;
+      border-left: 0;
+      text-align: center;
+      color: #b2bcc9;
+      vertical-align: top;
+      padding-top: 110px;
+    }
+
+    .pager {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      height: 28px;
+      padding: 0 6px;
+      border: 1px solid var(--line);
+      border-top: 0;
+      color: #9aa5b4;
+      background: #fff;
+      font-size: 11px;
+    }
+
+    .prompt-box {
+      margin-top: 10px;
+      padding: 8px 10px;
+      border: 1px solid #dbe7f5;
+      border-left: 3px solid var(--blue);
+      background: #f6faff;
+    }
+
+    .prompt-box.hidden {
+      display: none;
+    }
+
+    .prompt-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .prompt-title {
+      color: #425267;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .prompt-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .prompt-text {
+      display: block;
+      width: 100%;
+      min-height: 54px;
+      padding: 6px 8px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+    }
+
+    .prompt-text:focus {
+      border-color: var(--blue);
+    }
+
+    .preview {
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .preview.hidden {
+      display: none;
+    }
+
+    .preview-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #f7f9fc;
+    }
+
+    .preview-title {
+      margin: 0;
+      font-size: 15px;
+      color: #425267;
+      font-weight: 700;
+    }
+
+    .preview-meta {
+      margin-top: 4px;
+      color: #98a4b3;
+      font-size: 11px;
+    }
+
+    .preview-close {
+      color: #7f90a4;
+    }
+
+    .preview-body {
+      max-height: 1240px;
+      padding: 18px 24px 24px;
+      overflow-y: overlay;
+    }
+
+    .preview-file {
+      width: min(100%, 1120px);
+      margin: 0 auto 16px;
+      border: 1px solid #e3eaf2;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(31, 55, 88, 0.05);
+      overflow: hidden;
+    }
+
+    .preview-file.hidden,
+    .doc-paper.hidden {
+      display: none;
+    }
+
+    .preview-file-frame {
+      display: block;
+      width: 100%;
+      height: 1200px;
+      border: 0;
+      background: #f6f8fb;
+    }
+
+    .preview-visuals {
+      width: min(100%, 1120px);
+      margin: 0 auto 16px;
+    }
+
+    .preview-visuals.hidden {
+      display: none;
+    }
+
+    .visuals-title {
+      margin: 0 0 10px;
+      color: #44566d;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .chart-card {
+      border: 1px solid #e7edf5;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 4px 14px rgba(36, 63, 98, 0.05);
+      overflow: hidden;
+    }
+
+    .chart-card.full {
+      grid-column: 1 / -1;
+    }
+
+    .chart-card-head {
+      padding: 10px 12px;
+      border-bottom: 1px solid #edf2f7;
+      color: #425267;
+      font-size: 13px;
+      font-weight: 700;
+      background: #f9fbfd;
+    }
+
+    .chart-card-body {
+      padding: 10px 12px 12px;
+    }
+
+    .chart-svg {
+      display: block;
+      width: 100%;
+      height: 250px;
+      background: linear-gradient(#ffffff, #fbfdff);
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      margin-top: 8px;
+      color: #6c7b8f;
+      font-size: 11px;
+    }
+
+    .chart-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chart-legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex: 0 0 10px;
+    }
+
+    .chart-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 250px;
+      color: #9cabbc;
+      font-size: 12px;
+      background: #fbfdff;
+    }
+
+    .axis-text {
+      fill: #8fa0b3;
+      font-size: 10px;
+    }
+
+    .grid-line {
+      stroke: #edf2f7;
+      stroke-width: 1;
+    }
+
+    .chart-axis {
+      stroke: #d9e2ec;
+      stroke-width: 1;
+    }
+
+    .doc-paper {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: 36px 52px 42px;
+      border: 1px solid #edf1f5;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(31, 55, 88, 0.05);
+    }
+
+    .doc-main-title {
+      margin: 0;
+      color: #304258;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .doc-sub-title {
+      margin: 12px 0 26px;
+      color: #304258;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .doc-paragraph {
+      margin: 0 0 12px;
+      color: #556476;
+      font-size: 14px;
+      line-height: 1.9;
+      text-indent: 2em;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .doc-ai {
+      font-style: italic;
+    }
+
+    .doc-section {
+      margin: 18px 0 12px;
+      color: #3f4f65;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .doc-sub-section {
+      margin: 14px 0 10px;
+      color: #4d5f74;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .doc-sign {
+      margin-top: 28px;
+      text-align: right;
+    }
+
+    .pager-select,
+    .pager-input {
+      width: 52px;
+      height: 20px;
+      padding: 0 6px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      color: #718094;
+      outline: none;
+      font-size: 11px;
+    }
+
+    .pager-btn,
+    .pager-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      color: #7e8a9b;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .pager-btn[disabled] {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .pager-num.active {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .toast {
+      position: fixed;
+      top: 18px;
+      right: 24px;
+      min-width: 160px;
+      padding: 10px 14px;
+      border: 1px solid #d7e7ff;
+      border-radius: 4px;
+      background: #f4f9ff;
+      color: #53729b;
+      box-shadow: 0 6px 18px rgba(56, 89, 132, 0.08);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: all 0.2s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .download-mask {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 10px;
+      background: rgba(47, 61, 83, 0.12);
+    }
+
+    .download-mask.hidden {
+      display: none;
+    }
+
+    .download-dialog {
+      width: 872px;
+      border: 1px solid #b9c1ca;
+      border-radius: 4px;
+      background: #f3f3f3;
+      box-shadow: 0 12px 28px rgba(33, 46, 64, 0.22);
+      overflow: hidden;
+    }
+
+    .download-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+      padding: 0 16px;
+      border-bottom: 1px solid #cfd5dd;
+      background: linear-gradient(#f9f9f9, #ededed);
+      cursor: move;
+      user-select: none;
+    }
+
+    .download-head-title {
+      color: #4b5563;
+      font-size: 14px;
+    }
+
+    .download-close {
+      position: relative;
+      width: 28px;
+      height: 28px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .download-close::before,
+    .download-close::after {
+      content: "";
+      position: absolute;
+      top: 13px;
+      left: 4px;
+      width: 20px;
+      height: 2px;
+      background: #7e8794;
+    }
+
+    .download-close::before {
+      transform: rotate(45deg);
+    }
+
+    .download-close::after {
+      transform: rotate(-45deg);
+    }
+
+    .download-body {
+      padding: 30px 32px 26px;
+      background: #f3f3f3;
+    }
+
+    .download-row {
+      display: grid;
+      grid-template-columns: 68px 1fr;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .download-label {
+      color: #2f3d50;
+      font-size: 17px;
+      white-space: nowrap;
+    }
+
+    .download-value,
+    .download-path-wrap {
+      display: flex;
+      align-items: center;
+      height: 46px;
+      border: 1px solid #bfc6cf;
+      background: #fff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    .download-value {
+      padding: 0 14px;
+      color: #2d415a;
+      font-size: 17px;
+    }
+
+    .download-url {
+      color: #a8b0bb;
+    }
+
+    .download-file-name {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .download-file-size {
+      margin-left: 12px;
+      color: #68788e;
+      white-space: nowrap;
+    }
+
+    .download-path-wrap {
+      overflow: hidden;
+    }
+
+    .download-path {
+      flex: 1;
+      padding: 0 12px;
+      color: #2d415a;
+      font-size: 17px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .download-space {
+      padding: 0 12px 0 0;
+      color: #7f8da2;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .download-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 100%;
+      border-left: 1px solid #c9d0d8;
+      background: linear-gradient(#f8f8f8, #ececec);
+      color: #49586c;
+      font-size: 11px;
+    }
+
+    .download-browse {
+      width: 106px;
+      height: 46px;
+      margin-left: 10px;
+      border: 1px solid #bfc6cf;
+      background: linear-gradient(#ffffff, #efefef);
+      color: #2d415a;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    .download-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      padding: 66px 22px 6px 0;
+    }
+
+    .download-act-btn {
+      min-width: 120px;
+      height: 46px;
+      border: 1px solid #bfc6cf;
+      border-radius: 2px;
+      background: linear-gradient(#ffffff, #efefef);
+      color: #26384f;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    .download-act-btn.primary {
+      border-color: #6ea9ef;
+      background: #70aff6;
+      color: #fff;
+    }
+
+    @media (max-width: 1280px) {
+      .page {
+        min-height: 900px;
+      }
+
+      .table-wrap {
+        min-height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="toolbar">
+      <div class="field">
+        <label for="reportName">报告名称</label>
+        <input id="reportName" type="text" placeholder="请输入报告名称">
+      </div>
+      <button class="btn btn-primary" type="button" id="queryBtn">查询</button>
+      <button class="btn btn-plain" type="button" id="resetBtn">重置</button>
+      <button class="btn btn-primary btn-add" type="button" id="generateBtn">生成报告</button>
+    </div>
+
+    <div class="content">
+      <div class="table-wrap">
+        <table>
+          <colgroup>
+            <col style="width: 44px">
+            <col style="width: 560px">
+            <col style="width: 150px">
+            <col style="width: 90px">
+            <col style="width: 150px">
+            <col style="width: 220px">
+          </colgroup>
+          <thead>
+            <tr>
+              <th class="col-index">序号</th>
+              <th>报告名称</th>
+              <th>发布时间</th>
+              <th>创建人</th>
+              <th>创建时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="reportRows"></tbody>
+        </table>
+      </div>
+
+      <div class="pager">
+        <span id="totalText">共 0 条</span>
+        <select class="pager-select" id="pageSize">
+          <option value="10">10条/页</option>
+          <option value="20" selected>20条/页</option>
+          <option value="50">50条/页</option>
+        </select>
+        <button class="pager-btn" type="button" id="prevBtn">&lt;</button>
+        <span class="pager-num active" id="pageNum">1</span>
+        <button class="pager-btn" type="button" id="nextBtn">&gt;</button>
+        <span>前往</span>
+        <input class="pager-input" id="gotoInput" type="text" value="1">
+        <span>页</span>
+        <button class="pager-btn" type="button" id="gotoBtn">确定</button>
+      </div>
+
+      <div class="prompt-box hidden" id="promptBox">
+        <div class="prompt-head">
+          <div class="prompt-title">大模型提示词</div>
+          <div class="prompt-actions">
+            <button class="btn btn-ai" type="button" id="promptAnalyzeBtn">智能分析</button>
+            <button class="btn btn-plain" type="button" id="promptAiBtn">提示词智能生成</button>
+            <button class="btn btn-primary" type="button" id="promptSaveBtn">保存提示词</button>
+          </div>
+        </div>
+        <textarea class="prompt-text" id="promptText" rows="3"></textarea>
+      </div>
+
+      <div class="preview hidden" id="previewPanel">
+        <div class="preview-head">
+          <div>
+            <h2 class="preview-title" id="previewTitle">报告预览</h2>
+            <div class="preview-meta" id="previewMeta"></div>
+          </div>
+          <button class="btn btn-plain preview-close" type="button" id="closePreviewBtn">关闭</button>
+        </div>
+        <div class="preview-body">
+          <div class="preview-file hidden" id="previewFileWrap">
+            <iframe class="preview-file-frame" id="previewFileFrame" title="原文档预览"></iframe>
+          </div>
+          <div class="preview-visuals hidden" id="previewVisuals"></div>
+          <div class="doc-paper" id="previewContent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="download-mask hidden" id="downloadMask">
+    <div class="download-dialog" id="downloadDialog">
+      <div class="download-head" id="downloadHead">
+        <div class="download-head-title">新建下载任务</div>
+        <button class="download-close" type="button" id="downloadCloseBtn" aria-label="关闭"></button>
+      </div>
+      <div class="download-body">
+        <div class="download-row">
+          <div class="download-label">网址:</div>
+          <div class="download-value">
+            <span class="download-url" id="downloadUrl"></span>
+          </div>
+        </div>
+        <div class="download-row">
+          <div class="download-label">文件名:</div>
+          <div class="download-value">
+            <span class="download-file-name" id="downloadFileName"></span>
+            <span class="download-file-size" id="downloadFileSize"></span>
+          </div>
+        </div>
+        <div class="download-row">
+          <div class="download-label">下载到:</div>
+          <div style="display:flex; align-items:center;">
+            <div class="download-path-wrap" style="flex:1;">
+              <span class="download-path" id="downloadPath"></span>
+              <span class="download-space" id="downloadSpace"></span>
+              <span class="download-arrow">▼</span>
+            </div>
+            <button class="download-browse" type="button" id="downloadBrowseBtn">浏览</button>
+          </div>
+        </div>
+
+        <div class="download-actions">
+          <button class="download-act-btn" type="button" id="downloadOpenBtn">下载并打开</button>
+          <button class="download-act-btn primary" type="button" id="downloadOnlyBtn">下载</button>
+          <button class="download-act-btn" type="button" id="downloadCancelBtn">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    (function () {
+      var reportName = document.getElementById("reportName");
+      var queryBtn = document.getElementById("queryBtn");
+      var resetBtn = document.getElementById("resetBtn");
+      var generateBtn = document.getElementById("generateBtn");
+      var reportRows = document.getElementById("reportRows");
+      var totalText = document.getElementById("totalText");
+      var pageSize = document.getElementById("pageSize");
+      var prevBtn = document.getElementById("prevBtn");
+      var nextBtn = document.getElementById("nextBtn");
+      var pageNum = document.getElementById("pageNum");
+      var gotoInput = document.getElementById("gotoInput");
+      var gotoBtn = document.getElementById("gotoBtn");
+      var toast = document.getElementById("toast");
+      var previewPanel = document.getElementById("previewPanel");
+      var previewTitle = document.getElementById("previewTitle");
+      var previewMeta = document.getElementById("previewMeta");
+      var previewFileWrap = document.getElementById("previewFileWrap");
+      var previewFileFrame = document.getElementById("previewFileFrame");
+      var previewVisuals = document.getElementById("previewVisuals");
+      var previewContent = document.getElementById("previewContent");
+      var closePreviewBtn = document.getElementById("closePreviewBtn");
+      var promptBox = document.getElementById("promptBox");
+      var promptText = document.getElementById("promptText");
+      var promptAnalyzeBtn = document.getElementById("promptAnalyzeBtn");
+      var promptAiBtn = document.getElementById("promptAiBtn");
+      var promptSaveBtn = document.getElementById("promptSaveBtn");
+      var downloadMask = document.getElementById("downloadMask");
+      var downloadDialog = document.getElementById("downloadDialog");
+      var downloadHead = document.getElementById("downloadHead");
+      var downloadCloseBtn = document.getElementById("downloadCloseBtn");
+      var downloadUrl = document.getElementById("downloadUrl");
+      var downloadFileName = document.getElementById("downloadFileName");
+      var downloadFileSize = document.getElementById("downloadFileSize");
+      var downloadPath = document.getElementById("downloadPath");
+      var downloadSpace = document.getElementById("downloadSpace");
+      var downloadBrowseBtn = document.getElementById("downloadBrowseBtn");
+      var downloadOpenBtn = document.getElementById("downloadOpenBtn");
+      var downloadOnlyBtn = document.getElementById("downloadOnlyBtn");
+      var downloadCancelBtn = document.getElementById("downloadCancelBtn");
+
+      var REPORT_CHARTS_1 = [{"id":1,"type":"barChart","title":"近12个月资金流量情况表（单位：亿元）","series":[{"name":"资金流入","categories":["1","2","3","4","5","6","7","8","9","10","11","12"],"values":[6.71,6.44,6.71,6.7,5.66,9.07,5.97,5.97,6.37,0,0,0]},{"name":"资金流出","categories":["1","2","3","4","5","6","7","8","9","10","11","12"],"values":[4.53,4.13,4.88,5.5,4.39,5.31,4.55,5.37,5.2,0,0,0]}]},{"id":2,"type":"barChart","title":"分支机构资金净流入情况表（单位：万元）","series":[{"name":"流入金额","categories":["市直一部","滕州分中心","枣矿分中心","峄城管理部","台儿庄管理部","市中管理部","山亭管理部","薛城管理部","高新区管理部","市直二部"],"values":[1185353964.04,1543162993.87,881495926.4,405305967.99,328351784.52,355849038.51,236865423.82,399570195.34,152397951.44,470399508.72]}]},{"id":3,"type":"lineChart","title":"归集趋势图（单位：亿元）","series":[{"name":"2025年","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月","10月","11月","12月"],"values":[4.49,4.41,4.49,4.69,3.84,7.38,4.08,4,4.56,0,0,0]},{"name":"2024年","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月","10月","11月","12月"],"values":[3.78,3.73,4.66,5.03,9.92,7.43,4.4,4.02,3.99,3.9,3.8,3.96]}]},{"id":4,"type":"lineChart","title":"提取趋势图（单位：亿元）","series":[{"name":"2025年","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月","10月","11月","12月"],"values":[3.34,2.99,3.46,3.36,2.78,2.63,3.77,3.5,3.17,0,0,0]},{"name":"2024年","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月","10月","11月","12月"],"values":[3.21,2.99,3.01,3.08,2.86,2.83,3.8,3.23,3.28,2.8,3.1,3.09]}]},{"id":5,"type":"barChart","title":"近一年购建房提取占比情况","series":[{"name":"购建房提取","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月"],"values":[48769100,51219100,66239200,64792800,57062300,56768300,66603803.27,72380603.87,62390107.02]},{"name":"除购建房外提取","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月"],"values":[285342674.22,248227989.82,279316549.27,271597430.11,221289860.26,206653358.91,310807335.37,278097963.01,254540669.98]}]},{"id":6,"type":"barChart","title":"近一年还贷提取情况（单位：万元）","series":[{"name":"还贷提取","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月"],"values":[16794.13,15076.73,16495.5,16052.06,14846.79,14092.3,14666.71,15793.11,14586.12]}]},{"id":7,"type":"barChart","title":"近一年无房租赁提取情况（单位：万元）","series":[{"name":"无房租赁提取金额","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月"],"values":[1037.83,683.79,931.02,975.32,836.95,794.08,1192.79,1391.05,1503.35]}]},{"id":8,"type":"lineChart","title":"贷款趋势图（单位：亿元）","series":[{"name":"2025年","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月"],"values":[1.19,1.13,1.43,2.14,1.61,2.68,0.77,1.87,2.03]},{"name":"2024年","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月"],"values":[114714000,76245000,113340000,137059000,217863434.19,179659000,231011000,188995000,179743000]}]},{"id":9,"type":"lineChart","title":"全市商品住房交易情况（单位：套）","series":[{"name":"2025年","categories":["01","02","03","04","05","06","07","08","09","10","11","12"],"values":[100,87,120,192,142,258,148,362,382,0,0,0]},{"name":"2024年","categories":["01","02","03","04","05","06","07","08","09","10","11","12"],"values":[126,67,104,110,125,149,233,158,167,139,115,96]}]},{"id":10,"type":"lineChart","title":"全市二手房成交情况（单位：套）","series":[{"name":"2025年","categories":["01","02","03","04","05","06","07","08","09","10","11","12"],"values":[94,92,130,141,146,198,76,166,149,0,0,0]},{"name":"2024年","categories":["01","02","03","04","05","06","07","08","09","10","11","12"],"values":[99,85,127,154,116,127,129,126,111,74,111,84]}]},{"id":11,"type":"barChart","title":"近一年剔除后贷款发放情况（单位：笔、万元）","series":[]},{"id":12,"type":"lineChart","title":"贷款回收趋势图（单位：亿元）","series":[{"name":"2025年","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月"],"values":[2.22,2.03,2.22,2,1.82,1.69,1.88,1.98,1.81]},{"name":"2024年","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月"],"values":[1.96,2.08,2.06,2.02,1.89,1.96,2.08,2.04,1.94]}]},{"id":13,"type":"barChart","title":"近一年住房公积金贷款还款情况（单位：万元）","series":[{"name":"正常还款","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月"],"values":[10174.43,10097.77,10036.19,9975.54,9954.4,9928.27,9971.61,9877.43,9870.14]},{"name":"提前还款","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月"],"values":[12030.01,10211.15,12154.26,10046.55,8271.25,6944.7,8871.87,9883.51,8205.68]}]},{"id":14,"type":"lineChart","title":"住房消费趋势图（单位：亿元）","series":[{"name":"2025年","categories":["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],"values":[227088654.45,208824331.76,240504434.25,235066574.73,213899749.84,205632067.01,225198753.99,244222204.86,223978785.74,0,0,0]},{"name":"2024年","categories":["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],"values":[208891031.58,198117502.98,213839316.95,232921499.23,215548322.54,220616172.82,260993149.78,243150971.22,232689646.41,201201814,209531392.05,223666940.43]}]},{"id":15,"type":"lineChart","title":"住房公积金存贷比变动情况","series":[{"name":"存贷比","categories":["01月","02月","03月","04月","05月","06月","07月","08月","09月"],"values":[65.33,64.49,63.82,63.5,63.1,62.21,61.63,61.45,61.17]}]},{"id":16,"type":"barChart","title":"全市各机构存贷比情况","series":[{"name":"存贷比","categories":["薛城管理部","市直二部","高新区管理部","滕州分中心","市中管理部","峄城管理部","台儿庄管理部","市直一部","山亭管理部","枣矿分中心"],"values":[128.52,126.92,95.42,80.85,70.08,55.45,54.43,44.19,25.25,15.72]}]},{"id":17,"type":"barChart","title":"全省各地住房公积金存贷比情况","series":[{"name":"存贷比","categories":["临沂","淄博","日照","青岛","潍坊","烟台","济南","德州","泰安","滨州","枣庄","济宁","东营","菏泽","聊城","威海"],"values":[75.77,72.43,70.46,70.16,69.76,69.36,67.44,67.24,66.51,66.43,66.15,66.11,63.56,60.53,59.24,54.15]}]},{"id":18,"type":"lineChart","title":"近12个月银行存款余额变动情况（单位：亿元）","series":[{"name":"住房公积金存款余额","categories":["2026年01月","2026年02月","2026年03月","2026年04月","2026年05月","2026年06月","2026年07月","2026年08月","2026年09月","2026年10月","2026年11月","2026年12月"],"values":[78.03,80.46,82.79,84.31,85.92,85.76,87.61,87.59,89.07,0,0,0]},{"name":"增值收益存款余额","categories":["2026年01月","2026年02月","2026年03月","2026年04月","2026年05月","2026年06月","2026年07月","2026年08月","2026年09月","2026年10月","2026年11月","2026年12月"],"values":[4.38,4.58,4.36,4.36,4.21,4.77,4.67,5.52,5.43,0,0,0]},{"name":"存款余额合计","categories":["2026年01月","2026年02月","2026年03月","2026年04月","2026年05月","2026年06月","2026年07月","2026年08月","2026年09月","2026年10月","2026年11月","2026年12月"],"values":[82.41,85.05,87.14,88.67,90.13,90.53,92.29,93.12,94.5,0,0,0]}]},{"id":19,"type":"pieChart","title":"银行存款余额占比情况","series":[{"name":"银行存款余额占比情况","categories":["中国工商银行","日照银行","青岛银行","枣庄银行","滕州农商行","山东省农村信用社联合社","交通银行","中国邮政储蓄银行","恒丰银行","中国建设银行","中国农业银行","中国银行"],"values":[13.61,0,0,0.55,0,0.59,1.61,11.53,2.19,52.19,14.81,2.91]}]}];
+
+      var reports = [
+        {
+          id: 1,
+          name: "年度运行分析报告_TEST_2026-10-20",
+          publishTime: "2026-10-20 15:17:26",
+          creator: "运营员1",
+          createTime: "2026-10-20 15:17:26",
+          docPath: "d:\\Work\\AI智擎提效平台原型-0908V5\\ai-zhiling-platform\\年资金运行分析_TEST_2026-10-20.docx",
+          fileName: "年资金运行分析_TEST_2026-10-20 (1).docx",
+          fileSize: "227.05 KB",
+          downloadUrl: "blob:http://100.70.3.16:9031/7d8e73f9-001d-46a7-acae-125a9cbcbdc4",
+          downloadPath: "C:\\Users\\qyq\\Desktop",
+          freeSpace: "剩: 14.32 GB",
+          pdfPath: "d:\\Work\\AI智擎提效平台原型-0908V5\\ai-zhiling-platform\\年资金运行分析_TEST_2026-10-20.pdf",
+          analysisDocPath: "d:\\Work\\AI智擎提效平台原型-0908V5\\ai-zhiling-platform\\年资金运行分析_TEST_2026-10-20_智能分析.docx",
+          analysisPdfPath: "d:\\Work\\AI智擎提效平台原型-0908V5\\ai-zhiling-platform\\年资金运行分析_TEST_2026-10-20_智能分析.pdf",
+          charts: REPORT_CHARTS_1,
+          content: [
+            "枣庄市住房公积金管理中心",
+            "2026年度资金运行分析报告",
+            "今年以来，在市中心党组的正确领导下，全市各分中心、管理部紧紧围绕年初确定的重点项目，有序推进各项计划任务，在支持住房消费、维护建缴对象合法权益、促进房地产市场平稳健康发展方面做出应有的贡献。根据住房城乡建设部住房公积金监管司《关于加强住房公积金统计分析工作的通知》（建金综函〔2018〕186号）文件要求，对2026年度资金运行过程中发现的问题及时采取改进措施，加强内部管理，防范资金运行风险。",
+            "一、资金运行总体情况",
+            "1-12月份，全市归集住房公积金41.94亿元（含年度结息3.2亿元，剔除结息38.74亿元），提取住房公积金29.02亿元，提取额占归集额74.91%，住房公积金结余9.72亿元，归集余额为0亿元。发放个人住房公积金贷款14.84亿元（其中公转商置换1.69亿元），贷款回收17.65亿元，贷款余额为0亿元，年末存贷比例为0%。全年资金流入56.39亿元（剔除结息），资金流出43.86亿元，资金净流入12.53亿元,年末公转商贴息贷款余额已清零，存贷款规模0亿元。",
+            "资金运行基本特征：",
+            "（一）资金流入情况分析。",
+            "全年资金流入合计56.39亿元（剔除结息），其中：缴存额38.74亿元，贷款回收17.65亿元，分别占资金流入总量的68.7%和31.3%。",
+            "从全市资金流量情况图可以看出，请人工补充分析，月均资金流入4.7亿元，影响资金流入的主要原因是请人工补充分析。",
+            "（二）资金流出情况分析。",
+            "全年资金流出合计43.86亿元，其中：提取额29.02亿元、贷款发放额14.84亿元，分别占资金流出总量的66.17%和33.83%。",
+            "请人工补充分析。",
+            "（三）资金净流量情况分析。",
+            "全年资金净流入12.53亿元，月均净流入1.04亿元，剔除公转商置换后月均净流入1.18亿元。请人工补充分析。",
+            "通过分析各机构资金净流入情况表可以看出，请人工补充分析。按净流入金额（剔除公转商置换）由高到低分别是：市中管理部11104.76万元、峄城管理部18745.04万元、山亭管理部9456.07万元、台儿庄管理部12234.41万元、薛城管理部6642.5万元、滕州分中心41867.37万元、枣矿分中心20111.66万元、高新区管理部3125.17万元、市直一部53779.42万元、市直二部-3352.36万元。",
+            "二、各项指标计划执行情况分析",
+            "（一）住房公积金归集。全市归集住房公积金41.94亿元（含结息3.2亿元，剔除结息38.74亿元），同比增长-28.45%，近三年平均增长率4.69%，剔除结息后月均缴存金额3.23亿元，年末缴存余额0亿元。",
+            "运行特点：",
+            "1.请人工补充分析。",
+            "2. 2026年归集增长率超过4%的分支机构为；归集增长率低于2%的分支机构为市直二部（-58.04%）、薛城管理部（-45.87%）、市直一部（-32.16%）、枣矿分中心（-26.14%）、台儿庄管理部（-21.87%）、市中管理部（-21.27%）、高新区管理部（-20.93%）、山亭管理部（-19.5%）、峄城管理部（-18.11%）、滕州分中心（-17.87%）。",
+            "2026年全市各分支机构归集情况表（单位：万元）",
+            "3. 开展2026年度基数调整后，各分支机构归集增长情况高低不均，多数分支机构基数调整后归集变动不大。环比增长率最高为高新区管理部-49.1%，环比增长率最低为滕州分中心-62.94%。",
+            "2026年各分支机构基数调整后归集变动情况表（单位：万元）",
+            "（二）住房公积金提取。全市提取住房公积金29.02亿元，同比增长-22.16%，近三年平均增长率3.74%。提取占归集额比例为74.91%，较上一年占比上升8.02%，月均提取金额2.42亿元。",
+            "2026年住房公积金提取事项分类表",
+            "1.购建房提取额同比下降2.47%。请人工补充分析，购建房提取占提取总额的18.82%。1月份占比最低为14.6%。",
+            "2.还贷提取额同比增长70.49%。请人工补充分析。",
+            "3.无房租赁提取金额同比增长30.27%。2月份无房租赁提取达到年内峰值。请人工补充分析。",
+            "4.横向比较全省各地住房公积金提取情况，枣庄住房消费提取占提取比例为113.22%，在全省排名第**位。请人工补充分析。",
+            "全省各地住房公积金提取情况表",
+            "请人工补充分析",
+            "（三）个人住房公积金贷款发放。全市发放个人住房公积金贷款2902笔，金额14.84亿元，分别同比下降0%、下降19.26%，剔除置换后发放贷款2511笔、金额13.15亿元，分别同比下降0%、-15.98%。近三年贷款发放金额平均增长率为-10.26%，月均贷款发放金额1.24亿元，剔除置换后月均贷款发放1.1亿元，贷款余额为0亿元。",
+            "2026年，枣庄全市房地产交易成交住房**套，同比**%，其中一手房**套，同比**%；二手房**套，同比**%。请人工补充分析。",
+            "运行特点：",
+            "1.请人工补充分析。",
+            "2.请人工补充分析。",
+            "3.请人工补充分析。",
+            "（四）住房公积金贷款回收。2026年全市贷款回收17.65亿元，同比增长-26.2%，近三年平均增长率9.06%，月均贷款回收金额1.47亿元。",
+            "运行特点：",
+            "1.请人工补充分析。",
+            "2.2026年提前还贷额占比为49.07%，请人工补充分析。",
+            "（五）支持住房消费额。全市支持住房消费额43.86亿元（其中公转商置换1.69亿元），较去年同期下降21.21%，近三年平均增长率-2.75%，剔除公转商置换同比下降20.33%，剔除后月均住房消费额3.51亿元。",
+            "运行特点：",
+            "1. 请人工补充分析。",
+            "2. 请人工补充分析。8月份住房消费金额最高，达到2.44亿元。6月份住房消费金额最低，为2.06亿元，其中提取额仅29.02亿元。",
+            "（六）存贷比情况分析。12月末全市住房公积金缴存余额0亿元，住房公积金贷款余额0亿元，存贷比0%，较年初下降0%，公转商贷款余额为0。",
+            "运行特点：",
+            "1.今年以来请人工补充分析。平均每月存贷比下降0.0%，请人工补充分析。",
+            "2.全市各分支机构存贷比高低不均，各机构全口径存贷比从高到低排序为：。年末共有3个分支机构存贷比超过95%，7个分支机构存贷比低于85%。",
+            "3.全省各地住房公积金存贷比相差较大，请人工补充分析，枣庄存贷比请人工补充分析。",
+            "（七）业务收支及增值收益情况",
+            "2026年全市实现增值收益0亿元，同比下降0%，较去年同期减少0万元，同比月下降金额约0.0万元；业务收入3.86亿元，同比下降28.09%；业务支出2.67亿元，同比增长-13.08%。请人工补充分析。",
+            "2026年增值收益变动情况表（单位：万元）",
+            "（八）资金竞争性存放工作回评情况",
+            "请人工补充分析",
+            "（九）各委托银行存款余额情况。12月末全市存款0亿元，其中住房公积金存款0亿元，增值收益存款0亿元。年末全市存款较年初增加0亿元，其中住房公积金存款增加0亿元，增值收益存款减少0亿元。",
+            "2026年共有0家银行存款金额增加，银行存款增加最多的为亿元，其次为中国建设银行49.48亿元、中国农业银行14.05亿元、中国工商银行12.9亿元、中国邮政储蓄银行10.93亿元、中国银行2.76亿元、恒丰银行2.08亿元、交通银行1.53亿元、山东省农村信用社联合社0.56亿元、枣庄银行0.52亿元、青岛银行0亿元、滕州农商行0亿元、日照银行0亿元；共有0家银行存款金额减少，请人工补充分析。银行存款变化情况主要是受住房公积金资金存款变化及定期存款的因素影响。具体银行存款变化情况如下表所示：",
+            "银行存款变化情况表（单位：亿元）",
+            "12月末银行存款余额占比在10%以上有无数据占比0%。无数据较年初下降0%，占比变动主要受请人工补充分析。",
+            "三、2026年资金运行主要问题",
+            "通过分析全年资金运行情况，主要存在以下问题：",
+            "请人工补充分析。",
+            "四、2027年资金运行建议",
+            "为保障住房公积金资金运行更平稳、更高效，推动资金管理取得更大效益，建议2027年资金运行着重要抓好以下四方面：",
+            "（一）请人工补充分析。",
+            "（二）请人工补充分析。",
+            "（三）请人工补充分析。",
+            "（四）请人工补充分析。",
+            "计划财务处",
+            "2026年10月20日"
+          ]
+        },
+        {
+          id: 2,
+          name: "年度运行分析报告_TEST_2026-10-19",
+          publishTime: "2026-10-16 17:01:09",
+          creator: "运营员1",
+          createTime: "2026-10-16 17:01:09",
+          docPath: "",
+          fileName: "年度运行分析报告_TEST_2026-10-19.docx",
+          fileSize: "0 KB",
+          downloadUrl: "blob:http://100.70.3.16:9031/ndbg-task-2026-10-19",
+          downloadPath: "C:\\Users\\qyq\\Desktop",
+          freeSpace: "剩: 14.32 GB",
+          pdfPath: "",
+          analysisDocPath: "",
+          analysisPdfPath: "",
+          charts: [],
+          content: []
+        },
+        {
+          id: 3,
+          name: "年度运行分析报告_TEST_2026-10-14",
+          publishTime: "2026-10-14 17:43:45",
+          creator: "运维员0",
+          createTime: "2026-10-14 17:43:45",
+          docPath: "",
+          fileName: "年度运行分析报告_TEST_2026-10-14.docx",
+          fileSize: "0 KB",
+          downloadUrl: "blob:http://100.70.3.16:9031/ndbg-task-2026-10-14",
+          downloadPath: "C:\\Users\\qyq\\Desktop",
+          freeSpace: "剩: 14.32 GB",
+          pdfPath: "",
+          analysisDocPath: "",
+          analysisPdfPath: "",
+          charts: [],
+          content: []
+        }
+      ];
+
+      var state = {
+        keyword: "",
+        page: 1,
+        pageSize: 20,
+        activeReportId: null,
+        activeDownloadId: null
+      };
+
+      function showToast(text) {
+        toast.textContent = text;
+        toast.classList.add("show");
+        window.clearTimeout(showToast.timer);
+        showToast.timer = window.setTimeout(function () {
+          toast.classList.remove("show");
+        }, 1500);
+      }
+
+      function pad(num) {
+        return String(num).padStart(2, "0");
+      }
+
+      function nowText() {
+        var now = new Date();
+        return now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()) + " " +
+          pad(now.getHours()) + ":" + pad(now.getMinutes()) + ":" + pad(now.getSeconds());
+      }
+
+      function formatReportName() {
+        var text = reportName.value.trim();
+        var suffix = text || "TEST";
+        return "年度运行分析报告_" + suffix + "_" + nowText().slice(0, 10);
+      }
+
+      function getFilteredList() {
+        var keyword = state.keyword;
+        if (!keyword) {
+          return reports.slice();
+        }
+        return reports.filter(function (item) {
+          return item.name.indexOf(keyword) > -1;
+        });
+      }
+
+      function getPagedList(list) {
+        var start = (state.page - 1) * state.pageSize;
+        return list.slice(start, start + state.pageSize);
+      }
+
+      function escapeHtml(text) {
+        return String(text)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function paragraphClass(text, index) {
+        if (index === 0) {
+          return "doc-main-title";
+        }
+        if (index === 1) {
+          return "doc-sub-title";
+        }
+        if (/^[一二三四五六七八九十]+、/.test(text)) {
+          return "doc-section";
+        }
+        if (/^（[一二三四五六七八九十]+）/.test(text)) {
+          return "doc-sub-section";
+        }
+        if (text === "计划财务处" || /^\d{4}年\d{1,2}月\d{1,2}日$/.test(text)) {
+          return "doc-paragraph doc-sign";
+        }
+        return "doc-paragraph";
+      }
+
+      function buildAnalysisContent(baseContent) {
+        var list = baseContent.slice();
+        list[2] = "今年以来，在市中心党组的正确领导下，全市各分中心、管理部紧紧围绕年初确定的重点项目，有序推进各项计划任务，在支持住房消费、维护建缴对象合法权益、促进房地产市场平稳健康发展方面做出应有的贡献。根据住房城乡建设部住房公积金监管司《关于加强住房公积金统计分析工作的通知》（建金综函〔2018〕186号）文件要求，对2026年度资金运行过程中发现的问题及时采取改进措施，加强内部管理，防范资金运行风险。需要说明的是，截至目前2026年10-12月份基础业务数据尚未采集，以下涉及全年口径、同比变化和区域比较的分析，主要依据1-9月实绩、历年同月季节性变化以及枣庄本地房地产和人口流动特征进行推演，重点用于趋势研判和决策参考。";
+        list[8] = "从全市资金流量情况图可以看出，枣庄资金流入仍以缴存资金为主体、贷款回收为补充，资金来源结构总体稳定。月均资金流入4.7亿元，波动主要受企业缴存节奏、年度结息时点、提前还贷集中发生以及重点园区企业经营景气度变化影响。结合枣庄老工业基地转型、制造业和能源化工企业占比较高的实际情况，企业用工和工资发放节奏对缴存额的影响较为直接；同时，近两年居民提前还贷意愿上升，也使贷款回收对资金流入的支撑作用更加明显。";
+        list[11] = "从资金流出去向看，提取仍是资金流出的主要渠道，说明当前公积金使用场景更多集中在住房消费支取和偿还住房贷款，体现出居民改善居住条件和降低家庭杠杆并行的特点。贷款发放额占比低于提取额，说明枣庄房地产市场仍处于恢复阶段，尤其是非核心片区新增购房需求释放较慢，导致贷款投放对资金流出的拉动弱于历史高点。";
+        list[13] = "全年资金净流入12.53亿元，月均净流入1.04亿元，剔除公转商置换后月均净流入1.18亿元，表明当前资金运行总体仍处于净回笼状态。形成这一格局的主要原因，一是缴存和贷款回收的刚性较强，二是提取和贷款发放虽保持较高规模，但尚未对资金池形成持续性挤压，三是10-12月数据尚未采集，四季度一般存在缴存和结息扰动，后续仍需结合补录数据进一步校正。";
+        list[14] = "通过分析各机构资金净流入情况表可以看出，资金净流入明显向缴存基础较好、人口和产业集聚度较高的区域集中。市直一部、滕州分中心、枣矿分中心净流入规模居前，说明主城区和产业人口集聚区域对资金沉淀的贡献更突出；市直二部出现净流出，反映出该区域提取和贷款需求释放快于当期资金回笼。整体看，枣庄区域间资金运行分化加大，建议后续加强对净流出机构的月度监测和资金调度。";
+        list[18] = "1.归集总量下降与枣庄当前产业结构和就业结构调整密切相关。传统制造、煤化工及上下游企业仍是缴存主体，部分企业经营承压、用工趋于审慎，对新增缴存和缴存基数形成下拉；同时，灵活就业群体扩大、民营小微企业波动较大，也使归集增长缺乏稳定支撑。";
+        list[25] = "1.购建房提取额同比下降2.47%，说明枣庄商品住房成交尚未出现趋势性回暖，刚性和改善性购房需求释放仍偏温和，购房提取对总提取的拉动有限。购建房提取占提取总额的18.82%，1月份占比最低为14.6%，反映出年初居民购房决策相对谨慎，更多资金使用集中在存量按揭偿还和日常住房支出。";
+        list[26] = "2.还贷提取额同比增长70.49%，反映出居民降杠杆意愿明显增强。受贷款利率下行、家庭现金流管理趋稳以及提前还贷观念增强等因素影响，职工更多选择使用公积金余额偿还住房贷款，特别是在主城区和滕州等按揭贷款存量较大的区域，还贷提取增长对总提取形成了主要支撑。";
+        list[27] = "3.无房租赁提取金额同比增长30.27%，说明新市民、青年职工和跨区域就业群体对租赁住房支持政策的使用频率持续提升。2月份无房租赁提取达到年内峰值，与春节前后返乡返岗、租赁续签和集中办理业务有关，也反映出枣庄在产业转型过程中，租住型住房需求保持活跃。";
+        list[28] = "4.横向比较全省各地住房公积金提取情况，枣庄住房消费提取占提取比例为113.22%，处于全省中上水平，但具体排名需待全年完整数据披露后再行确认。该指标高于100%，说明枣庄公积金使用更加偏向住房消费场景，资金政策对购房、租房和偿贷需求的支持力度较强，也与本地房地产市场以刚需和改善为主、投资性需求较弱的特点相吻合。";
+        list[30] = "综合看，枣庄提取结构正由传统购房提取向“购房+还贷+租赁”多元并存转变，其中还贷提取和租赁提取增速较快，反映出住房消费方式更加理性、更加注重存量住房金融负担的缓释。后续应继续跟踪提取结构变化对资金流动性的影响。";
+        list[32] = "2026年，枣庄全市房地产交易年度完整数据尚未形成，10-12月成交信息仍待采集，因此全年成交套数及同比暂不宜直接定值。从1-9月市场表现看，一手房成交恢复力度有限，二手房因价格调整和改善置换带动，活跃度相对更高。结合枣庄主城区、薛城和滕州市场表现，预计四季度整体仍以低位修复为主，住房公积金贷款需求难以回到前几年高位。";
+        list[34] = "1.贷款发放总量回落，主要受房地产市场成交偏弱影响。枣庄当前购房需求以刚需、改善型自住为主，投资性需求明显减弱，导致公积金贷款申请增长动力不足。";
+        list[35] = "2.从区域结构看，主城区和滕州仍是贷款投放的主要承接区域，说明人口和产业集聚地区住房交易更具韧性；山亭、台儿庄等区域则受市场容量较小、改善需求释放缓慢影响，贷款投放弹性相对不足。";
+        list[36] = "3.剔除公转商置换后，贷款发放下降幅度仍较为明显，说明政策性置换业务对贷款规模存在阶段性托底作用，但市场内生购房需求恢复仍需时间，后续应关注利率优惠、首套改善支持等政策对贷款需求的传导效果。";
+        list[39] = "1.贷款回收整体保持稳定，但同比回落，说明在新增贷款投放减弱的同时，存量贷款回收逐步成为资金回笼主渠道。结合枣庄居民风险偏好趋于稳健、提前偿债意愿增强的情况，贷款回收仍将维持对资金安全运行的重要支撑。";
+        list[40] = "2.2026年提前还贷额占比为49.07%，占比较高，说明借款职工在收入稳定后更倾向于压降负债、缩短贷款期限。该现象与当前低风险偏好、居民更加重视家庭资产负债平衡有关，也意味着后续贷款余额和利息收入增长空间将继续承压。";
+        list[43] = "1.支持住房消费额总体回落，说明枣庄住房消费需求仍处于恢复阶段，政策支持效应已从“扩大规模”逐步转向“稳定预期”和“改善结构”。提取和贷款两端对住房消费的支撑依然明显，但新增购房需求释放不足，使总量较去年同期有所下降。";
+        list[44] = "2.8月份住房消费金额最高，达到2.44亿元，6月份住房消费金额最低，为2.06亿元，其中提取额仅29.02亿元。月度波动与暑期购房、年中资金安排及业务办理集中度有关，也反映出枣庄住房消费更多受居民收入预期和市场情绪驱动。当前消费重心已由新增置业逐步转向存量还贷、租赁支持和改善型需求释放。";
+        list[47] = "1.今年以来存贷比持续处于低位，平均每月存贷比下降0.0%，反映出在新增贷款投放不足、贷款余额较低的情况下，资金安全性较强但使用效率有待提升。对枣庄而言，这既说明流动性风险总体可控，也提示政策资金对房地产和住房消费的撬动作用仍需进一步增强。";
+        list[48] = "2.全市各分支机构存贷比高低不均，体现出区域住房交易活跃度和贷款需求差异较大。主城区及人口集聚区域存贷比较高，说明资金使用效率相对更好；部分外围区域存贷比较低，则反映贷款需求偏弱、资金沉淀较多。建议结合区域房地产去化周期和缴存结构，实施差异化的贷款投放和资金调度策略。";
+        list[49] = "3.全省各地住房公积金存贷比相差较大，受人口集聚、房地产市场热度和贷款政策执行节奏影响明显。枣庄存贷比整体偏低，与本地房地产市场处于修复阶段、提前还贷占比较高以及新增贷款投放不足密切相关，后续需在风险可控前提下提升政策资金使用效率。";
+        list[51] = "2026年全市实现增值收益0亿元，同比下降0%，较去年同期减少0万元，同比月下降金额约0.0万元；业务收入3.86亿元，同比下降28.09%；业务支出2.67亿元，同比增长-13.08%。从结构看，业务收入下降主要受贷款余额下降、利息收入减少影响，支出同步回落则反映出资金付息和相关费用支出压力减轻。考虑到提前还贷占比偏高、存贷比偏低，增值收益增长基础仍然偏弱。";
+        list[54] = "从回评情况看，资金竞争性存放工作总体平稳，存放结构较为分散，能够较好兼顾资金安全、流动性和收益性。后续建议进一步优化考核维度，重点关注合作银行对住房公积金归集扩面、便民服务和信息化建设的支持情况，推动“资金存放”与“服务贡献”联动评价。";
+        list[56] = "2026年共有0家银行存款金额增加，银行存款增加最多的为亿元，其次为中国建设银行49.48亿元、中国农业银行14.05亿元、中国工商银行12.9亿元、中国邮政储蓄银行10.93亿元、中国银行2.76亿元、恒丰银行2.08亿元、交通银行1.53亿元、山东省农村信用社联合社0.56亿元、枣庄银行0.52亿元、青岛银行0亿元、滕州农商行0亿元、日照银行0亿元；共有0家银行存款金额减少，说明当前统计口径下年末存款已基本完成压降或结转，银行间余额分布更多体现历史沉淀结构而非当期新增配置。银行存款变化情况主要是受住房公积金资金存款变化及定期存款到期、归集资金回笼与业务支出节奏影响。具体银行存款变化情况如下表所示：";
+        list[58] = "12月末银行存款余额占比在10%以上有无数据占比0%。无数据较年初下降0%，占比变动主要受资金集中清算、定期存款到期转存节奏以及业务资金归集投放时点变化影响。由于四季度数据尚未完整采集，相关占比变化仍需以后续补录数据复核。";
+        list[61] = "通过分析全年资金运行情况，主要存在以下问题：一是归集增长承压，传统产业和部分民营企业缴存稳定性不足，扩面增缴难度上升；二是提取和提前还贷增长较快，对资金沉淀和收益水平形成挤压；三是贷款投放恢复偏慢，政策资金支持住房消费的放大效应尚未充分体现；四是区域间资金运行差异扩大，个别机构存在净流出压力；五是四季度数据尚未采集，年度研判的精细化程度仍受基础数据完整性制约。";
+        list[64] = "（一）围绕枣庄产业转型和园区企业发展，持续推进归集扩面增缴，重点抓好灵活就业人员、民营企业和新业态从业人员建缴覆盖，夯实资金来源基础。";
+        list[65] = "（二）优化提取和贷款联动政策，既保障刚需和改善性住房消费，又要加强对高频提前还贷、资金集中外流等情况的监测，保持资金运行的稳定性和可持续性。";
+        list[66] = "（三）结合主城区、薛城、滕州等重点区域住房交易情况，精准支持合理住房贷款需求，提升政策资金使用效率，推动公积金制度在稳楼市、促消费中的作用更好发挥。";
+        list[67] = "（四）完善年度数据采集、月度监测和趋势预警机制，尽快补齐10-12月数据，形成“监测、分析、调度、反馈”闭环管理，为2027年资金运行决策提供更扎实的数据支撑。";
+        return list;
+      }
+
+      function stripAiMarkers(text) {
+        return String(text).replace(/\[\[AI\]\]([\s\S]*?)\[\[\/AI\]\]/g, "$1");
+      }
+
+      function renderInlineAiText(text) {
+        var source = String(text);
+        var result = "";
+        var lastIndex = 0;
+        var regex = /\[\[AI\]\]([\s\S]*?)\[\[\/AI\]\]/g;
+        var match;
+
+        while ((match = regex.exec(source))) {
+          result += escapeHtml(source.slice(lastIndex, match.index));
+          result += '<span class="doc-ai">' + escapeHtml(match[1]) + "</span>";
+          lastIndex = match.index + match[0].length;
+        }
+
+        result += escapeHtml(source.slice(lastIndex));
+        return result;
+      }
+
+      function chartColors(index) {
+        var colors = ["#2f86ff", "#6fbe45", "#8b72f2", "#f4a53a", "#ef5350", "#36b3c9"];
+        return colors[index % colors.length];
+      }
+
+      function formatAxisValue(value) {
+        if (value >= 100000000) {
+          return (value / 100000000).toFixed(1) + "亿";
+        }
+        if (value >= 10000) {
+          return (value / 10000).toFixed(1) + "万";
+        }
+        return String(Math.round(value * 100) / 100);
+      }
+
+      function chartMaxValue(chart) {
+        var max = 0;
+        (chart.series || []).forEach(function (series) {
+          (series.values || []).forEach(function (value) {
+            if (+value > max) {
+              max = +value;
+            }
+          });
+        });
+        return max || 1;
+      }
+
+      function normalizeChart(chart) {
+        var title = chart.title || "";
+        var max = chartMaxValue(chart);
+        var divisor = 1;
+
+        if (title.indexOf("亿元") > -1 && max > 1000) {
+          divisor = 100000000;
+        } else if (title.indexOf("万元") > -1 && max > 1000000) {
+          divisor = 10000;
+        }
+
+        if (divisor === 1) {
+          return chart;
+        }
+
+        return {
+          id: chart.id,
+          type: chart.type,
+          title: chart.title,
+          series: (chart.series || []).map(function (series) {
+            return {
+              name: series.name,
+              categories: (series.categories || []).slice(),
+              values: (series.values || []).map(function (value) {
+                return (+value || 0) / divisor;
+              })
+            };
+          })
+        };
+      }
+
+      function renderBarChartSvg(chart) {
+        var width = 520;
+        var height = 250;
+        var left = 52;
+        var right = 14;
+        var top = 16;
+        var bottom = 46;
+        var categories = (chart.series[0] && chart.series[0].categories) || [];
+        var count = categories.length || 1;
+        var plotWidth = width - left - right;
+        var plotHeight = height - top - bottom;
+        var max = chartMaxValue(chart) * 1.1;
+        var grid = "";
+        var seriesCount = chart.series.length || 1;
+
+        function px(index) {
+          return left + plotWidth * index / count;
+        }
+
+        function py(value) {
+          return top + (max - value) / max * plotHeight;
+        }
+
+        for (var i = 0; i <= 4; i += 1) {
+          var v = max / 4 * i;
+          var y = py(v);
+          grid += '<line class="grid-line" x1="' + left + '" y1="' + y + '" x2="' + (width - right) + '" y2="' + y + '"></line>';
+          grid += '<text class="axis-text" x="' + (left - 6) + '" y="' + (y + 4) + '" text-anchor="end">' + formatAxisValue(v) + '</text>';
+        }
+
+        var bars = "";
+        var barArea = plotWidth / count;
+        var barWidth = Math.max(8, Math.min(26, (barArea - 10) / seriesCount));
+
+        categories.forEach(function (label, index) {
+          chart.series.forEach(function (series, sIndex) {
+            var value = +((series.values || [])[index] || 0);
+            var x = px(index) + 6 + sIndex * barWidth;
+            var y = py(value);
+            var h = top + plotHeight - y;
+            bars += '<rect x="' + x + '" y="' + y + '" width="' + (barWidth - 2) + '" height="' + h + '" rx="2" fill="' + chartColors(sIndex) + '"></rect>';
+          });
+          bars += '<text class="axis-text" x="' + (px(index) + barArea / 2) + '" y="' + (height - 18) + '" text-anchor="middle">' + escapeHtml(String(label).slice(0, 6)) + '</text>';
+        });
+
+        return '<svg class="chart-svg" viewBox="0 0 ' + width + ' ' + height + '" preserveAspectRatio="none">' +
+          grid +
+          '<line class="chart-axis" x1="' + left + '" y1="' + (top + plotHeight) + '" x2="' + (width - right) + '" y2="' + (top + plotHeight) + '"></line>' +
+          bars +
+          '</svg>';
+      }
+
+      function renderLineChartSvg(chart) {
+        var width = 520;
+        var height = 250;
+        var left = 52;
+        var right = 14;
+        var top = 16;
+        var bottom = 46;
+        var categories = (chart.series[0] && chart.series[0].categories) || [];
+        var count = categories.length || 1;
+        var plotWidth = width - left - right;
+        var plotHeight = height - top - bottom;
+        var max = chartMaxValue(chart) * 1.1;
+        var grid = "";
+
+        function px(index) {
+          return count === 1 ? left + plotWidth / 2 : left + plotWidth * index / (count - 1);
+        }
+
+        function py(value) {
+          return top + (max - value) / max * plotHeight;
+        }
+
+        for (var i = 0; i <= 4; i += 1) {
+          var v = max / 4 * i;
+          var y = py(v);
+          grid += '<line class="grid-line" x1="' + left + '" y1="' + y + '" x2="' + (width - right) + '" y2="' + y + '"></line>';
+          grid += '<text class="axis-text" x="' + (left - 6) + '" y="' + (y + 4) + '" text-anchor="end">' + formatAxisValue(v) + '</text>';
+        }
+
+        var lines = "";
+        chart.series.forEach(function (series, sIndex) {
+          var points = [];
+          (series.values || []).forEach(function (value, index) {
+            points.push(px(index) + "," + py(+value || 0));
+          });
+          lines += '<polyline fill="none" stroke="' + chartColors(sIndex) + '" stroke-width="2.5" points="' + points.join(" ") + '"></polyline>';
+          (series.values || []).forEach(function (value, index) {
+            lines += '<circle cx="' + px(index) + '" cy="' + py(+value || 0) + '" r="2.8" fill="' + chartColors(sIndex) + '"></circle>';
+          });
+        });
+
+        categories.forEach(function (label, index) {
+          lines += '<text class="axis-text" x="' + px(index) + '" y="' + (height - 18) + '" text-anchor="middle">' + escapeHtml(String(label).replace("2026年", "").slice(0, 8)) + '</text>';
+        });
+
+        return '<svg class="chart-svg" viewBox="0 0 ' + width + ' ' + height + '" preserveAspectRatio="none">' +
+          grid +
+          '<line class="chart-axis" x1="' + left + '" y1="' + (top + plotHeight) + '" x2="' + (width - right) + '" y2="' + (top + plotHeight) + '"></line>' +
+          lines +
+          '</svg>';
+      }
+
+      function renderPieChartSvg(chart) {
+        var width = 520;
+        var height = 250;
+        var cx = 160;
+        var cy = 122;
+        var r = 74;
+        var values = (chart.series[0] && chart.series[0].values) || [];
+        var categories = (chart.series[0] && chart.series[0].categories) || [];
+        var total = values.reduce(function (sum, value) { return sum + (+value || 0); }, 0) || 1;
+        var acc = 0;
+        var paths = "";
+
+        values.forEach(function (value, index) {
+          var slice = (+value || 0) / total;
+          var start = acc * Math.PI * 2 - Math.PI / 2;
+          var end = (acc + slice) * Math.PI * 2 - Math.PI / 2;
+          var x1 = cx + r * Math.cos(start);
+          var y1 = cy + r * Math.sin(start);
+          var x2 = cx + r * Math.cos(end);
+          var y2 = cy + r * Math.sin(end);
+          var large = slice > 0.5 ? 1 : 0;
+          paths += '<path d="M ' + cx + ' ' + cy + ' L ' + x1 + ' ' + y1 + ' A ' + r + ' ' + r + ' 0 ' + large + ' 1 ' + x2 + ' ' + y2 + ' Z" fill="' + chartColors(index) + '"></path>';
+          acc += slice;
+        });
+
+        var legend = categories.map(function (name, index) {
+          return '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:' + chartColors(index) + '"></span>' + escapeHtml(name) + '</span>';
+        }).join("");
+
+        return '<svg class="chart-svg" viewBox="0 0 ' + width + ' ' + height + '" preserveAspectRatio="none">' + paths +
+          '<circle cx="' + cx + '" cy="' + cy + '" r="34" fill="#fff"></circle>' +
+          '<text x="' + cx + '" y="' + (cy + 4) + '" text-anchor="middle" class="axis-text">占比</text>' +
+          '</svg><div class="chart-legend">' + legend + '</div>';
+      }
+
+      function renderChartCard(chart) {
+        chart = normalizeChart(chart);
+
+        if (!chart.series || !chart.series.length) {
+          return '<div class="chart-card"><div class="chart-card-head">' + escapeHtml(chart.title) + '</div><div class="chart-card-body"><div class="chart-empty">当前图表源文件未包含可直接渲染的数据</div></div></div>';
+        }
+
+        var legend = chart.series.map(function (series, index) {
+          return '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:' + chartColors(index) + '"></span>' + escapeHtml(series.name) + '</span>';
+        }).join("");
+        var body = chart.type === "pieChart" ? renderPieChartSvg(chart) : (chart.type === "lineChart" ? renderLineChartSvg(chart) : renderBarChartSvg(chart));
+        var fullClass = chart.type === "pieChart" || chart.id === 2 || chart.id === 17 || chart.id === 18 ? " full" : "";
+        return '<div class="chart-card' + fullClass + '"><div class="chart-card-head">' + escapeHtml(chart.title) + '</div><div class="chart-card-body">' + body + (chart.type === "pieChart" ? "" : '<div class="chart-legend">' + legend + '</div>') + '</div></div>';
+      }
+
+      function renderChartGallery(charts) {
+        if (!charts || !charts.length) {
+          previewVisuals.classList.add("hidden");
+          previewVisuals.innerHTML = "";
+          return;
+        }
+        previewVisuals.classList.remove("hidden");
+        previewVisuals.innerHTML = '<div class="visuals-title">图形内容</div><div class="chart-grid">' + charts.map(renderChartCard).join("") + '</div>';
+      }
+
+      function toFileUrl(path) {
+        if (!path) {
+          return "";
+        }
+        return encodeURI("file:///" + String(path).replace(/\\/g, "/"));
+      }
+
+      function buildAnalysisContent(baseContent) {
+        var list = baseContent.slice();
+
+        function ai(text) {
+          return "[[AI]]" + text + "[[/AI]]";
+        }
+
+        list[8] = "从全市资金流量情况图可以看出，" + ai("资金流入结构总体呈现“缴存为主、贷款回收补充”的格局，整体来源较为稳定") + "，月均资金流入4.7亿元，影响资金流入的主要原因是" + ai("企业缴存节奏、年度结息时点、提前还贷集中发生以及重点园区企业景气变化，同时枣庄传统产业占比较高，也使缴存波动更易受就业和工资发放节奏影响") + "。";
+        list[11] = ai("从资金流出去向看，提取仍是资金流出的主要渠道，说明当前公积金使用场景更多集中在住房消费支取和偿还住房贷款，体现出居民改善居住条件和降低家庭杠杆并行的特点。贷款发放额占比低于提取额，说明枣庄房地产市场仍处于恢复阶段，尤其是非核心片区新增购房需求释放较慢，导致贷款投放对资金流出的拉动弱于历史高点。");
+        list[13] = "全年资金净流入12.53亿元，月均净流入1.04亿元，剔除公转商置换后月均净流入1.18亿元。" + ai("说明当前资金运行总体仍处于净回笼状态，形成这一格局的主要原因是缴存和贷款回收刚性较强，而提取和贷款发放尚未对资金池形成持续性挤压。需要说明的是，2026年10-12月数据尚未采集，四季度一般存在缴存、结息和提前还贷集中波动，后续仍需结合补录数据进一步校正全年判断。");
+        list[14] = "通过分析各机构资金净流入情况表可以看出，" + ai("资金净流入明显向缴存基础较好、人口和产业集聚度较高的区域集中。市直一部、滕州分中心、枣矿分中心净流入规模居前，说明主城区和产业人口集聚区域对资金沉淀的贡献更突出；市直二部出现净流出，反映出该区域提取和贷款需求释放快于当期资金回笼，区域间资金运行分化有所加大") + "。按净流入金额（剔除公转商置换）由高到低分别是：市中管理部11104.76万元、峄城管理部18745.04万元、山亭管理部9456.07万元、台儿庄管理部12234.41万元、薛城管理部6642.5万元、滕州分中心41867.37万元、枣矿分中心20111.66万元、高新区管理部3125.17万元、市直一部53779.42万元、市直二部-3352.36万元。";
+        list[18] = "1." + ai("归集总量下降与枣庄当前产业结构和就业结构调整密切相关。传统制造、煤化工及上下游企业仍是缴存主体，部分企业经营承压、用工趋于审慎，对新增缴存和缴存基数形成下拉；同时，灵活就业群体扩大、民营小微企业波动较大，也使归集增长缺乏稳定支撑。");
+        list[25] = "1.购建房提取额同比下降2.47%。" + ai("这说明枣庄商品住房成交尚未出现趋势性回暖，刚性和改善性购房需求释放仍偏温和，购房提取对总提取的拉动有限。购建房提取占提取总额的18.82%，1月份占比最低为14.6%，反映出年初居民购房决策相对谨慎，更多资金使用集中在存量按揭偿还和日常住房支出。");
+        list[26] = "2.还贷提取额同比增长70.49%。" + ai("这反映出居民降杠杆意愿明显增强。受贷款利率下行、家庭现金流管理趋稳以及提前还贷观念增强等因素影响，职工更多选择使用公积金余额偿还住房贷款，特别是在主城区和滕州等按揭贷款存量较大的区域，还贷提取增长对总提取形成了主要支撑。");
+        list[27] = "3.无房租赁提取金额同比增长30.27%。2月份无房租赁提取达到年内峰值。" + ai("这说明新市民、青年职工和跨区域就业群体对租赁住房支持政策的使用频率持续提升。春节前后返乡返岗、租赁续签和集中办理业务，也带动了阶段性租赁提取高点，反映出枣庄在产业转型过程中，租住型住房需求保持活跃。");
+        list[28] = "4.横向比较全省各地住房公积金提取情况，枣庄住房消费提取占提取比例为113.22%，在全省排名第**位。" + ai("从已掌握情况看，该指标处于全省中上水平，但具体排名仍需待全年完整数据披露后再行确认。该指标高于100%，说明枣庄公积金使用更加偏向住房消费场景，资金政策对购房、租房和偿贷需求的支持力度较强，也与本地房地产市场以刚需和改善为主、投资性需求较弱的特点相吻合。");
+        list[30] = ai("综合看，枣庄提取结构正由传统购房提取向“购房+还贷+租赁”多元并存转变，其中还贷提取和租赁提取增速较快，反映出住房消费方式更加理性、更加注重存量住房金融负担的缓释。后续应继续跟踪提取结构变化对资金流动性的影响。");
+        list[32] = "2026年，枣庄全市房地产交易成交住房**套，同比**%，其中一手房**套，同比**%；二手房**套，同比**%。" + ai("由于10-12月数据尚未采集，全年成交套数及同比暂不宜直接定值。从1-9月市场表现看，一手房成交恢复力度有限，二手房因价格调整和改善置换带动，活跃度相对更高。结合枣庄主城区、薛城和滕州市场表现，预计四季度整体仍以低位修复为主，住房公积金贷款需求难以回到前几年高位。");
+        list[34] = "1." + ai("贷款发放总量回落，主要受房地产市场成交偏弱影响。枣庄当前购房需求以刚需、改善型自住为主，投资性需求明显减弱，导致公积金贷款申请增长动力不足。");
+        list[35] = "2." + ai("从区域结构看，主城区和滕州仍是贷款投放的主要承接区域，说明人口和产业集聚地区住房交易更具韧性；山亭、台儿庄等区域则受市场容量较小、改善需求释放缓慢影响，贷款投放弹性相对不足。");
+        list[36] = "3." + ai("剔除公转商置换后，贷款发放下降幅度仍较为明显，说明政策性置换业务对贷款规模存在阶段性托底作用，但市场内生购房需求恢复仍需时间，后续应关注利率优惠、首套改善支持等政策对贷款需求的传导效果。");
+        list[39] = "1." + ai("贷款回收整体保持稳定，但同比回落，说明在新增贷款投放减弱的同时，存量贷款回收逐步成为资金回笼主渠道。结合枣庄居民风险偏好趋于稳健、提前偿债意愿增强的情况，贷款回收仍将维持对资金安全运行的重要支撑。");
+        list[40] = "2.2026年提前还贷额占比为49.07%，" + ai("占比较高，说明借款职工在收入稳定后更倾向于压降负债、缩短贷款期限。该现象与当前低风险偏好、居民更加重视家庭资产负债平衡有关，也意味着后续贷款余额和利息收入增长空间将继续承压。");
+        list[43] = "1. " + ai("支持住房消费额总体回落，说明枣庄住房消费需求仍处于恢复阶段，政策支持效应已从“扩大规模”逐步转向“稳定预期”和“改善结构”。提取和贷款两端对住房消费的支撑依然明显，但新增购房需求释放不足，使总量较去年同期有所下降。");
+        list[44] = "2. " + ai("月度波动与暑期购房、年中资金安排及业务办理集中度有关，也反映出枣庄住房消费更多受居民收入预期和市场情绪驱动。当前消费重心已由新增置业逐步转向存量还贷、租赁支持和改善型需求释放。") + "8月份住房消费金额最高，达到2.44亿元。6月份住房消费金额最低，为2.06亿元，其中提取额仅29.02亿元。";
+        list[47] = "1.今年以来" + ai("存贷比持续处于低位") + "。平均每月存贷比下降0.0%，" + ai("反映出在新增贷款投放不足、贷款余额较低的情况下，资金安全性较强但使用效率有待提升。对枣庄而言，这既说明流动性风险总体可控，也提示政策资金对房地产和住房消费的撬动作用仍需进一步增强") + "。";
+        list[48] = "2.全市各分支机构存贷比高低不均，各机构全口径存贷比从高到低排序为：。年末共有3个分支机构存贷比超过95%，7个分支机构存贷比低于85%。" + ai("这体现出区域住房交易活跃度和贷款需求差异较大。主城区及人口集聚区域存贷比较高，说明资金使用效率相对更好；部分外围区域存贷比较低，则反映贷款需求偏弱、资金沉淀较多。建议结合区域房地产去化周期和缴存结构，实施差异化的贷款投放和资金调度策略。");
+        list[49] = "3.全省各地住房公积金存贷比相差较大，" + ai("受人口集聚、房地产市场热度和贷款政策执行节奏影响明显") + "，枣庄存贷比" + ai("整体偏低，与本地房地产市场处于修复阶段、提前还贷占比较高以及新增贷款投放不足密切相关，后续需在风险可控前提下提升政策资金使用效率") + "。";
+        list[51] = "2026年全市实现增值收益0亿元，同比下降0%，较去年同期减少0万元，同比月下降金额约0.0万元；业务收入3.86亿元，同比下降28.09%；业务支出2.67亿元，同比增长-13.08%。" + ai("从结构看，业务收入下降主要受贷款余额下降、利息收入减少影响，支出同步回落则反映出资金付息和相关费用支出压力减轻。考虑到提前还贷占比偏高、存贷比偏低，增值收益增长基础仍然偏弱。");
+        list[54] = ai("从回评情况看，资金竞争性存放工作总体平稳，存放结构较为分散，能够较好兼顾资金安全、流动性和收益性。后续建议进一步优化考核维度，重点关注合作银行对住房公积金归集扩面、便民服务和信息化建设的支持情况，推动“资金存放”与“服务贡献”联动评价。");
+        list[56] = "2026年共有0家银行存款金额增加，银行存款增加最多的为亿元，其次为中国建设银行49.48亿元、中国农业银行14.05亿元、中国工商银行12.9亿元、中国邮政储蓄银行10.93亿元、中国银行2.76亿元、恒丰银行2.08亿元、交通银行1.53亿元、山东省农村信用社联合社0.56亿元、枣庄银行0.52亿元、青岛银行0亿元、滕州农商行0亿元、日照银行0亿元；共有0家银行存款金额减少，" + ai("说明当前统计口径下年末存款已基本完成压降或结转，银行间余额分布更多体现历史沉淀结构而非当期新增配置") + "。银行存款变化情况主要是受住房公积金资金存款变化及定期存款的因素影响。具体银行存款变化情况如下表所示：";
+        list[58] = "12月末银行存款余额占比在10%以上有无数据占比0%。无数据较年初下降0%，占比变动主要受" + ai("资金集中清算、定期存款到期转存节奏以及业务资金归集投放时点变化影响。由于四季度数据尚未完整采集，相关占比变化仍需以后续补录数据复核") + "。";
+        list[61] = ai("通过分析全年资金运行情况，主要存在以下问题：一是归集增长承压，传统产业和部分民营企业缴存稳定性不足，扩面增缴难度上升；二是提取和提前还贷增长较快，对资金沉淀和收益水平形成挤压；三是贷款投放恢复偏慢，政策资金支持住房消费的放大效应尚未充分体现；四是区域间资金运行差异扩大，个别机构存在净流出压力；五是四季度数据尚未采集，年度研判的精细化程度仍受基础数据完整性制约。");
+        list[64] = "（一）" + ai("围绕枣庄产业转型和园区企业发展，持续推进归集扩面增缴，重点抓好灵活就业人员、民营企业和新业态从业人员建缴覆盖，夯实资金来源基础。");
+        list[65] = "（二）" + ai("优化提取和贷款联动政策，既保障刚需和改善性住房消费，又要加强对高频提前还贷、资金集中外流等情况的监测，保持资金运行的稳定性和可持续性。");
+        list[66] = "（三）" + ai("结合主城区、薛城、滕州等重点区域住房交易情况，精准支持合理住房贷款需求，提升政策资金使用效率，推动公积金制度在稳楼市、促消费中的作用更好发挥。");
+        list[67] = "（四）" + ai("完善年度数据采集、月度监测和趋势预警机制，尽快补齐10-12月数据，形成“监测、分析、调度、反馈”闭环管理，为2027年资金运行决策提供更扎实的数据支撑。");
+        return list;
+      }
+
+      // 大模型提示词：根据当前报告生成默认提示词
+      function buildPromptText(report) {
+        return "你是住房公积金资金运行分析专家。请通读《" + report.name + "》全文，结合山东省枣庄市经济与房地产市场情况，" +
+          "对报告中“请人工补充分析”部分逐处补充分析（2026年10-12月数据尚未采集，按1-9月实绩与季节性趋势研判），" +
+          "其他文字描述与图表保持不变，展示时按 PDF 预览。";
+      }
+
+      // 提示词智能生成：模拟调用大模型生成一版新的提示词，逐次切换分析角度
+      var PROMPT_ANGLES = [
+        "资金归集与扩面增缴",
+        "提取结构与住房消费",
+        "贷款发放与回收节奏",
+        "存贷比与资金流动性",
+        "增值收益与存款结构",
+        "房地产市场交易活跃度",
+        "缴存基数与覆盖人群变化",
+        "提前还贷与资金外流",
+        "区域间业务差异"
+      ];
+      var promptRound = 0;
+
+      function buildLlmPromptText(report) {
+        var angles = [];
+        for (var i = 0; i < 3; i += 1) {
+          angles.push(PROMPT_ANGLES[(promptRound * 3 + i) % PROMPT_ANGLES.length]);
+        }
+        promptRound += 1;
+        return "你是住房公积金资金运行分析专家。请通读《" + report.name + "》，重点结合" + angles.join("、") +
+          "，分析2026年度资金运行情况，并替换报告中“请人工补充分析”的内容（2026年10-12月数据未采集，" +
+          "按已有数据与季节规律研判），其余文字与图表保持不变，展示时按 PDF 预览。";
+      }
+
+      function activeReport() {
+        return reports.find(function (item) {
+          return item.id === state.activeReportId;
+        });
+      }
+
+      function hidePromptBox() {
+        promptBox.classList.add("hidden");
+        promptText.value = "";
+      }
+
+      function showPromptBox(report) {
+        promptText.value = buildPromptText(report);
+        promptBox.classList.remove("hidden");
+      }
+
+      // 智能分析：在原文档中补充分析内容并按 PDF 预览
+      function runAnalysis(report) {
+        if (report.analysisPdfPath) {
+          report.analysisReady = true;
+          showPreview(report, "analysisPdf");
+          showToast("智能分析已完成，已按原文档版式生成 PDF");
+          return;
+        }
+
+        if (!report.originalContent || !report.originalContent.length) {
+          showToast("当前报告暂无可分析的文档内容");
+          return;
+        }
+        report.content = buildAnalysisContent(report.originalContent);
+        report.analysisReady = true;
+        showPreview(report, "analysis");
+        showToast("智能分析已完成，已补全人工分析内容");
+      }
+
+      function hidePreview() {
+        state.activeReportId = null;
+        hidePromptBox();
+        previewPanel.classList.add("hidden");
+        previewTitle.textContent = "报告预览";
+        previewMeta.textContent = "";
+        previewFileWrap.classList.add("hidden");
+        previewFileFrame.src = "";
+        previewVisuals.classList.add("hidden");
+        previewVisuals.innerHTML = "";
+        previewContent.classList.remove("hidden");
+        previewContent.innerHTML = "";
+      }
+
+      function showPreview(report, mode) {
+        state.activeReportId = report.id;
+        previewTitle.textContent = report.name;
+        mode = mode || "analysis";
+
+        if (mode === "original" && report.pdfPath) {
+          previewMeta.textContent = "来源文件：" + report.docPath + " | 按原文档版式预览";
+          previewFileFrame.src = toFileUrl(report.pdfPath);
+          previewFileWrap.classList.remove("hidden");
+          previewVisuals.classList.add("hidden");
+          previewVisuals.innerHTML = "";
+          previewContent.classList.add("hidden");
+          previewContent.innerHTML = "";
+          previewPanel.classList.remove("hidden");
+          return;
+        }
+
+        if (mode === "analysisPdf" && report.analysisPdfPath) {
+          previewMeta.textContent = "来源文件：" + (report.analysisDocPath || report.docPath) + " | 已在原文档中补充智能分析并按 PDF 预览";
+          previewFileFrame.src = toFileUrl(report.analysisPdfPath);
+          previewFileWrap.classList.remove("hidden");
+          previewVisuals.classList.add("hidden");
+          previewVisuals.innerHTML = "";
+          previewContent.classList.add("hidden");
+          previewContent.innerHTML = "";
+          previewPanel.classList.remove("hidden");
+          return;
+        }
+
+        previewFileWrap.classList.add("hidden");
+        previewFileFrame.src = "";
+        previewContent.classList.remove("hidden");
+        previewMeta.textContent = report.docPath
+          ? "来源文件：" + report.docPath + (report.analysisReady ? " | 已完成智能分析补全（10-12月数据缺失按趋势研判）" : "")
+          : "来源文件：当前记录未绑定文档";
+        renderChartGallery(report.charts || []);
+
+        if (!report.content || !report.content.length) {
+          previewContent.innerHTML = '<p class="doc-paragraph" style="text-indent:0">当前报告暂无可预览的文档内容。</p>';
+        } else {
+          previewContent.innerHTML = report.content.map(function (item, index) {
+            var plainText = stripAiMarkers(item);
+            return '<p class="' + paragraphClass(plainText, index) + '">' + renderInlineAiText(item) + '</p>';
+          }).join("");
+        }
+
+        previewPanel.classList.remove("hidden");
+      }
+
+      reports.forEach(function (report) {
+        report.originalContent = report.content.slice();
+        report.analysisReady = false;
+      });
+
+      function resetDownloadDialogPosition() {
+        downloadDialog.style.transform = "";
+      }
+
+      function hideDownloadDialog() {
+        state.activeDownloadId = null;
+        downloadMask.classList.add("hidden");
+        resetDownloadDialogPosition();
+      }
+
+      function showDownloadDialog(report) {
+        state.activeDownloadId = report.id;
+        downloadUrl.textContent = report.downloadUrl || "";
+        downloadFileName.textContent = report.fileName || (report.name + ".docx");
+        downloadFileSize.textContent = report.fileSize || "0 KB";
+        downloadPath.textContent = report.downloadPath || "C:\\Users\\qyq\\Desktop";
+        downloadSpace.textContent = report.freeSpace || "剩: 14.32 GB";
+        downloadMask.classList.remove("hidden");
+        resetDownloadDialogPosition();
+      }
+
+      function updatePager(total) {
+        var totalPage = Math.max(1, Math.ceil(total / state.pageSize));
+        if (state.page > totalPage) {
+          state.page = totalPage;
+        }
+        totalText.textContent = "共 " + total + " 条";
+        pageNum.textContent = state.page;
+        gotoInput.value = state.page;
+        prevBtn.disabled = state.page <= 1;
+        nextBtn.disabled = state.page >= totalPage;
+      }
+
+      function renderTable() {
+        var filtered = getFilteredList();
+        var rows = getPagedList(filtered);
+
+        updatePager(filtered.length);
+
+        if (!rows.length) {
+          reportRows.innerHTML = [
+            '<tr class="empty-row">',
+            '<td colspan="6">暂无数据</td>',
+            '</tr>'
+          ].join("");
+          return;
+        }
+
+        reportRows.innerHTML = rows.map(function (item, index) {
+          var rowNo = (state.page - 1) * state.pageSize + index + 1;
+          return [
+            "<tr>",
+            '<td class="cell-index">' + rowNo + "</td>",
+            "<td title=\"" + item.name + "\">" + item.name + "</td>",
+            "<td>" + item.publishTime + "</td>",
+            "<td>" + item.creator + "</td>",
+            "<td>" + item.createTime + "</td>",
+            '<td class="cell-actions">',
+            '<button class="btn btn-primary" type="button" data-action="view" data-id="' + item.id + '">查看</button>',
+            '<button class="btn btn-ai" type="button" data-action="analyze" data-id="' + item.id + '">智能分析</button>',
+            '<button class="btn btn-download" type="button" data-action="download" data-id="' + item.id + '">下载</button>',
+            '<button class="btn btn-danger" type="button" data-action="delete" data-id="' + item.id + '">删除</button>',
+            "</td>",
+            "</tr>"
+          ].join("");
+        }).join("");
+      }
+
+      function doQuery() {
+        state.keyword = reportName.value.trim();
+        state.page = 1;
+        renderTable();
+      }
+
+      function doReset() {
+        reportName.value = "";
+        state.keyword = "";
+        state.page = 1;
+        renderTable();
+      }
+
+      function doGenerate() {
+        var time = nowText();
+        reports.unshift({
+          id: Date.now(),
+          name: formatReportName(),
+          publishTime: time,
+          creator: "运营员1",
+          createTime: time,
+          docPath: "",
+          pdfPath: "",
+          analysisDocPath: "",
+          analysisPdfPath: "",
+          fileName: formatReportName() + ".docx",
+          fileSize: "0 KB",
+          downloadUrl: "blob:http://100.70.3.16:9031/generated-" + Date.now(),
+          downloadPath: "C:\\Users\\qyq\\Desktop",
+          freeSpace: "剩: 14.32 GB",
+          content: [],
+          originalContent: [],
+          analysisReady: false
+        });
+        state.page = 1;
+        renderTable();
+        showToast("年度报告已生成");
+      }
+
+      function changePage(nextPage) {
+        var totalPage = Math.max(1, Math.ceil(getFilteredList().length / state.pageSize));
+        if (nextPage < 1 || nextPage > totalPage) {
+          return;
+        }
+        state.page = nextPage;
+        renderTable();
+      }
+
+      queryBtn.addEventListener("click", doQuery);
+      resetBtn.addEventListener("click", doReset);
+      generateBtn.addEventListener("click", doGenerate);
+      reportName.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          doQuery();
+        }
+      });
+
+      pageSize.addEventListener("change", function () {
+        state.pageSize = +pageSize.value;
+        state.page = 1;
+        renderTable();
+      });
+
+      prevBtn.addEventListener("click", function () {
+        changePage(state.page - 1);
+      });
+
+      nextBtn.addEventListener("click", function () {
+        changePage(state.page + 1);
+      });
+
+      gotoBtn.addEventListener("click", function () {
+        var nextPage = parseInt(gotoInput.value, 10);
+        if (!nextPage) {
+          gotoInput.value = state.page;
+          return;
+        }
+        changePage(nextPage);
+      });
+
+      closePreviewBtn.addEventListener("click", hidePreview);
+      // 生成智能分析：按当前提示词对当前报告重新执行智能分析
+      promptAnalyzeBtn.addEventListener("click", function () {
+        var report = activeReport();
+        if (!report) {
+          showToast("请先选择需要分析的报告");
+          return;
+        }
+        runAnalysis(report);
+      });
+      // 提示词智能生成：调用大模型生成一版新的提示词
+      promptAiBtn.addEventListener("click", function () {
+        var report = activeReport();
+        if (!report) {
+          return;
+        }
+        var original = promptAiBtn.textContent;
+        promptAiBtn.textContent = "生成中…";
+        promptAiBtn.disabled = true;
+        window.setTimeout(function () {
+          promptText.value = buildLlmPromptText(report);
+          promptAiBtn.textContent = original;
+          promptAiBtn.disabled = false;
+        }, 500);
+      });
+      // 保存提示词：保存当前编辑后的提示词
+      promptSaveBtn.addEventListener("click", function () {
+        var original = promptSaveBtn.textContent;
+        promptSaveBtn.textContent = "已保存";
+        promptSaveBtn.disabled = true;
+        window.setTimeout(function () {
+          promptSaveBtn.textContent = original;
+          promptSaveBtn.disabled = false;
+        }, 1200);
+        showToast("提示词已保存");
+      });
+      downloadCloseBtn.addEventListener("click", hideDownloadDialog);
+      downloadCancelBtn.addEventListener("click", hideDownloadDialog);
+      downloadBrowseBtn.addEventListener("click", function () {
+        showToast("已打开路径选择");
+      });
+      downloadOnlyBtn.addEventListener("click", function () {
+        showToast("下载任务已创建");
+        hideDownloadDialog();
+      });
+      downloadOpenBtn.addEventListener("click", function () {
+        showToast("已开始下载并将在完成后打开");
+        hideDownloadDialog();
+      });
+      downloadMask.addEventListener("click", function (event) {
+        if (event.target === downloadMask) {
+          hideDownloadDialog();
+        }
+      });
+
+      reportRows.addEventListener("click", function (event) {
+        var target = event.target;
+        var action = target.getAttribute("data-action");
+        var id = +target.getAttribute("data-id");
+        var report = reports.find(function (item) {
+          return item.id === id;
+        });
+
+        if (!action || !id || !report) {
+          return;
+        }
+
+        if (action === "view") {
+          hidePromptBox();
+          showPreview(report, "original");
+          showToast("已加载报告内容");
+          return;
+        }
+
+        if (action === "analyze") {
+          showPromptBox(report);
+          runAnalysis(report);
+          return;
+        }
+
+        if (action === "download") {
+          showDownloadDialog(report);
+          return;
+        }
+
+        if (action === "delete") {
+          reports = reports.filter(function (item) {
+            return item.id !== id;
+          });
+          if (state.activeReportId === id) {
+            hidePreview();
+          }
+          if (state.activeDownloadId === id) {
+            hideDownloadDialog();
+          }
+          renderTable();
+          showToast("报告已删除");
+        }
+      });
+
+      (function enableDownloadDialogDrag() {
+        var startX = 0;
+        var startY = 0;
+        var translateX = 0;
+        var translateY = 0;
+        var dragging = false;
+
+        downloadHead.addEventListener("mousedown", function (event) {
+          dragging = true;
+          startX = event.clientX - translateX;
+          startY = event.clientY - translateY;
+          document.body.style.userSelect = "none";
+        });
+
+        document.addEventListener("mousemove", function (event) {
+          if (!dragging) {
+            return;
+          }
+          translateX = event.clientX - startX;
+          translateY = event.clientY - startY;
+          downloadDialog.style.transform = "translate(" + translateX + "px, " + translateY + "px)";
+        });
+
+        document.addEventListener("mouseup", function () {
+          dragging = false;
+          document.body.style.userSelect = "";
+        });
+      })();
+
+      renderTable();
+    })();
+  </script>
+</body>
+</html>

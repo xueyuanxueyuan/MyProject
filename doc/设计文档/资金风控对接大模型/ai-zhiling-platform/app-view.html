@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>应用界面 · AI智擎提效平台</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232A6BF0'/%3E%3Cpath d='M13 4 6.5 13.5h4L10 20l7.5-9.5h-4z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="app-view">
+  <div class="bg-fx" aria-hidden="true"></div>
+
+  <!-- ======== 应用界面容器页顶栏 ======== -->
+  <header class="viewbar">
+    <a class="viewbar-back" href="index.html#apps">
+      <span data-icon="arrow-left" data-size="15"></span>返回门户
+    </a>
+    <div class="viewbar-title" id="viewTitle"></div>
+    <div class="viewbar-right">
+      <span class="view-usage" id="viewUsage"></span>
+      <button class="icon-btn" id="btnExternal" title="在新窗口打开实际应用"></button>
+    </div>
+  </header>
+
+  <!-- ======== 应用界面舞台：iframe 加载实际系统，或占位容器 ======== -->
+  <main class="view-main" id="viewStage"></main>
+
+  <script src="icons.js" defer></script>
+  <script src="mock.js" defer></script>
+  <script src="api.js" defer></script>
+  <script src="app-view.js" defer></script>
+</body>
+</html>

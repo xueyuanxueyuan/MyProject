@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI智擎提效平台 · 首信技术中台</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232F7BFF'/%3E%3Cpath d='M13 4 6.5 13.5h4L10 20l7.5-9.5h-4z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-view="apps">
+  <div class="bg-fx" aria-hidden="true"></div>
+
+  <!-- ======== 顶栏 ======== -->
+  <header class="topbar">
+    <a class="brand" href="#apps" aria-label="返回应用中心">
+      <span class="brand-mark" data-icon="sparkles" data-size="18"></span>
+      <span class="brand-text">
+          <span class="brand-name">AI智擎提效平台</span>
+          <span class="brand-sub">首信技术中台打造 · 全司 AI 应用统一门户</span>
+        </span>
+    </a>
+    <nav class="main-nav" aria-label="主导航">
+      <a href="#apps" data-nav="apps" class="active">
+        <span data-icon="layout-grid" data-size="15"></span>应用中心
+      </a>
+      <a href="#stats" data-nav="stats">
+        <span data-icon="bar-chart" data-size="15"></span>统计洞察
+      </a>
+      <a href="#ability" data-nav="ability" data-perm="config">
+        <span data-icon="settings" data-size="15"></span>能力管理
+      </a>
+      <a href="#users" data-nav="users" data-perm="super">
+        <span data-icon="users" data-size="15"></span>用户管理
+      </a>
+    </nav>
+    <div class="topbar-right">
+      <div class="search-box">
+        <span data-icon="search" data-size="15"></span>
+        <input id="searchInput" type="text" placeholder="搜索应用名称 / 能力关键词" autocomplete="off">
+      </div>
+      <!-- 登录/用户胶囊由 app-user.js 动态渲染 -->
+      <div id="userSlot"></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ======== 视图一：应用中心 ======== -->
+    <section id="view-apps" class="view">
+      <div class="hero">
+        <div class="hero-text">
+          <span class="hero-badge">UNIFIED AI WORKSPACE · 统一入口</span>
+          <h1>让每一个岗位，<em>一键唤起 AI 生产力</em></h1>
+          <p>面向业务前端、技术中台、管理后台三大场景，统一汇聚全司提质增效的智能体应用与开放 AI 能力——统一入口、统一体验、统一度量，点击卡片即刻进入使用。</p>
+        </div>
+        <div class="hero-kpis">
+          <div class="kpi"><span class="kpi-num" id="kpiApps">0</span><span class="kpi-label">在线应用</span></div>
+          <div class="kpi"><span class="kpi-num" id="kpiUsage">0</span><span class="kpi-label">累计使用次数</span></div>
+          <div class="kpi"><span class="kpi-num" id="kpiUsers">0</span><span class="kpi-label">月活跃用户</span></div>
+          <div class="kpi"><span class="kpi-num" id="kpiWeek">0</span><span class="kpi-label">近 7 天使用</span></div>
+        </div>
+      </div>
+
+      <!-- 组合视图：一次性渲染所有一级/二级/分组，不分Tab -->
+      <div id="appsCombined"></div>
+
+      <!-- 悬浮分类导航：时间轴锚点，悬停显示分类名，点击快速定位 -->
+      <aside class="cat-nav" id="catNav" hidden aria-label="分类快速导航">
+        <nav class="cn-rail" id="catNavPanel"></nav>
+      </aside>
+    </section>
+
+    <!-- ======== 视图二：统计洞察 ======== -->
+    <section id="view-stats" class="view" hidden>
+      <div id="statsBody"></div>
+    </section>
+
+    <!-- ======== 视图三：能力管理 ======== -->
+    <section id="view-ability" class="view" hidden>
+      <div id="abilityBody"></div>
+    </section>
+
+    <!-- ======== 视图四：用户管理 ======== -->
+    <section id="view-users" class="view" hidden>
+      <div id="usersBody"></div>
+    </section>
+  </main>
+
+  <footer class="page-foot">
+    <span>© 2026 首信技术中台 · AI智擎提效平台</span>
+    <span>演示原型 · 应用清单与统计数据为模拟内容，点击「进入使用」会累计演示计数</span>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="icons.js"></script>
+  <script src="mock.js"></script>
+  <script src="api.js"></script>
+  <script src="app-user.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>缴存金额</title>
+  <style>
+    :root {
+      --page-bg: #edf1f5;
+      --panel-bg: #ffffff;
+      --line: #e7ebf0;
+      --line-dark: #d9dfe7;
+      --text: #566272;
+      --text-light: #8a96a5;
+      --title: #2c3b4f;
+      --blue: #2f86ff;
+      --green: #6dbd45;
+      --red: #ef5350;
+      --gray-btn: #7e8693;
+      --blue-btn: #2f86ff;
+      --green-btn: #6fbe45;
+      --red-btn: #ef5350;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--page-bg);
+      color: var(--text);
+      font: 12px/1.5 "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+    }
+
+    .page {
+      width: min(100%, 1920px);
+      min-height: 1440px;
+      margin: 4px auto;
+      background: var(--panel-bg);
+      border: 1px solid var(--line);
+    }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      height: 28px;
+      padding: 0 18px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      height: 100%;
+      color: #6b7684;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .tab.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      background: var(--blue);
+    }
+
+    .toolbar {
+      padding: 10px 18px 8px;
+      border-bottom: 1px solid var(--line);
+      background: #f7f9fb;
+    }
+
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .field {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: #7d8897;
+      white-space: nowrap;
+    }
+
+    .field label {
+      transform: scale(0.96);
+      transform-origin: left center;
+    }
+
+    .field select,
+    .field input {
+      height: 22px;
+      padding: 0 8px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      color: #556273;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .field select { width: 180px; }
+    .field.month input { width: 120px; }
+    .field.num input {
+      width: 50px;
+      text-align: center;
+    }
+
+    .stepper {
+      display: inline-flex;
+      align-items: center;
+      overflow: hidden;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+    }
+
+    .stepper input {
+      width: 44px;
+      height: 20px;
+      border: 0;
+      text-align: center;
+      padding: 0;
+    }
+
+    .step-btns {
+      display: flex;
+      flex-direction: column;
+      width: 16px;
+      border-left: 1px solid var(--line-dark);
+    }
+
+    .step-btns button {
+      height: 10px;
+      border: 0;
+      background: #fafbfc;
+      color: #91a0b0;
+      font-size: 9px;
+      line-height: 10px;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .step-btns button + button {
+      border-top: 1px solid var(--line-dark);
+    }
+
+    .btn {
+      height: 22px;
+      padding: 0 12px;
+      border: 0;
+      color: #fff;
+      font-size: 11px;
+      cursor: pointer;
+      line-height: 22px;
+      white-space: nowrap;
+    }
+
+    .btn.gray { background: var(--gray-btn); }
+    .btn.blue { background: var(--blue-btn); }
+    .btn.green { background: var(--green-btn); }
+    .btn.red { background: var(--red-btn); }
+
+    .toolbar-tip {
+      margin-top: 7px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #9aa5b3;
+      font-size: 11px;
+    }
+
+    .toolbar-tip::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .subbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 26px;
+      padding: 0 18px;
+      border-top: 1px solid #fbfcfd;
+      border-bottom: 1px solid var(--line);
+      color: #a1acb8;
+      background: #fafbfc;
+      font-size: 11px;
+    }
+
+    .content {
+      padding: 14px 8px 18px;
+      background: #fff;
+    }
+
+    .section-title {
+      margin: 0 0 6px;
+      padding: 0 0 0 2px;
+      font-size: 15px;
+      color: #3a4655;
+      font-weight: 700;
+    }
+
+    .prompt-box {
+      margin: 0 2px 10px;
+      padding: 8px 10px;
+      border: 1px solid #dbe7f5;
+      border-left: 3px solid var(--blue);
+      background: #f6faff;
+    }
+
+    .prompt-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .prompt-title {
+      color: #3a4655;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .prompt-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .prompt-text {
+      display: block;
+      width: 100%;
+      min-height: 54px;
+      padding: 6px 8px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      color: #6b7684;
+      font: inherit;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+    }
+
+    .prompt-text:focus {
+      border-color: var(--blue);
+    }
+
+    .minor-title {
+      margin: 0 0 8px;
+      padding-left: 2px;
+      color: #586677;
+      font-size: 12px;
+    }
+
+    .chart-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 2px 4px;
+    }
+
+    .algo {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--green);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .algo::before {
+      content: "";
+      width: 2px;
+      height: 14px;
+      background: var(--blue);
+    }
+
+    .chart-box {
+      position: relative;
+      height: 230px;
+      margin: 0 4px 16px;
+      overflow: hidden;
+    }
+
+    .legend {
+      position: absolute;
+      top: 12px;
+      right: 44px;
+      display: flex;
+      gap: 18px;
+      color: #7e8996;
+      font-size: 10px;
+      z-index: 1;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-line {
+      width: 14px;
+      border-top: 2px solid currentColor;
+    }
+
+    .legend-item.blue { color: var(--blue); }
+    .legend-item.green { color: var(--green); }
+    .legend-item.red { color: var(--red); }
+    .legend-item.green .legend-line { border-top-style: dashed; }
+    .legend-item.red .legend-line { border-top-style: dashed; }
+
+    #trendChart {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .grid {
+      stroke: #e9edf3;
+      stroke-width: 1;
+    }
+
+    .axis {
+      fill: #a3adba;
+      font-size: 8px;
+    }
+
+    .history-line {
+      fill: none;
+      stroke: var(--blue);
+      stroke-width: 1.6;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+    }
+
+    .forecast-line {
+      fill: none;
+      stroke: var(--green);
+      stroke-width: 1.6;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      stroke-dasharray: 4 3;
+    }
+
+    .history-dot {
+      fill: var(--blue);
+      stroke: #fff;
+      stroke-width: 1;
+    }
+
+    .forecast-dot {
+      fill: var(--green);
+      stroke: #fff;
+      stroke-width: 1;
+    }
+
+    .llm-line {
+      fill: none;
+      stroke: var(--red);
+      stroke-width: 1.6;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      stroke-dasharray: 6 4;
+    }
+
+    .llm-dot {
+      fill: var(--red);
+      stroke: #fff;
+      stroke-width: 1;
+    }
+
+    .detail-title {
+      margin: 0 2px 8px;
+      color: #596678;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .table-wrap {
+      margin: 0 2px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      height: 30px;
+      padding: 0 12px;
+      border-bottom: 1px solid #eef2f6;
+      font-size: 11px;
+      color: #657180;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    th {
+      background: #f7f8fa;
+      color: #9aa5b1;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    td.num {
+      text-align: right;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    .data-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 56px;
+      height: 18px;
+      padding: 0 7px;
+      border: 1px solid #bfe3ad;
+      background: #eff9e9;
+      color: #6eaf4f;
+      font-size: 11px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1940px) {
+      .page {
+        width: calc(100% - 12px);
+      }
+    }
+
+    @media (max-width: 860px) {
+      .toolbar {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .subbar,
+      .tabs {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .content {
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+
+      .field select {
+        width: 150px;
+      }
+
+      .legend {
+        right: 18px;
+        top: 8px;
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .tabs {
+        gap: 14px;
+        flex-wrap: wrap;
+        height: auto;
+        padding-top: 6px;
+        padding-bottom: 6px;
+      }
+
+      .tab {
+        height: 24px;
+      }
+
+      .subbar {
+        height: auto;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        flex-wrap: wrap;
+      }
+
+      .chart-box {
+        height: 200px;
+      }
+
+      th,
+      td {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="tabs">
+      <a class="tab active" href="javascript:void(0)" data-tab="deposit">缴存金额</a>
+      <a class="tab" href="javascript:void(0)" data-tab="withdraw">提取金额</a>
+      <a class="tab" href="javascript:void(0)" data-tab="loanIssue">贷款发放</a>
+      <a class="tab" href="javascript:void(0)" data-tab="loanRecover">贷款回收</a>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-row">
+        <div class="field">
+          <label for="unitName">机构</label>
+          <select id="unitName">
+            <option>住房公积金管理中心</option>
+          </select>
+        </div>
+
+        <div class="field month">
+          <label for="reportMonth">预测起始月份</label>
+          <input id="reportMonth" type="month" value="2026-10">
+        </div>
+
+        <div class="field num">
+          <label for="forecastNum">预测周期</label>
+          <div class="stepper">
+            <input id="forecastNum" type="text" value="13" readonly>
+            <div class="step-btns">
+              <button type="button" id="stepUp">+</button>
+              <button type="button" id="stepDown">-</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>个月</label>
+        </div>
+
+        <button class="btn gray" type="button" id="queryBtn">查询数据</button>
+        <button class="btn blue" type="button" id="predictBtn">预测数据</button>
+        <button class="btn red" type="button" id="llmBtn">大模型预测</button>
+        <button class="btn green" type="button" id="saveBtn">保存预测模型</button>
+      </div>
+
+      <div class="toolbar-tip">可预测未来 1 至 13 个月（含趋势外推），预测模型算法：GRU</div>
+    </div>
+
+    <div class="subbar">
+      <span>预测基础数据：历史数据回溯</span>
+      <span>机构名称：青岛市住房公积金管理中心</span>
+      <span>预测日期：2026-10-19</span>
+      <span>模型：GRU</span>
+    </div>
+
+    <div class="content">
+      <div class="prompt-box hidden" id="promptBox">
+        <div class="prompt-head">
+          <div class="prompt-title">大模型提示词</div>
+          <div class="prompt-actions">
+            <button class="btn blue" type="button" id="promptPredictBtn">数据预测</button>
+            <button class="btn gray" type="button" id="promptSuggestBtn">提示词智能生成</button>
+            <button class="btn green" type="button" id="promptSaveBtn">保存提示词</button>
+          </div>
+        </div>
+        <textarea class="prompt-text" id="promptText" rows="3"></textarea>
+      </div>
+      <h1 class="section-title" id="sectionTitle">缴存金额预测结果</h1>
+      <div class="chart-head">
+        <div class="minor-title">趋势图</div>
+        <div class="algo">用优预测算法 GRU</div>
+      </div>
+
+      <div class="chart-box">
+        <div class="legend">
+          <span class="legend-item blue"><span class="legend-line"></span>历史数据</span>
+          <span class="legend-item green"><span class="legend-line"></span>预测数据</span>
+          <span class="legend-item red hidden" id="llmLegend"><span class="legend-line"></span>大模型预测</span>
+        </div>
+        <svg id="trendChart" viewBox="0 0 990 230" preserveAspectRatio="none" aria-label="缴存金额预测结果趋势图"></svg>
+      </div>
+
+      <div class="detail-title">数据详情</div>
+      <div class="table-wrap">
+        <table>
+          <colgroup>
+            <col style="width: 150px">
+            <col style="width: 220px">
+            <col style="width: 220px">
+            <col style="width: 260px">
+            <col style="width: 110px">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>月份</th>
+              <th>算法模型预测金额</th>
+              <th>大模型预测金额</th>
+              <th>大模型预测说明</th>
+              <th>数据类型</th>
+            </tr>
+          </thead>
+          <tbody id="detailRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var chart = document.getElementById('trendChart');
+      var detailRows = document.getElementById('detailRows');
+      var forecastNum = document.getElementById('forecastNum');
+      var stepUp = document.getElementById('stepUp');
+      var stepDown = document.getElementById('stepDown');
+      var queryBtn = document.getElementById('queryBtn');
+      var predictBtn = document.getElementById('predictBtn');
+      var llmBtn = document.getElementById('llmBtn');
+      var llmLegend = document.getElementById('llmLegend');
+      var saveBtn = document.getElementById('saveBtn');
+      var sectionTitle = document.getElementById('sectionTitle');
+      var unitName = document.getElementById('unitName');
+      var promptBox = document.getElementById('promptBox');
+      var promptText = document.getElementById('promptText');
+      var promptPredictBtn = document.getElementById('promptPredictBtn');
+      var promptSuggestBtn = document.getElementById('promptSuggestBtn');
+      var promptSaveBtn = document.getElementById('promptSaveBtn');
+      var tabList = document.querySelectorAll('.tab');
+      var llmEnabled = false;
+      var currentTab = "deposit";
+
+      // 图表/明细统一使用「亿元」为单位；实际金额展示时再还原为「元」
+      function toYi(list) {
+        return list.map(function (value) { return value / 100000000; });
+      }
+
+      // 提取金额实际数据（单位：元，2017-01 至 2026-09，共 117 个月）
+      var withdrawRaw = [
+        164019237.86, 131483782.89, 210822607.73, 177399320.41, 170138912.78, 219909775.67, 169432631.78, 188428292.56, 252837832.04, 187983286.93, 247734305.31, 227314659.71,
+        312684240.27, 188004875.49, 232169230.3, 239233860.9, 277632880.7, 264924054.33, 229602996.4, 266740405.82, 237447902.55, 194646988.53, 257411840.91, 275730483.2,
+        271285144.08, 192330453.45, 227030764.65, 282903253.79, 259316731.87, 211863701.49, 236502554.08, 251342953.54, 249736805.26, 240184707.23, 256258381.27, 256890026.21,
+        238524744.73, 100327551.59, 205710176.27, 296339166.92, 270567629.07, 299644654.3, 364216687.43, 343217089.02, 337711700.95, 286782112.42, 327246288.72, 310410814.72,
+        355328288.69, 295519465.25, 320044729.38, 326918767.89, 304193325.59, 274222758.37, 323826070.36, 302017337.12, 285417821.65, 277163640.15, 285518290.89, 323813056.05,
+        356755993.24, 262718350.29, 332142897.77, 246701258.44, 285583413.3, 272803123.44, 321611208.65, 291369667.83, 283273466.56, 253893081.59, 220078219.14, 261047132.31,
+        344154933.25, 379144663.71, 430322698.18, 386737018.87, 325322837.69, 274040857.4, 350453393.17, 303328084.89, 301112057.9, 292202352.96, 303861082.37, 315020645.82,
+        360413654.49, 308536730.9, 382718903.06, 339004205.55, 325488410.23, 271973783.73, 359523741.57, 314428419.63, 319726083.4, 283403785.89, 325481413.61, 328465153.69,
+        321382875.99, 299392253.76, 300674443.71, 308038846.38, 285603381.64, 283042310.17, 380455884.32, 323310955.16, 327959886.88, 279561994.61, 309575939.8, 309490263.07,
+        334111774.22, 299447089.82, 345555749.27, 336390230.11, 278352160.26, 263421658.91, 377411138.64, 350478566.88, 316930777
+      ];
+
+      // 贷款发放实际数据（单位：元，2017-01 至 2026-09，共 117 个月）
+      var loanIssueRaw = [
+        98991000, 73757000, 105790000, 149868594.24, 150009157.87, 151286149.62, 207853000, 330133043.87, 196516969.65, 232550000, 273658000, 130916153.24,
+        272684533.84, 133878900, 135498000, 250488000, 197669000, 104667000, 198672000, 260014000, 131458000, 313341000, 285457653.22, 168359470.14,
+        275115000, 111589000, 185124000, 296072088.55, 203018369.15, 196253054.32, 308154000, 252388000, 233850000, 226102353.61, 314003008.68, 138751000,
+        230544965.03, 214457000, 168418448.1, 179410000, 245522000, 291967545.47, 306373599.29, 310075000, 345014415.13, 246303440.11, 288080316.02, 249853848.31,
+        302074278.23, 246372000, 366187194.64, 287987000, 223562600.58, 266241000, 289863000, 285330000, 381016176.02, 243845000, 221373000, 203956000,
+        394669000, 134392000, 241177581.57, 286685000, 282815000, 286386000, 232639000, 246488396.28, 251955000, 118675000, 157040000, 94759000,
+        116297000, 148855986.27, 138927000, 235542000, 167271000, 218779000, 146913000, 105108145.76, 292996912.56, 207550621, 107257000, 521926017.59,
+        111168337.57, 72450540.73, 106829000, 127856000, 169304000, 175762000, 154374364.98, 193170000, 139889000, 114859000, 115243000, 132086000,
+        114714000, 76245000, 113340000, 137059000, 217863434.19, 179659000, 231011000, 188995000, 179743000, 144856000, 143637000, 110823000,
+        119282000, 113055000, 142516000, 213583000, 160690000, 267797000, 77467000, 186757000, 202768000
+      ];
+
+      // 贷款回收实际数据（单位：元，2017-01 至 2026-09，共 117 个月）
+      var loanRecoverRaw = [
+        107601805.09, 103793559.88, 120552649.55, 119496955.49, 114565431.21, 107008314.62, 113585365.43, 119783731.93, 126469345.48, 116971350.52, 119311567.22, 115405572.92,
+        131373867.78, 116241657.82, 131891835.11, 137433288.02, 135203705.2, 133277415.32, 130369096.56, 134287128.17, 139875693.69, 131807087.74, 133585439.55, 137062193.92,
+        138654868.63, 137215560.91, 148353790.73, 150930328.18, 144663362.52, 142435425.3, 155253513.06, 154739964.27, 151195073.16, 149355068.97, 156935282.56, 155768256.13,
+        148338493.67, 118226551.37, 150279370.65, 176110702.74, 170838008.11, 178335958.29, 178365001.9, 180625951.23, 168366075.72, 175747477.37, 181815507.42, 177336114.61,
+        187170026.56, 175896246.62, 195465557.39, 188562379.26, 175968971.82, 175928053.94, 179477364.2, 185056600.28, 182258555.99, 173597105.69, 185459295.36, 190423945.36,
+        190580286.87, 193139013.26, 206428825.23, 179758514.96, 196437211.62, 192557434.3, 208879129.69, 214410726.49, 197664963.18, 194559377.21, 175755485.55, 192506154.17,
+        209572216.82, 231273082.06, 232971015.82, 222179051.22, 219238520.38, 202075810.95, 218558061.71, 223697909.37, 208928289.72, 219386778.66, 219772761.61, 214422059.84,
+        244290192.57, 230933061.73, 254011932.38, 228826594.56, 238928137.81, 216810152.52, 239688331.45, 246765921.72, 235769728.81, 223262378.22, 227655706.27, 225530973.87,
+        231449295.18, 243815286.88, 241775421.16, 236629833.39, 224369810.43, 230511319.96, 243249428.73, 238377161.53, 229007435.74, 231842311.32, 221255444.63, 239281388.29,
+        253470221.41, 234280471.03, 252918441.59, 231026621.25, 213105810.85, 199511140.42, 219601303.14, 228392687.73, 211665971.32
+      ];
+
+      // 各页签数据集：历史数据 2017-01 至 2026-09，预测数据 2026-10 至 2027-10（13 个月）
+      var DATASETS = {
+        deposit: {
+          name: "缴存金额",
+          yMax: 10,
+          yTicks: 5,
+          history: [
+            2.42, 2.35, 2.68, 2.55, 2.72, 2.86, 2.48, 2.62, 2.38, 2.75, 2.52, 2.90,
+            2.82, 2.65, 3.06, 2.88, 3.12, 3.28, 2.84, 3.02, 2.72, 3.18, 2.94, 3.36,
+            3.28, 3.05, 3.52, 3.34, 3.62, 3.85, 3.30, 3.48, 3.14, 3.68, 3.40, 3.92,
+            3.76, 3.42, 4.02, 3.82, 4.12, 4.34, 3.78, 3.96, 3.62, 4.18, 3.88, 4.42,
+            4.16, 3.82, 4.44, 4.22, 4.55, 4.78, 4.18, 4.38, 4.02, 4.62, 4.30, 4.88,
+            4.58, 4.20, 4.86, 4.62, 4.98, 5.24, 4.58, 4.80, 4.42, 5.06, 4.70, 5.32,
+            4.96, 4.58, 5.28, 5.02, 5.40, 5.68, 4.98, 5.22, 4.80, 5.48, 5.10, 5.76,
+            5.36, 4.95, 5.70, 5.42, 5.82, 6.12, 5.38, 5.64, 5.18, 5.92, 5.50, 6.22,
+            5.76, 5.32, 6.12, 5.82, 6.24, 6.56, 5.78, 6.04, 5.56, 6.34, 5.90, 6.66,
+            6.16, 5.70, 6.54, 6.22, 6.68, 7.02, 6.18, 6.46, 5.94
+          ],
+          forecast: [
+            6.72, 6.26, 7.05, 6.50, 6.02, 6.88, 6.55, 7.02, 7.38, 6.50, 6.80, 6.25, 7.10
+          ],
+          llm: [
+            6.84, 6.38, 7.18, 6.62, 6.15, 7.02, 6.68, 7.16, 7.52, 6.64, 6.95, 6.38, 7.26
+          ],
+          notes: {
+            "2026-10": "参考历年 10 月均值，略高于往年同期",
+            "2026-11": "11 月平稳区间",
+            "2026-12": "年末 12 月常规水平",
+            "2027-01": "年初平稳",
+            "2027-02": "2 月春节，年内低点",
+            "2027-03": "3 月回升",
+            "2027-04": "4 月平稳",
+            "2027-05": "排除 2025 年异常高点，常规 5 月水平",
+            "2027-06": "年度季节性峰值（历年 6 月年度结息）",
+            "2027-07": "6 月高峰回落，7 月常规",
+            "2027-08": "8 月平稳",
+            "2027-09": "9 月小幅抬升",
+            "2027-10": "次年 10 月，小幅递增"
+          }
+        },
+        withdraw: {
+          name: "提取金额",
+          yMax: 5,
+          yTicks: 5,
+          history: toYi(withdrawRaw),
+          forecast: [
+            3.05, 3.16, 3.27, 3.48, 3.06, 3.58, 3.46, 2.98, 2.85, 3.88, 3.62, 3.28, 3.16
+          ],
+          llm: [
+            3.12, 3.23, 3.34, 3.56, 3.12, 3.66, 3.53, 3.04, 2.90, 3.96, 3.70, 3.34, 3.23
+          ],
+          notes: {
+            "2026-10": "参考历年 10 月均值，略低于往年同期",
+            "2026-11": "11 月平稳区间",
+            "2026-12": "年末 12 月提取常规水平",
+            "2027-01": "年初提取小幅抬升",
+            "2027-02": "2 月春节，提取年内低点",
+            "2027-03": "3 月回升",
+            "2027-04": "4 月平稳",
+            "2027-05": "5 月常规水平",
+            "2027-06": "6 月提取回落",
+            "2027-07": "7 月季节性高点",
+            "2027-08": "8 月平稳",
+            "2027-09": "9 月小幅回落",
+            "2027-10": "次年 10 月，常规水平"
+          }
+        },
+        loanIssue: {
+          name: "贷款发放",
+          yMax: 6,
+          yTicks: 6,
+          history: toYi(loanIssueRaw),
+          forecast: [
+            1.85, 1.72, 1.35, 1.42, 1.15, 1.68, 1.95, 2.05, 2.75, 1.05, 1.92, 2.15, 1.98
+          ],
+          llm: [
+            1.92, 1.78, 1.40, 1.48, 1.20, 1.75, 2.02, 2.12, 2.84, 1.12, 2.00, 2.23, 2.05
+          ],
+          notes: {
+            "2026-10": "参考历年 10 月均值，常规水平",
+            "2026-11": "11 月平稳区间",
+            "2026-12": "年末 12 月发放回落",
+            "2027-01": "年初平稳",
+            "2027-02": "2 月春节，发放年内低点",
+            "2027-03": "3 月回升",
+            "2027-04": "4 月稳中有升",
+            "2027-05": "5 月常规水平",
+            "2027-06": "6 月发放季节性高峰",
+            "2027-07": "7 月发放回落",
+            "2027-08": "8 月回升",
+            "2027-09": "9 月发放高点",
+            "2027-10": "次年 10 月，常规水平"
+          }
+        },
+        loanRecover: {
+          name: "贷款回收",
+          yMax: 3,
+          yTicks: 6,
+          history: toYi(loanRecoverRaw),
+          forecast: [
+            2.18, 2.14, 2.28, 2.32, 2.10, 2.40, 2.28, 2.24, 2.02, 2.22, 2.30, 2.36, 2.42
+          ],
+          llm: [
+            2.26, 2.20, 2.34, 2.38, 2.15, 2.47, 2.34, 2.30, 2.07, 2.28, 2.36, 2.42, 2.49
+          ],
+          notes: {
+            "2026-10": "参考历年 10 月均值，回收保持平稳",
+            "2026-11": "11 月回收平稳区间",
+            "2026-12": "年末 12 月回收小幅抬升",
+            "2027-01": "年初回收常规水平",
+            "2027-02": "2 月春节，回收年内低点",
+            "2027-03": "3 月回收回升",
+            "2027-04": "4 月回收平稳",
+            "2027-05": "5 月回收常规水平",
+            "2027-06": "6 月回收回落",
+            "2027-07": "7 月回收回升",
+            "2027-08": "8 月回收平稳",
+            "2027-09": "9 月回收小幅抬升",
+            "2027-10": "次年 10 月，小幅递增"
+          }
+        }
+      };
+
+      var dataset = DATASETS[currentTab];
+
+      // 保存各页签大模型预测初值，切换页签或重新预测时可还原
+      var ORIGINALS = {};
+      Object.keys(DATASETS).forEach(function (key) {
+        ORIGINALS[key] = {
+          llm: DATASETS[key].llm.slice(),
+          notes: Object.assign({}, DATASETS[key].notes)
+        };
+      });
+
+      // 各月份业务特征说明，供大模型预测说明使用
+      var MONTH_HINT = {
+        1: "年初业务平稳，回归常态节奏",
+        2: "受春节假期影响，业务量处于年内低点",
+        3: "节后业务回升，需求集中释放",
+        4: "业务运行平稳，无明显季节性波动",
+        5: "常规月份，业务量保持稳定",
+        6: "年度结息因素带动，业务量处于年内高点",
+        7: "高峰回落，业务回归常态",
+        8: "暑期业务平稳，波动较小",
+        9: "业务小幅抬升，进入三季度末集中办理期",
+        10: "四季度开局，业务量常规水平",
+        11: "年末业务平稳，办理节奏稳定",
+        12: "年末集中办理，业务量有所抬升"
+      };
+
+      function average(list) {
+        if (!list.length) {
+          return 0;
+        }
+        return list.reduce(function (sum, value) { return sum + value; }, 0) / list.length;
+      }
+
+      // 同月季节性系数：该月历史均值 / 全历史均值
+      function seasonalIndex(month) {
+        var overall = average(dataset.history);
+        if (!overall) {
+          return 1;
+        }
+        var sameMonth = [];
+        dataset.history.forEach(function (value, index) {
+          var monthText = monthList(2017, 1, dataset.history.length)[index].split("-")[1];
+          if (parseInt(monthText, 10) === month) {
+            sameMonth.push(value);
+          }
+        });
+        return sameMonth.length ? average(sameMonth) / overall : 1;
+      }
+
+      // 解析提示词中的走势倾向
+      function promptTone(prompt) {
+        if (/增长|上升|上行|回暖|回升|提高|增加/.test(prompt)) {
+          return "上行";
+        }
+        if (/下降|下行|回落|下滑|减少|走低/.test(prompt)) {
+          return "下行";
+        }
+        return "平稳";
+      }
+
+      // 提示词倾向对应的调节系数
+      function promptBias(prompt) {
+        var bias = 0;
+        var tone = promptTone(prompt);
+        if (tone === "上行") {
+          bias += 0.03;
+        } else if (tone === "下行") {
+          bias -= 0.03;
+        }
+        if (/保守|稳健|谨慎|从紧/.test(prompt)) {
+          bias -= 0.015;
+        }
+        if (/乐观|积极|看好|扩张/.test(prompt)) {
+          bias += 0.015;
+        }
+        return bias;
+      }
+
+      // 模拟调用大模型：根据提示词倾向与历史数据（近 12 个月水平 + 同月季节性 + 同比增速）生成预测
+      function runLlmPredict() {
+        var series = buildSeries();
+        var prompt = promptText.value || "";
+        var recent = dataset.history.slice(-12);
+        var previous = dataset.history.slice(-24, -12);
+        var base = average(recent);
+        var yoy = previous.length ? (base - average(previous)) / average(previous) : 0;
+        var drift = yoy + promptBias(prompt);
+        var tone = promptTone(prompt);
+
+        dataset.llm = series.forecast.map(function (item, index) {
+          var month = parseInt(item.month.split("-")[1], 10);
+          var factor = Math.pow(1 + drift, (index + 1) / 12) * seasonalIndex(month);
+          return Math.round(base * factor * 100) / 100;
+        });
+
+        dataset.notes = {};
+        series.forecast.forEach(function (item, index) {
+          var month = parseInt(item.month.split("-")[1], 10);
+          var compare = dataset.llm[index] > item.value
+            ? "预计略高于算法模型预测"
+            : dataset.llm[index] < item.value
+              ? "预计略低于算法模型预测"
+              : "预计与算法模型预测持平";
+          dataset.notes[item.month] = MONTH_HINT[month] + "，结合提示词中的" + tone + "判断，" + compare + "。";
+        });
+      }
+
+      function pad(num) {
+        return String(num).padStart(2, "0");
+      }
+
+      function monthList(startYear, startMonth, count) {
+        var list = [];
+        var year = startYear;
+        var month = startMonth;
+        for (var i = 0; i < count; i += 1) {
+          list.push(year + "-" + pad(month));
+          month += 1;
+          if (month > 12) {
+            month = 1;
+            year += 1;
+          }
+        }
+        return list;
+      }
+
+      function toPolyline(list, offset, px, py) {
+        return list.map(function (item, index) {
+          return px(index + offset) + "," + py(item.value);
+        }).join(" ");
+      }
+
+      function toAmountText(value) {
+        return (value * 100000000).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
+
+      function buildSeries() {
+        var historyMonths = monthList(2017, 1, dataset.history.length);
+        var forecastStart = historyMonths[historyMonths.length - 1].split("-");
+        var nextYear = +forecastStart[0];
+        var nextMonth = +forecastStart[1] + 1;
+        if (nextMonth > 12) {
+          nextMonth = 1;
+          nextYear += 1;
+        }
+
+        var history = dataset.history.map(function (value, index) {
+          return { month: historyMonths[index], value: value };
+        });
+
+        var forecastMonths = monthList(nextYear, nextMonth, dataset.forecast.length);
+        var forecast = dataset.forecast.map(function (value, index) {
+          return { month: forecastMonths[index], value: value };
+        });
+        var llmForecast = dataset.llm.map(function (value, index) {
+          return { month: forecastMonths[index], value: value };
+        });
+
+        return { history: history, forecast: forecast, llmForecast: llmForecast };
+      }
+
+      function renderChart() {
+        var series = buildSeries();
+        var history = series.history;
+        var forecast = series.forecast;
+        var llmForecast = series.llmForecast;
+        var all = history.concat(forecast);
+        var width = 990;
+        var height = 230;
+        var left = 46;
+        var right = 14;
+        var top = 16;
+        var bottom = 40;
+        var plotWidth = width - left - right;
+        var plotHeight = height - top - bottom;
+        var max = dataset.yMax;
+
+        function px(index) {
+          return left + (plotWidth * index / (all.length - 1));
+        }
+
+        function py(value) {
+          return top + (max - value) / max * plotHeight;
+        }
+
+        var gridHtml = "";
+        var ticks = dataset.yTicks || 5;
+        for (var i = 0; i <= ticks; i += 1) {
+          var yValue = (max / ticks) * i;
+          var y = py(yValue);
+          gridHtml += '<line class="grid" x1="' + left + '" y1="' + y + '" x2="' + (width - right) + '" y2="' + y + '"></line>';
+          gridHtml += '<text class="axis" x="' + (left - 6) + '" y="' + (y + 4) + '" text-anchor="end">' + yValue.toFixed(1) + "亿</text>";
+        }
+
+        var xHtml = "";
+        for (var j = 0; j < all.length; j += 6) {
+          xHtml += '<text class="axis" transform="translate(' + px(j) + " " + (height - 12) + ') rotate(48)" text-anchor="start">' + all[j].month + "</text>";
+        }
+        xHtml += '<text class="axis" transform="translate(' + px(all.length - 1) + " " + (height - 12) + ') rotate(48)" text-anchor="start">' + all[all.length - 1].month + "</text>";
+
+        var histMarks = history.map(function (item, index) {
+          if (!(index % 10 === 0 || index >= history.length - 3)) return "";
+          return '<circle class="history-dot" cx="' + px(index) + '" cy="' + py(item.value) + '" r="2.2"></circle>';
+        }).join("");
+
+        var forecastOffset = history.length - 1;
+        var predMarks = forecast.map(function (item, index) {
+          return '<circle class="forecast-dot" cx="' + px(index + forecastOffset) + '" cy="' + py(item.value) + '" r="2.2"></circle>';
+        }).join("");
+        var llmLine = "";
+        var llmMarks = "";
+        if (llmEnabled) {
+          llmLine = '<polyline class="llm-line" points="' + toPolyline(llmForecast, forecastOffset, px, py) + '"></polyline>';
+          llmMarks = llmForecast.map(function (item, index) {
+            return '<circle class="llm-dot" cx="' + px(index + forecastOffset) + '" cy="' + py(item.value) + '" r="2.2"></circle>';
+          }).join("");
+          llmLegend.classList.remove("hidden");
+        } else {
+          llmLegend.classList.add("hidden");
+        }
+
+        chart.innerHTML =
+          '<rect x="0" y="0" width="' + width + '" height="' + height + '" fill="#fff"></rect>' +
+          gridHtml +
+          '<polyline class="history-line" points="' + toPolyline(history, 0, px, py) + '"></polyline>' +
+          '<polyline class="forecast-line" points="' + toPolyline(forecast, forecastOffset, px, py) + '"></polyline>' +
+          llmLine +
+          histMarks +
+          predMarks +
+          llmMarks +
+          xHtml;
+      }
+
+      function renderRows() {
+        var series = buildSeries();
+        var historyRows = series.history.map(function (item) {
+          return [item.month, toAmountText(item.value), "-", "-", "历史数据"];
+        });
+        var forecastRows = series.forecast.map(function (item, index) {
+          return [
+            item.month,
+            toAmountText(item.value),
+            llmEnabled ? toAmountText(series.llmForecast[index].value) : "-",
+            llmEnabled ? (dataset.notes[item.month] || "-") : "待执行大模型预测",
+            "预测数据"
+          ];
+        });
+        var allRows = historyRows.concat(forecastRows);
+        // 数据详情按月份倒序排列（最新月份在前）
+        allRows.sort(function (a, b) {
+          return a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0;
+        });
+
+        detailRows.innerHTML = allRows.map(function (row) {
+          return (
+            "<tr>" +
+              "<td>" + row[0] + "</td>" +
+              '<td class="num">' + row[1] + "</td>" +
+              '<td class="num">' + row[2] + '</td>' +
+              "<td>" + row[3] + "</td>" +
+              '<td><span class="data-tag">' + row[4] + '</span></td>' +
+            "</tr>"
+          );
+        }).join("");
+      }
+
+      function changeCount(delta) {
+        var current = parseInt(forecastNum.value, 10) || 13;
+        current = Math.max(1, Math.min(24, current + delta));
+        forecastNum.value = current;
+      }
+
+      // 构造发送给大模型的提示词，随页签与预测区间联动
+      function buildPromptText() {
+        var series = buildSeries();
+        var firstMonth = series.history[0].month;
+        var lastMonth = series.history[series.history.length - 1].month;
+        var startMonth = series.forecast[0].month;
+        var endMonth = series.forecast[series.forecast.length - 1].month;
+        return "你是住房公积金资金运行分析专家。请基于" + unitName.value + " " + firstMonth + " 至 " + lastMonth +
+          " 的" + dataset.name + "历史数据（共 " + series.history.length + " 个月），结合宏观经济形势、房地产政策及住房公积金业务季节性波动规律，预测 " +
+          startMonth + " 至 " + endMonth + " 共 " + series.forecast.length + " 个月的" + dataset.name +
+          "，并逐月给出预测说明及主要影响因素。";
+      }
+
+      // AI 生成提示词：模拟调用大模型生成一版新的提示词，逐次切换分析角度
+      var PROMPT_ANGLES = [
+        "宏观经济形势",
+        "房地产调控政策",
+        "住房交易活跃度",
+        "缴存覆盖与基数调整",
+        "居民购房与还贷行为",
+        "提前还贷与资金流动性",
+        "季节性波动规律",
+        "人口流动与就业变化",
+        "区域间业务差异"
+      ];
+      var promptRound = 0;
+
+      function buildLlmPromptText() {
+        var series = buildSeries();
+        var firstMonth = series.history[0].month;
+        var lastMonth = series.history[series.history.length - 1].month;
+        var startMonth = series.forecast[0].month;
+        var endMonth = series.forecast[series.forecast.length - 1].month;
+        var angles = [];
+        for (var i = 0; i < 3; i += 1) {
+          angles.push(PROMPT_ANGLES[(promptRound * 3 + i) % PROMPT_ANGLES.length]);
+        }
+        promptRound += 1;
+        return "你是住房公积金资金运行分析专家。请基于" + unitName.value + " " + firstMonth + " 至 " + lastMonth +
+          " 的" + dataset.name + "历史数据（共 " + series.history.length + " 个月），重点结合" + angles.join("、") +
+          "，预测 " + startMonth + " 至 " + endMonth + " 共 " + series.forecast.length + " 个月的" + dataset.name +
+          "，并逐月给出预测说明及主要影响因素。";
+      }
+
+      function switchTab(key) {
+        currentTab = key;
+        dataset = DATASETS[key];
+        llmEnabled = false;
+        promptBox.classList.add("hidden");
+        // 还原该页签的大模型预测结果，避免沿用上一次的预测
+        dataset.llm = ORIGINALS[key].llm.slice();
+        dataset.notes = Object.assign({}, ORIGINALS[key].notes);
+        sectionTitle.textContent = dataset.name + "预测结果";
+        chart.setAttribute("aria-label", dataset.name + "预测结果趋势图");
+        renderChart();
+        renderRows();
+      }
+
+      tabList.forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          tabList.forEach(function (item) { item.classList.remove("active"); });
+          tab.classList.add("active");
+          switchTab(tab.getAttribute("data-tab"));
+        });
+      });
+
+      stepUp.addEventListener("click", function () { changeCount(1); });
+      stepDown.addEventListener("click", function () { changeCount(-1); });
+      queryBtn.addEventListener("click", function () {
+        renderChart();
+        renderRows();
+      });
+      predictBtn.addEventListener("click", function () {
+        renderChart();
+        renderRows();
+      });
+      llmBtn.addEventListener("click", function () {
+        llmEnabled = true;
+        promptText.value = buildPromptText();
+        promptBox.classList.remove("hidden");
+        renderChart();
+        renderRows();
+      });
+      // 数据预测：根据调整后的提示词与历史数据调用大模型，更新预测趋势图与数据详情
+      promptPredictBtn.addEventListener("click", function () {
+        var original = promptPredictBtn.textContent;
+        promptPredictBtn.textContent = "预测中…";
+        promptPredictBtn.disabled = true;
+        setTimeout(function () {
+          runLlmPredict();
+          llmEnabled = true;
+          renderChart();
+          renderRows();
+          promptPredictBtn.textContent = original;
+          promptPredictBtn.disabled = false;
+        }, 500);
+      });
+      // 提示词智能生成：调用大模型生成一版新的提示词
+      promptSuggestBtn.addEventListener("click", function () {
+        var original = promptSuggestBtn.textContent;
+        promptSuggestBtn.textContent = "生成中…";
+        promptSuggestBtn.disabled = true;
+        setTimeout(function () {
+          promptText.value = buildLlmPromptText();
+          promptSuggestBtn.textContent = original;
+          promptSuggestBtn.disabled = false;
+        }, 500);
+      });
+      // 保存提示词：保存当前编辑后的提示词
+      promptSaveBtn.addEventListener("click", function () {
+        var original = promptSaveBtn.textContent;
+        promptSaveBtn.textContent = "已保存";
+        promptSaveBtn.disabled = true;
+        setTimeout(function () {
+          promptSaveBtn.textContent = original;
+          promptSaveBtn.disabled = false;
+        }, 1200);
+      });
+      saveBtn.addEventListener("click", function () {
+        var original = saveBtn.textContent;
+        saveBtn.textContent = "模型已保存";
+        saveBtn.disabled = true;
+        setTimeout(function () {
+          saveBtn.textContent = original;
+          saveBtn.disabled = false;
+        }, 1200);
+      });
+
+      renderChart();
+      renderRows();
+    })();
+  </script>
+</body>
+</html>
